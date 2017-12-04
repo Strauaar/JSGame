@@ -16,7 +16,7 @@ JSGame is a fun and colorful game comprised of four parts:
   + Goals will be placed around the canvas and the objective is to get the projectiles to go towards and pass the goals.
 + Power-ups
   + Such power-ups will be implemented:
-    + The user can release all the stuck projectiles on the disc it directions normal to the the face of the disc.
+    + The user can release all the stuck projectiles on the disc in directions normal to the the face of the disc.
     + The user gains the ability to shoot incoming projectiles.
 
 In addition to the above features, the user will be able to access a game menu.
@@ -26,5 +26,28 @@ The game will end once the disc is completely covered in projectiles and the obj
 
 ## Wireframes
 The app will be a single screen which will take up the size of the window. The user will be introduced to the game with a splash title and tutorial options.
+
 The main game layout is shown below.
+
 ![Main-page-image](https://github.com/Strauaar/JSGame/blob/master/wireframes/main.png)
+
+## Architecture and Technologies
++ Vanilla Javascript
++ `HTML 5 Canvas` for rendering
++ `Webpack` for bundling
+
+The main components will be divided in a way as seen above in the overview section.
+
+## Implementation Timeline
+<strong>Day 1</strong>: Setup game files and have objects render with their various properties setup.
+
+<strong>Day 2</strong>: Ensure game physics works and is implemented correctly and bug free. Start on power-up implementation.
+
+<strong>Day 3</strong>: Finish power-up implementation and ensure playability. Start styling.
+
+<strong>Day 4</strong>: Finish styling and implement title splash page and tutorials.
+
+## Bonuses Features
++ Add sound effects
++ Add game save option
++ Allow user to adjust parameters of the game
