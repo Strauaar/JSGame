@@ -1,4 +1,4 @@
-## Background and Overview
+## Overview and Features
 JSGame is a fun and colorful game comprised of four parts:
 + Disc
   + A user controlled disc in the middle of the canvas.
@@ -18,3 +18,12 @@ JSGame is a fun and colorful game comprised of four parts:
   + Such power-ups will be implemented:
     + The user can release all the stuck projectiles on the disc it directions normal to the the face of the disc.
     + The user gains the ability to shoot incoming projectiles.
+
+In addition to the above features, the user will be able to access a game menu.
+
+Game difficulty will increase in terms of faster projectiles, smaller goal targets, and higher projectile count.
+The game will end once the disc is completely covered in projectiles and the objective is to get the most goals!
+
+## Wireframes
+The app will be a single screen which will take up the size of the window. The user will be introduced to the game with a splash title and tutorial options.
+The main game layout is shown below.
