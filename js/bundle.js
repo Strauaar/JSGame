@@ -72,8 +72,8 @@ const GameView = __webpack_require__(1);
 document.addEventListener('DOMContentLoaded', () => {
   let canvas = document.getElementById('game-canvas');
   let ctx = canvas.getContext('2d');
-  // const gameView = new GameView(ctx);
-  // gameView.start(ctx);
+  const gameView = new GameView(ctx);
+  gameView.start(ctx);
 });
 
 
@@ -85,13 +85,27 @@ const Game = __webpack_require__(2);
 
 class GameView {
   constructor(ctx) {
-    // this.game = new Game();
+    this.game = new Game();
     this.ctx = ctx;
+    this.start = this.start.bind(this);
   }
 
 
   start() {
-    // requestAnimationFrame
+    // this.ctx.fillStyle = 'red';
+    // this.ctx.beginPath();
+    // this.ctx.arc(
+    //   0,
+    //   0,
+    //   120,
+    //   2 * Math.PI,
+    //   false
+    // );
+    // this.ctx.fill();
+    setInterval( () => {
+      // this.game.step();
+      // this.game.draw(this.ctx);
+    }, 20);
   }
 }
 
@@ -102,6 +116,65 @@ module.exports = GameView;
 /* 2 */
 /***/ (function(module, exports) {
 
+// TODO: import game components
+
+class Game {
+  constructor(){
+    this.projectiles = [];
+    // TODO: Implement bullet as powerup
+    // this.bullets = [];
+
+    // this.disc = new Disc(params here);
+    this.DIM_X = window.innerWidth;
+    this.DIM_Y = window.innerHeight;
+    this.randomPosition = this.randomPosition.bind(this);
+    this.draw = this.draw.bind(this);
+    this.moveObjects = this.moveObjects.bind(this);
+    this.wrap = this.wrap.bind(this);
+    this.checkCollisions = this.checkCollisions.bind(this);
+    this.step = this.step.bind(this);
+    this.allObjects = this.allObjects.bind(this);
+  }
+
+  randomPosition() {
+
+  }
+
+  draw(ctx) {
+    ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
+    // re-draw all objects
+  }
+
+  moveObjects() {
+    this.allObjects().forEach(object => {
+      object.move();
+    });
+  }
+
+  wrap() {
+
+  }
+
+  checkCollisions() {
+
+  }
+
+  step() {
+    this.moveObjects();
+    this.checkCollisions();
+  }
+
+  allObjects() {
+    // let all = this.projectiles.slice();
+    // all.push(this.disc);
+    // TODO: Add other objects
+    // all = all.concat()
+    // return all;
+  }
+}
+
+
+module.exports = Game;
 
 
 /***/ })
