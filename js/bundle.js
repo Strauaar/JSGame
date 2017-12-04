@@ -79,6 +79,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Game = __webpack_require__(2);
+
+class GameView {
+  constructor(ctx) {
+    // this.game = new Game();
+    this.ctx = ctx;
+  }
+
+
+  start() {
+    // requestAnimationFrame
+  }
+}
+
+module.exports = GameView;
+
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports) {
 
 
