@@ -1,7 +1,8 @@
-const MovingObject = require('./moving_object.js');
+import MovingObject from './moving_object';
+
 class Projectile extends MovingObject {
   constructor(options){
-    // options include color, pos: random position
+    options.radius = 5;
     super(options);
   }
 

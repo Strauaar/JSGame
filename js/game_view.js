@@ -1,4 +1,4 @@
-const Game = require('./game.js');
+import Game from './game';
 
 class GameView {
   constructor(ctx) {
@@ -26,4 +26,4 @@ class GameView {
   }
 }
 
-module.exports = GameView;
+export default GameView;

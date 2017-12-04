@@ -1,4 +1,4 @@
-const GameView = require(`./game_view.js`);
+import GameView from './game_view';
 
 document.addEventListener('DOMContentLoaded', () => {
   let canvas = document.getElementById('game-canvas');
