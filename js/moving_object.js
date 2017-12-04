@@ -8,7 +8,7 @@ class MovingObject {
     this.game = options.game;
     this.draw = this.draw.bind(this);
     this.move = this.move.bind(this);
-    this.collideWith = this.collideWith.bind(this);
+    this.didCollideWith = this.didCollideWith.bind(this);
   }
 
   draw(ctx) {
@@ -30,7 +30,7 @@ class MovingObject {
     this.pos[1] += this.vel[0];
   }
 
-  collideWith(otherObejct) {
+  didCollideWith(otherObejct) {
     // let totalRadius = this.radius + otherObejct.radius;
     // if (distance formula <= totalRadius){
     // return true;

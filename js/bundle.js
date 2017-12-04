@@ -67,59 +67,82 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const GameView = __webpack_require__(1);
+"use strict";
 
-document.addEventListener('DOMContentLoaded', () => {
-  let canvas = document.getElementById('game-canvas');
-  let ctx = canvas.getContext('2d');
-  const gameView = new GameView(ctx);
+
+var GameView = __webpack_require__(1);
+
+document.addEventListener('DOMContentLoaded', function () {
+  var canvas = document.getElementById('game-canvas');
+  var ctx = canvas.getContext('2d');
+  var gameView = new GameView(ctx);
   gameView.start(ctx);
 });
-
 
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Game = __webpack_require__(2);
+"use strict";
 
-class GameView {
-  constructor(ctx) {
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Game = __webpack_require__(2);
+
+var GameView = function () {
+  function GameView(ctx) {
+    _classCallCheck(this, GameView);
+
     this.game = new Game();
     this.ctx = ctx;
     this.start = this.start.bind(this);
   }
 
+  _createClass(GameView, [{
+    key: 'start',
+    value: function start() {
+      // this.ctx.fillStyle = 'red';
+      // this.ctx.beginPath();
+      // this.ctx.arc(
+      //   0,
+      //   0,
+      //   120,
+      //   2 * Math.PI,
+      //   false
+      // );
+      // this.ctx.fill();
+      setInterval(function () {
+        // this.game.step();
+        // this.game.draw(this.ctx);
+      }, 20);
+    }
+  }]);
 
-  start() {
-    // this.ctx.fillStyle = 'red';
-    // this.ctx.beginPath();
-    // this.ctx.arc(
-    //   0,
-    //   0,
-    //   120,
-    //   2 * Math.PI,
-    //   false
-    // );
-    // this.ctx.fill();
-    setInterval( () => {
-      // this.game.step();
-      // this.game.draw(this.ctx);
-    }, 20);
-  }
-}
+  return GameView;
+}();
 
 module.exports = GameView;
 
-
 /***/ }),
 /* 2 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 // TODO: import game components
 
-class Game {
-  constructor(){
+var Game = function () {
+  function Game() {
+    _classCallCheck(this, Game);
+
     this.projectiles = [];
     // TODO: Implement bullet as powerup
     // this.bullets = [];
@@ -136,46 +159,50 @@ class Game {
     this.allObjects = this.allObjects.bind(this);
   }
 
-  randomPosition() {
+  _createClass(Game, [{
+    key: "randomPosition",
+    value: function randomPosition() {}
+  }, {
+    key: "draw",
+    value: function draw(ctx) {
+      ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
+      // re-draw all objects
+    }
+  }, {
+    key: "moveObjects",
+    value: function moveObjects() {
+      this.allObjects().forEach(function (object) {
+        object.move();
+      });
+    }
+  }, {
+    key: "wrap",
+    value: function wrap() {}
+  }, {
+    key: "checkCollisions",
+    value: function checkCollisions() {}
+  }, {
+    key: "step",
+    value: function step() {
+      this.moveObjects();
+      this.checkCollisions();
+    }
+  }, {
+    key: "allObjects",
+    value: function allObjects() {
+      // let all = this.projectiles.slice();
+      // all.push(this.disc);
+      // TODO: Add other objects
+      // all = all.concat()
+      // return all;
+    }
+  }]);
 
-  }
-
-  draw(ctx) {
-    ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
-    // re-draw all objects
-  }
-
-  moveObjects() {
-    this.allObjects().forEach(object => {
-      object.move();
-    });
-  }
-
-  wrap() {
-
-  }
-
-  checkCollisions() {
-
-  }
-
-  step() {
-    this.moveObjects();
-    this.checkCollisions();
-  }
-
-  allObjects() {
-    // let all = this.projectiles.slice();
-    // all.push(this.disc);
-    // TODO: Add other objects
-    // all = all.concat()
-    // return all;
-  }
-}
-
+  return Game;
+}();
 
 module.exports = Game;
 
-
 /***/ })
 /******/ ]);
+//# sourceMappingURL=bundle.js.map
