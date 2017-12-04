@@ -27,3 +27,4 @@ The game will end once the disc is completely covered in projectiles and the obj
 ## Wireframes
 The app will be a single screen which will take up the size of the window. The user will be introduced to the game with a splash title and tutorial options.
 The main game layout is shown below.
+(https://github.com/Strauaar/JSGame/blob/master/wireframes/main.png)
