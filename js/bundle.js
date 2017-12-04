@@ -65,6 +65,20 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const GameView = __webpack_require__(1);
+
+document.addEventListener('DOMContentLoaded', () => {
+  let canvas = document.getElementById('game-canvas');
+  let ctx = canvas.getContext('2d');
+  // const gameView = new GameView(ctx);
+  // gameView.start(ctx);
+});
+
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports) {
 
 
