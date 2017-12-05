@@ -76,9 +76,8 @@ class Disc extends MovingObject{
   }
 
   caluclateCollision(otherObject) {
-
-    otherObject.vel[0] = -1 * otherObject.vel[0];
-    otherObject.vel[1] = -1 * otherObject.vel[1];
+    otherObject.vel[0] = -1 * (Math.cos(this.dTheta) * this.outerRadius * this.angular_vel) + otherObject.vel[0];
+    otherObject.vel[1] = -1 * (Math.sin(this.dTheta) * this.outerRadius * this.angular_vel) + otherObject.vel[1];
   }
 
 }

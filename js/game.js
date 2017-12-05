@@ -100,6 +100,7 @@ class Game {
       }
       this.disc.end_angle = Util.calculateRad(rel_x, rel_y, theta);
       // console.log(this.disc.end_angle);
+      this.disc.dTheta = this.disc.end_angle - this.disc.start_angle;
       let angular_vel = Util.calculateAngVelocity(this.disc);
       this.disc.angular_vel = angular_vel;
       this.disc.draw(this.ctx, rel_x, rel_y, theta);
@@ -140,6 +141,7 @@ class Game {
     // this.allObjects().forEach(object => {
     //   object.move();
     // });
+    // console.log(this.disc.dTheta);
     this.allObjects().forEach(obj => {
       obj.move();
     });

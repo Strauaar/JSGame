@@ -333,6 +333,7 @@ var Game = function () {
         }
         _this2.disc.end_angle = Util.calculateRad(rel_x, rel_y, theta);
         // console.log(this.disc.end_angle);
+        _this2.disc.dTheta = _this2.disc.end_angle - _this2.disc.start_angle;
         var angular_vel = Util.calculateAngVelocity(_this2.disc);
         _this2.disc.angular_vel = angular_vel;
         _this2.disc.draw(_this2.ctx, rel_x, rel_y, theta);
@@ -377,6 +378,7 @@ var Game = function () {
       // this.allObjects().forEach(object => {
       //   object.move();
       // });
+      // console.log(this.disc.dTheta);
       this.allObjects().forEach(function (obj) {
         obj.move();
       });
@@ -540,9 +542,8 @@ var Disc = function (_MovingObject) {
   }, {
     key: 'caluclateCollision',
     value: function caluclateCollision(otherObject) {
-
-      otherObject.vel[0] = -1 * otherObject.vel[0];
-      otherObject.vel[1] = -1 * otherObject.vel[1];
+      otherObject.vel[0] = -1 * (Math.cos(this.dTheta) * this.outerRadius * this.angular_vel) + otherObject.vel[0];
+      otherObject.vel[1] = -1 * (Math.sin(this.dTheta) * this.outerRadius * this.angular_vel) + otherObject.vel[1];
     }
   }]);
 
@@ -662,7 +663,7 @@ var calculateAngVelocity = exports.calculateAngVelocity = function calculateAngV
   var dTheta = disc.end_angle - disc.start_angle;
   var dTime = disc.end_time - disc.start_time;
   var omega = dTheta / dTime;
-  return omega * 10;
+  return omega;
 };
 
 /***/ })
