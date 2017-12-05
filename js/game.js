@@ -23,7 +23,6 @@ class Game {
     this.checkCollisions = this.checkCollisions.bind(this);
     this.step = this.step.bind(this);
     this.allObjects = this.allObjects.bind(this);
-
   }
 
   initProjectiles() {
@@ -87,15 +86,48 @@ class Game {
   renderFragments() {
     let rel_x;
     let rel_y;
+    let timeout;
     const registerMovement = (e) => {
+      clearTimeout(timeout);
       rel_x = Util.relative_x(e.clientX, this.DIM_X);
       rel_y = Util.relative_y(e.clientY, this.DIM_Y);
-      this.disc.draw(this.ctx, rel_x, rel_y, Math.atan(rel_y/rel_x))
-      console.log("rel_x", rel_x);
-      console.log("rel_y", rel_y);
-      console.log("atan", Math.atan(rel_y/rel_x));
-    }
+      this.disc.draw(this.ctx, rel_x, rel_y, Math.atan(rel_y/rel_x));
+      timeout = setTimeout(function () {
+          var event = new CustomEvent("mousestop", {
+              detail: {
+                  clientX: e.clientX,
+                  clientY: e.clientY
+              },
+              bubbles: true,
+              cancelable: true
+          });
+          e.target.dispatchEvent(event);
+      }, 1);
+    };
+
+    const registerStaticPosition = (e) => {
+      rel_x = Util.relative_x(e.detail.clientX, this.DIM_X);
+      rel_y = Util.relative_y(e.detail.clientY, this.DIM_Y);
+      setInterval(() => {this.disc.draw(this.ctx, rel_x, rel_y, Math.atan(rel_y/rel_x))}, 1);
+    };
+
     document.addEventListener('mousemove', registerMovement)
+    document.addEventListener('mousestop', registerStaticPosition)
+
+    // document.addEventListener('mousemove', function (e) {
+    //     clearTimeout(timeout);
+    //     timeout = setTimeout(function () {
+    //         var event = new CustomEvent("mousestop", {
+    //             detail: {
+    //                 clientX: e.clientX,
+    //                 clientY: e.clientY
+    //             },
+    //             bubbles: true,
+    //             cancelable: true
+    //         });
+    //         e.target.dispatchEvent(event);
+    //     }, mouseStopDelay);
+    // });
   }
 
   draw(ctx) {
@@ -129,7 +161,7 @@ class Game {
 
   allObjects() {
     let all = this.projectiles.slice();
-    all.push(this.disc);
+    // all.push(this.disc);
     // TODO: Add other objects
     // all = all.concat()
     return all;

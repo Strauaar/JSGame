@@ -319,15 +319,50 @@ var Game = function () {
 
       var rel_x = void 0;
       var rel_y = void 0;
+      var timeout = void 0;
       var registerMovement = function registerMovement(e) {
+        clearTimeout(timeout);
         rel_x = Util.relative_x(e.clientX, _this2.DIM_X);
         rel_y = Util.relative_y(e.clientY, _this2.DIM_Y);
         _this2.disc.draw(_this2.ctx, rel_x, rel_y, Math.atan(rel_y / rel_x));
-        console.log("rel_x", rel_x);
-        console.log("rel_y", rel_y);
-        console.log("atan", Math.atan(rel_y / rel_x));
+        timeout = setTimeout(function () {
+          var event = new CustomEvent("mousestop", {
+            detail: {
+              clientX: e.clientX,
+              clientY: e.clientY
+            },
+            bubbles: true,
+            cancelable: true
+          });
+          e.target.dispatchEvent(event);
+        }, 1);
       };
+
+      var registerStaticPosition = function registerStaticPosition(e) {
+        rel_x = Util.relative_x(e.detail.clientX, _this2.DIM_X);
+        rel_y = Util.relative_y(e.detail.clientY, _this2.DIM_Y);
+        setInterval(function () {
+          _this2.disc.draw(_this2.ctx, rel_x, rel_y, Math.atan(rel_y / rel_x));
+        }, 1);
+      };
+
       document.addEventListener('mousemove', registerMovement);
+      document.addEventListener('mousestop', registerStaticPosition);
+
+      // document.addEventListener('mousemove', function (e) {
+      //     clearTimeout(timeout);
+      //     timeout = setTimeout(function () {
+      //         var event = new CustomEvent("mousestop", {
+      //             detail: {
+      //                 clientX: e.clientX,
+      //                 clientY: e.clientY
+      //             },
+      //             bubbles: true,
+      //             cancelable: true
+      //         });
+      //         e.target.dispatchEvent(event);
+      //     }, mouseStopDelay);
+      // });
     }
   }, {
     key: 'draw',
@@ -365,7 +400,7 @@ var Game = function () {
     key: 'allObjects',
     value: function allObjects() {
       var all = this.projectiles.slice();
-      all.push(this.disc);
+      // all.push(this.disc);
       // TODO: Add other objects
       // all = all.concat()
       return all;
@@ -454,11 +489,11 @@ var Disc = function (_MovingObject) {
       }
 
       this.setRadialGradient(ctx, "#DC1C29", "#B7161B");
-      this.drawDonut(ctx, rad, rad + Math.PI * 2 / 3);
+      this.drawDonut(ctx, -rad, -rad + Math.PI * 2 / 3);
       this.setRadialGradient(ctx, "#84BC3D", "#5B8829");
-      this.drawDonut(ctx, rad + Math.PI * 2 / 3, rad + Math.PI * 4 / 3);
+      this.drawDonut(ctx, -rad + Math.PI * 2 / 3, -rad + Math.PI * 4 / 3);
       this.setRadialGradient(ctx, "#27A1D4", "#2182AD");
-      this.drawDonut(ctx, rad + Math.PI * 4 / 3, rad + Math.PI * 2);
+      this.drawDonut(ctx, -rad + Math.PI * 4 / 3, -rad + Math.PI * 2);
     }
   }, {
     key: "drawDonut",
@@ -470,7 +505,7 @@ var Disc = function (_MovingObject) {
       ctx.closePath();
 
       // add shadow
-      this.addShadow(ctx);
+      // this.addShadow(ctx);
 
       ctx.fill();
     }
