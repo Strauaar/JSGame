@@ -197,18 +197,24 @@ var Game = function () {
   }, {
     key: 'randomPosition',
     value: function randomPosition() {
-      // let x_bounds_left = [canvasWidth() - 50, 0];
-      // let x_bounds_right = [canvasWidth(), canvasWidth() + 50];
-      // let y_bounds_top = [canvasHeight() - 50, 0];
-      // let y_bounds_bottom = [canvasHeight(), canvasHeight() + 50];
       var x = void 0;
       var y = void 0;
-      switch (Math.floor(Math.random() * 5)) {
-
+      switch (Math.floor(Math.random() * 4)) {
+        case 0:
+          x = -50;
+          y = Math.random() * this.DIM_Y;
+        case 1:
+          x = 50 + this.DIM_X;
+          y = Math.random() * this.DIM_Y;
+        case 2:
+          x = Math.random() * this.DIM_X;
+          y = -50;
+        case 3:
+          x = Math.random() * this.DIM_X;
+          y = 50 + this.DIM_Y;
         default:
           x = 0;
           y = 0;
-
       }
       return [x, y];
     }
