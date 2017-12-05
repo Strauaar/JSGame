@@ -12,7 +12,7 @@ class GameView {
     setInterval( () => {
       this.game.step();
       this.game.draw(ctx);
-    }, 100);
+    }, 60);
   }
 }
 

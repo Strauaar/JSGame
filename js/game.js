@@ -1,4 +1,5 @@
 // TODO: import game components
+import Disc from './disc';
 import Projectile from './projectile';
 import * as Util from './util';
 
@@ -8,7 +9,7 @@ class Game {
     // TODO: Implement bullet as powerup
     // this.bullets = [];
 
-    // this.disc = new Disc(params here);
+    this.disc = new Disc();
     this.DIM_X = 800;
     this.DIM_Y = 800;
     this.initProjectiles = this.initProjectiles.bind(this);

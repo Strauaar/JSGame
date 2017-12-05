@@ -4,7 +4,6 @@ class MovingObject {
     this.pos = options.pos;
     this.vel = options.vel;
     this.radius = options.radius;
-    // this.color = random color
     this.game = options.game;
     this.color = options.color;
     this.draw = this.draw.bind(this);
