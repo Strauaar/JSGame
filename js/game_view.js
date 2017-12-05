@@ -8,21 +8,12 @@ class GameView {
   }
 
 
-  start() {
-    // this.ctx.fillStyle = 'red';
-    // this.ctx.beginPath();
-    // this.ctx.arc(
-    //   0,
-    //   0,
-    //   120,
-    //   2 * Math.PI,
-    //   false
-    // );
-    // this.ctx.fill();
+  start(ctx) {
+
     setInterval( () => {
-      // this.game.step();
-      // this.game.draw(this.ctx);
-    }, 20);
+      this.game.step();
+      this.game.draw(ctx);
+    }, 100);
   }
 }
 

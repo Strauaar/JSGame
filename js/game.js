@@ -3,7 +3,7 @@ import Projectile from './projectile';
 import * as Util from './util';
 
 class Game {
-  constructor(){
+  constructor() {
     this.projectiles = [];
     // TODO: Implement bullet as powerup
     // this.bullets = [];
@@ -13,7 +13,7 @@ class Game {
     this.DIM_Y = window.innerHeight;
     this.initProjectiles = this.initProjectiles.bind(this);
     this.initProjectiles();
-    this.randomPosition = this.randomPosition.bind(this);
+
     this.draw = this.draw.bind(this);
     this.moveObjects = this.moveObjects.bind(this);
     this.wrap = this.wrap.bind(this);
@@ -24,19 +24,23 @@ class Game {
   }
 
   initProjectiles() {
+    let x = window.innerWidth / 2;
+    let y = window.innerHeight / 2;
     setInterval( () => {
-      this.projectiles.push(new Projectile())
-    }, 1000)
-  }
+      // console.log(this.projectiles[0].pos);
+      this.projectiles.push(new Projectile({color: 'red', pos: [0, 0], vel: [1,1], game: this}));}, 1000)
+      // setInterval( () => {
+      //
+      //   console.log(this.projectiles[0].pos);
+      // }, 1000)
 
-  randomPosition() {
-
+    // }, 1000);
   }
 
   draw(ctx) {
     ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
     this.projectiles.forEach(projectile => {
-      projectile.draw();
+      projectile.draw(ctx);
     });
   }
 
@@ -44,6 +48,9 @@ class Game {
     // this.allObjects().forEach(object => {
     //   object.move();
     // });
+    this.projectiles.forEach(projectile => {
+      projectile.move();
+    });
   }
 
   wrap() {
@@ -56,7 +63,7 @@ class Game {
 
   step() {
     this.moveObjects();
-    this.checkCollisions();
+    // this.checkCollisions();
   }
 
   allObjects() {

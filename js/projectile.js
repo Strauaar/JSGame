@@ -10,3 +10,5 @@ class Projectile extends MovingObject {
 
   }
 }
+
+export default Projectile;

@@ -115,21 +115,13 @@ var GameView = function () {
 
   _createClass(GameView, [{
     key: 'start',
-    value: function start() {
-      // this.ctx.fillStyle = 'red';
-      // this.ctx.beginPath();
-      // this.ctx.arc(
-      //   0,
-      //   0,
-      //   120,
-      //   2 * Math.PI,
-      //   false
-      // );
-      // this.ctx.fill();
+    value: function start(ctx) {
+      var _this = this;
+
       setInterval(function () {
-        // this.game.step();
-        // this.game.draw(this.ctx);
-      }, 20);
+        _this.game.step();
+        _this.game.draw(ctx);
+      }, 100);
     }
   }]);
 
@@ -179,7 +171,7 @@ var Game = function () {
     this.DIM_Y = window.innerHeight;
     this.initProjectiles = this.initProjectiles.bind(this);
     this.initProjectiles();
-    this.randomPosition = this.randomPosition.bind(this);
+
     this.draw = this.draw.bind(this);
     this.moveObjects = this.moveObjects.bind(this);
     this.wrap = this.wrap.bind(this);
@@ -193,19 +185,25 @@ var Game = function () {
     value: function initProjectiles() {
       var _this = this;
 
+      var x = window.innerWidth / 2;
+      var y = window.innerHeight / 2;
       setInterval(function () {
-        _this.projectiles.push(new _projectile2.default());
+        // console.log(this.projectiles[0].pos);
+        _this.projectiles.push(new _projectile2.default({ color: 'red', pos: [0, 0], vel: [1, 1], game: _this }));
       }, 1000);
+      // setInterval( () => {
+      //
+      //   console.log(this.projectiles[0].pos);
+      // }, 1000)
+
+      // }, 1000);
     }
-  }, {
-    key: 'randomPosition',
-    value: function randomPosition() {}
   }, {
     key: 'draw',
     value: function draw(ctx) {
       ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
       this.projectiles.forEach(function (projectile) {
-        projectile.draw();
+        projectile.draw(ctx);
       });
     }
   }, {
@@ -214,6 +212,9 @@ var Game = function () {
       // this.allObjects().forEach(object => {
       //   object.move();
       // });
+      this.projectiles.forEach(function (projectile) {
+        projectile.move();
+      });
     }
   }, {
     key: 'wrap',
@@ -227,7 +228,7 @@ var Game = function () {
     key: 'step',
     value: function step() {
       this.moveObjects();
-      this.checkCollisions();
+      // this.checkCollisions();
     }
   }, {
     key: 'allObjects',
@@ -252,6 +253,10 @@ exports.default = Game;
 
 "use strict";
 
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -285,12 +290,18 @@ var Projectile = function (_MovingObject) {
   return Projectile;
 }(_moving_object2.default);
 
+exports.default = Projectile;
+
 /***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -305,34 +316,29 @@ var MovingObject = function () {
     this.radius = options.radius;
     // this.color = random color
     this.game = options.game;
+    this.color = options.color;
     this.draw = this.draw.bind(this);
     this.move = this.move.bind(this);
     this.didCollideWith = this.didCollideWith.bind(this);
   }
 
   _createClass(MovingObject, [{
-    key: "draw",
+    key: 'draw',
     value: function draw(ctx) {
-      // ctx.fillStyle = this.color
-      // ctx.beginPath();
-      // ctx.arc(
-      //   this.pos[0],
-      //   this.pos[1],
-      //   this.radius,
-      //   0,
-      //   2 * Math.PI,
-      //   false
-      // );
-      // ctx.fill();
+      // console.log(this);
+      ctx.fillStyle = 'green';
+      ctx.beginPath();
+      ctx.arc(this.pos[0], this.pos[1], 20, 0, 2 * Math.PI, false);
+      ctx.fill();
     }
   }, {
-    key: "move",
+    key: 'move',
     value: function move() {
       this.pos[0] += this.vel[0];
-      this.pos[1] += this.vel[0];
+      this.pos[1] += this.vel[1];
     }
   }, {
-    key: "didCollideWith",
+    key: 'didCollideWith',
     value: function didCollideWith(otherObejct) {
       // let totalRadius = this.radius + otherObejct.radius;
       // if (distance formula <= totalRadius){
@@ -346,7 +352,7 @@ var MovingObject = function () {
   return MovingObject;
 }();
 
-module.exports = MovingObject;
+exports.default = MovingObject;
 
 /***/ }),
 /* 5 */
@@ -362,6 +368,24 @@ var COLOR = ['red', 'blue', 'green'];
 
 var randomColor = exports.randomColor = function randomColor() {
   return COLOR[Math.floor(Math.random() * COLOR.length)];
+};
+
+var canvasHeight = exports.canvasHeight = function canvasHeight() {
+  return window.innerHeight;
+};
+
+var canvasWidth = exports.canvasWidth = function canvasWidth() {
+  return window.innerWidth;
+};
+
+var randomPosition = exports.randomPosition = function randomPosition() {
+  // let x_bounds_left = [canvasWidth() - 50, 0];
+  // let x_bounds_right = [canvasWidth(), canvasWidth() + 50];
+  // let y_bounds_top = [canvasHeight() - 50, 0];
+  // let y_bounds_bottom = [canvasHeight(), canvasHeight() + 50];
+  var x = Math.random() * canvaswidth();
+  var y = Math.random() * canvasHeight();
+  return [x, y];
 };
 
 /***/ })
