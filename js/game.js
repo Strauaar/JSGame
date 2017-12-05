@@ -86,8 +86,13 @@ class Game {
     let rel_x;
     let rel_y;
     let timeout;
+    let start_time;
+    this.disc.start_time = 1;
     const registerMovement = (e) => {
       clearTimeout(timeout);
+      if(this.disc.start_time === 0){
+          this.disc.start_time = Date.now();
+      }
       rel_x = Util.relative_x(e.clientX, this.DIM_X);
       rel_y = Util.relative_y(e.clientY, this.DIM_Y);
       this.disc.draw(this.ctx, rel_x, rel_y, Math.atan(rel_y/rel_x));
@@ -105,6 +110,9 @@ class Game {
     };
 
     const registerStaticPosition = (e) => {
+      this.disc.end_time = Date.now();
+      console.log(this.disc.end_time - this.disc.start_time);
+      this.disc.start_time = 0;
       rel_x = Util.relative_x(e.detail.clientX, this.DIM_X);
       rel_y = Util.relative_y(e.detail.clientY, this.DIM_Y);
       setInterval(() => {this.disc.draw(this.ctx, rel_x, rel_y, Math.atan(rel_y/rel_x))}, 1);

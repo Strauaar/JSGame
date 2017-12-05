@@ -319,8 +319,13 @@ var Game = function () {
       var rel_x = void 0;
       var rel_y = void 0;
       var timeout = void 0;
+      var start_time = void 0;
+      this.disc.start_time = 1;
       var registerMovement = function registerMovement(e) {
         clearTimeout(timeout);
+        if (_this2.disc.start_time === 0) {
+          _this2.disc.start_time = Date.now();
+        }
         rel_x = Util.relative_x(e.clientX, _this2.DIM_X);
         rel_y = Util.relative_y(e.clientY, _this2.DIM_Y);
         _this2.disc.draw(_this2.ctx, rel_x, rel_y, Math.atan(rel_y / rel_x));
@@ -338,6 +343,9 @@ var Game = function () {
       };
 
       var registerStaticPosition = function registerStaticPosition(e) {
+        _this2.disc.end_time = Date.now();
+        console.log(_this2.disc.end_time - _this2.disc.start_time);
+        _this2.disc.start_time = 0;
         rel_x = Util.relative_x(e.detail.clientX, _this2.DIM_X);
         rel_y = Util.relative_y(e.detail.clientY, _this2.DIM_Y);
         setInterval(function () {
@@ -527,6 +535,7 @@ var Disc = function (_MovingObject) {
   }, {
     key: "caluclateCollision",
     value: function caluclateCollision(otherObject) {
+
       otherObject.vel[0] = -1 * otherObject.vel[0];
       otherObject.vel[1] = -1 * otherObject.vel[1];
     }

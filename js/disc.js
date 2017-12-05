@@ -84,6 +84,7 @@ class Disc extends MovingObject{
   }
 
   caluclateCollision(otherObject) {
+    
     otherObject.vel[0] = -1 * otherObject.vel[0];
     otherObject.vel[1] = -1 * otherObject.vel[1];
   }
