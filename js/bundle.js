@@ -204,8 +204,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // TODO: import game components
-
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _disc = __webpack_require__(4);
 
@@ -244,7 +243,7 @@ var Game = function () {
     this.draw = this.draw.bind(this);
     this.moveObjects = this.moveObjects.bind(this);
     this.wrap = this.wrap.bind(this);
-    this.checkCollisions = this.checkCollisions.bind(this);
+    this.checkCollisionsWithDisc = this.checkCollisionsWithDisc.bind(this);
     this.step = this.step.bind(this);
     this.allObjects = this.allObjects.bind(this);
   }
@@ -371,15 +370,27 @@ var Game = function () {
     key: 'wrap',
     value: function wrap() {}
   }, {
-    key: 'checkCollisions',
-    value: function checkCollisions() {
-      //nested loop for checking all objects
+    key: 'checkCollisionsWithDisc',
+    value: function checkCollisionsWithDisc() {
+      var totalRadius = void 0;
+      var object_array = this.allObjects();
+      var distance = void 0;
+      for (var i = 0; i < object_array.length; i++) {
+        totalRadius = object_array[i].radius + this.disc.outerRadius;
+        distance = Util.distance(this.disc.pos[0], this.disc.pos[1], object_array[i].pos[0], object_array[i].pos[1]);
+
+        if (distance <= totalRadius) {
+          this.disc.caluclateCollision(object_array[i]);
+          // object_array[i].vel[0] = -1 * object_array[i].vel[0];
+          // object_array[i].vel[1] = -1 * object_array[i].vel[1];
+        } else {}
+      }
     }
   }, {
     key: 'step',
     value: function step() {
       this.moveObjects();
-      // this.checkCollisions();
+      this.checkCollisionsWithDisc();
     }
   }, {
     key: 'allObjects',
@@ -439,6 +450,7 @@ var Disc = function (_MovingObject) {
     _this.drawDonut = _this.drawDonut.bind(_this);
     _this.move = _this.move.bind(_this);
     _this.setRadialGradient = _this.setRadialGradient.bind(_this);
+    _this.caluclateCollision = _this.caluclateCollision.bind(_this);
     return _this;
   }
 
@@ -511,6 +523,12 @@ var Disc = function (_MovingObject) {
       grd.addColorStop(0, sgc);
       grd.addColorStop(1, bgc);
       ctx.fillStyle = grd;
+    }
+  }, {
+    key: "caluclateCollision",
+    value: function caluclateCollision(otherObject) {
+      otherObject.vel[0] = -1 * otherObject.vel[0];
+      otherObject.vel[1] = -1 * otherObject.vel[1];
     }
   }]);
 
@@ -606,6 +624,10 @@ var relative_y = exports.relative_y = function relative_y(y_coord, y_dim) {
     rel_y = (y_coord - y_dim / 2) * -1;
   }
   return rel_y;
+};
+
+var distance = exports.distance = function distance(x1, y1, x2, y2) {
+  return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 };
 
 /***/ })

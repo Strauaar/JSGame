@@ -1,4 +1,3 @@
-// TODO: import game components
 import Disc from './disc';
 import Projectile from './projectile';
 import * as Util from './util';
@@ -20,7 +19,7 @@ class Game {
     this.draw = this.draw.bind(this);
     this.moveObjects = this.moveObjects.bind(this);
     this.wrap = this.wrap.bind(this);
-    this.checkCollisions = this.checkCollisions.bind(this);
+    this.checkCollisionsWithDisc = this.checkCollisionsWithDisc.bind(this);
     this.step = this.step.bind(this);
     this.allObjects = this.allObjects.bind(this);
   }
@@ -135,13 +134,26 @@ class Game {
 
   }
 
-  checkCollisions() {
-    //nested loop for checking all objects
+  checkCollisionsWithDisc() {
+    let totalRadius;
+    let object_array = this.allObjects();
+    let distance;
+    for(let i = 0; i < object_array.length; i++) {
+      totalRadius = object_array[i].radius + this.disc.outerRadius;
+      distance = Util.distance(this.disc.pos[0], this.disc.pos[1], object_array[i].pos[0], object_array[i].pos[1])
+
+      if(distance <= totalRadius) {
+        this.disc.caluclateCollision(object_array[i]);
+        // object_array[i].vel[0] = -1 * object_array[i].vel[0];
+        // object_array[i].vel[1] = -1 * object_array[i].vel[1];
+      } else {
+      }
+    }
   }
 
   step() {
     this.moveObjects();
-    // this.checkCollisions();
+    this.checkCollisionsWithDisc();
   }
 
   allObjects() {

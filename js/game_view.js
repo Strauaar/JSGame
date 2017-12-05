@@ -7,7 +7,6 @@ class GameView {
     this.start = this.start.bind(this);
   }
 
-
   start(ctx) {
     setInterval( () => {
       this.game.step();

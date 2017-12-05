@@ -13,6 +13,7 @@ class Disc extends MovingObject{
     this.drawDonut = this.drawDonut.bind(this);
     this.move = this.move.bind(this);
     this.setRadialGradient = this.setRadialGradient.bind(this);
+    this.caluclateCollision = this.caluclateCollision.bind(this);
   }
 
   // renderFragments() {
@@ -80,6 +81,11 @@ class Disc extends MovingObject{
       grd.addColorStop(0,sgc);
       grd.addColorStop(1,bgc);
       ctx.fillStyle = grd;
+  }
+
+  caluclateCollision(otherObject) {
+    otherObject.vel[0] = -1 * otherObject.vel[0];
+    otherObject.vel[1] = -1 * otherObject.vel[1];
   }
 
 }

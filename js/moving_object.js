@@ -1,4 +1,3 @@
-
 class MovingObject {
   constructor(options) {
     this.pos = options.pos;
