@@ -98,6 +98,10 @@ class Game {
           this.disc.start_time = Date.now();
           this.disc.start_angle = Util.calculateRad(rel_x, rel_y, theta);
       }
+      this.disc.end_angle = Util.calculateRad(rel_x, rel_y, theta);
+      // console.log(this.disc.end_angle);
+      let angular_vel = Util.calculateAngVelocity(this.disc);
+      this.disc.angular_vel = angular_vel;
       this.disc.draw(this.ctx, rel_x, rel_y, theta);
       timeout = setTimeout(function () {
           var event = new CustomEvent("mousestop", {
@@ -117,9 +121,6 @@ class Game {
       rel_y = Util.relative_y(e.detail.clientY, this.DIM_Y);
       theta = Math.atan(rel_y/rel_x);
       this.disc.end_time = Date.now();
-      this.disc.end_angle = Util.calculateRad(rel_x, rel_y, theta);
-      // console.log(this.disc.end_time - this.disc.start_time);
-      // console.log(this.disc.end_angle - this.disc.start_angle);
       this.disc.start_time = 0;
       setInterval(() => {this.disc.draw(this.ctx, rel_x, rel_y, theta)}, 1);
     };

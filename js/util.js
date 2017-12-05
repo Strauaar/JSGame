@@ -49,3 +49,10 @@ export const calculateRad = (rel_x, rel_y, theta) => {
   }
   return rad;
 }
+
+export const calculateAngVelocity = (disc) => {
+  let dTheta = disc.end_angle - disc.start_angle;
+  let dTime = disc.end_time - disc.start_time;
+  let omega = dTheta/dTime;
+  return omega * 10;
+}

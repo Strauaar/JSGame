@@ -331,6 +331,10 @@ var Game = function () {
           _this2.disc.start_time = Date.now();
           _this2.disc.start_angle = Util.calculateRad(rel_x, rel_y, theta);
         }
+        _this2.disc.end_angle = Util.calculateRad(rel_x, rel_y, theta);
+        // console.log(this.disc.end_angle);
+        var angular_vel = Util.calculateAngVelocity(_this2.disc);
+        _this2.disc.angular_vel = angular_vel;
         _this2.disc.draw(_this2.ctx, rel_x, rel_y, theta);
         timeout = setTimeout(function () {
           var event = new CustomEvent("mousestop", {
@@ -350,9 +354,6 @@ var Game = function () {
         rel_y = Util.relative_y(e.detail.clientY, _this2.DIM_Y);
         theta = Math.atan(rel_y / rel_x);
         _this2.disc.end_time = Date.now();
-        _this2.disc.end_angle = Util.calculateRad(rel_x, rel_y, theta);
-        // console.log(this.disc.end_time - this.disc.start_time);
-        // console.log(this.disc.end_angle - this.disc.start_angle);
         _this2.disc.start_time = 0;
         setInterval(function () {
           _this2.disc.draw(_this2.ctx, rel_x, rel_y, theta);
@@ -655,6 +656,13 @@ var calculateRad = exports.calculateRad = function calculateRad(rel_x, rel_y, th
     rad = Math.PI * 3 / 2 + (Math.PI / 2 + theta);
   }
   return rad;
+};
+
+var calculateAngVelocity = exports.calculateAngVelocity = function calculateAngVelocity(disc) {
+  var dTheta = disc.end_angle - disc.start_angle;
+  var dTime = disc.end_time - disc.start_time;
+  var omega = dTheta / dTime;
+  return omega * 10;
 };
 
 /***/ })
