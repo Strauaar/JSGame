@@ -441,10 +441,12 @@ var Game = function () {
     this.moveObjects = this.moveObjects.bind(this);
     this.wrap = this.wrap.bind(this);
     this.checkCollisionsWithDisc = this.checkCollisionsWithDisc.bind(this);
+    this.checkCollisionsWithBullet = this.checkCollisionsWithBullet.bind(this);
     this.step = this.step.bind(this);
     this.allObjects = this.allObjects.bind(this);
     this.shootBullet = this.shootBullet.bind(this);
     this.removePowerup = this.removePowerup.bind(this);
+    this.removeObject = this.removeObject.bind(this);
   }
 
   _createClass(Game, [{
@@ -456,7 +458,7 @@ var Game = function () {
       setInterval(function () {
         position = _this.randomPosition();
         _this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: position, vel: _this.findCenter(position), radius: 20, game: _this }));
-      }, 5000);
+      }, 1000);
     }
   }, {
     key: 'initPowerUps',
@@ -475,7 +477,7 @@ var Game = function () {
             _this2.powerups.push(new _power_up2.default({ pos: position, vel: _this2.findCenter(position), game: _this2, disc: _this2.disc }));
             break;
         }
-      }, 30000);
+      }, 5000);
     }
   }, {
     key: 'randomPosition',
@@ -590,8 +592,13 @@ var Game = function () {
     key: 'draw',
     value: function draw(ctx) {
       ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
+      // ctx.fillStyle = "#2c2d23";
+      // ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
       this.allObjects().forEach(function (obj) {
         obj.draw(ctx);
+      });
+      this.bullets.forEach(function (bullet) {
+        bullet.draw(ctx);
       });
     }
   }, {
@@ -603,6 +610,9 @@ var Game = function () {
       // console.log(this.disc.dTheta);
       this.allObjects().forEach(function (obj) {
         obj.move();
+      });
+      this.bullets.forEach(function (bullet) {
+        bullet.move();
       });
     }
   }, {
@@ -626,10 +636,29 @@ var Game = function () {
       }
     }
   }, {
+    key: 'checkCollisionsWithBullet',
+    value: function checkCollisionsWithBullet() {
+      var totalRadius = void 0;
+      var object_array = this.allObjects();
+      var distance = void 0;
+      for (var j = 0; j < this.bullets.length; j++) {
+        for (var i = 0; i < object_array.length; i++) {
+          totalRadius = object_array[i].radius + this.bullets[j].radius;
+          distance = Util.distance(this.bullets[j].pos[0], this.bullets[j].pos[1], object_array[i].pos[0], object_array[i].pos[1]);
+
+          if (distance <= totalRadius) {
+            // debugger;
+            this.removeObject(object_array[i]);
+          }
+        }
+      }
+    }
+  }, {
     key: 'step',
     value: function step() {
       this.moveObjects();
       this.checkCollisionsWithDisc();
+      this.checkCollisionsWithBullet();
     }
   }, {
     key: 'allObjects',
@@ -638,7 +667,7 @@ var Game = function () {
       // all.push(this.disc);
       // TODO: Add other objects
       all = all.concat(this.powerups);
-      all = all.concat(this.bullets);
+      // all = all.concat(this.bullets);
       return all;
     }
   }, {
@@ -652,6 +681,17 @@ var Game = function () {
     value: function removePowerup(otherObject) {
       var index = this.powerups.indexOf(otherObject);
       this.powerups.splice(index, 1);
+    }
+  }, {
+    key: 'removeObject',
+    value: function removeObject(otherObject) {
+      if (otherObject instanceof _projectile2.default) {
+        var index = this.projectiles.indexOf(otherObject);
+        this.projectiles.splice(index, 1);
+      } else if (otherObject instanceof _bullet2.default) {
+        var _index = this.bullets.indexOf(otherObject);
+        this.bullets.splice(_index, 1);
+      }
     }
   }]);
 

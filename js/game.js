@@ -24,10 +24,12 @@ class Game {
     this.moveObjects = this.moveObjects.bind(this);
     this.wrap = this.wrap.bind(this);
     this.checkCollisionsWithDisc = this.checkCollisionsWithDisc.bind(this);
+    this.checkCollisionsWithBullet = this.checkCollisionsWithBullet.bind(this);
     this.step = this.step.bind(this);
     this.allObjects = this.allObjects.bind(this);
     this.shootBullet = this.shootBullet.bind(this);
     this.removePowerup = this.removePowerup.bind(this);
+    this.removeObject = this.removeObject.bind(this);
   }
 
   initProjectiles() {
@@ -35,7 +37,7 @@ class Game {
     setInterval( () => {
       position = this.randomPosition();
       this.projectiles.push(new Projectile({color: Util.randomColor(), pos: position, vel: this.findCenter(position), radius: 20, game: this}));
-    }, 5000)
+    }, 1000)
   }
 
   initPowerUps() {
@@ -51,7 +53,7 @@ class Game {
           this.powerups.push(new PowerUp({pos:position, vel: this.findCenter(position), game: this, disc: this.disc}));
           break;
       }
-    }, 30000)
+    }, 5000)
   }
 
   randomPosition() {
@@ -158,9 +160,14 @@ class Game {
 
   draw(ctx) {
     ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
+    // ctx.fillStyle = "#2c2d23";
+    // ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
     this.allObjects().forEach(obj => {
       obj.draw(ctx);
     });
+    this.bullets.forEach(bullet => {
+      bullet.draw(ctx);
+    })
   }
 
   moveObjects() {
@@ -170,6 +177,9 @@ class Game {
     // console.log(this.disc.dTheta);
     this.allObjects().forEach(obj => {
       obj.move();
+    });
+    this.bullets.forEach(bullet => {
+      bullet.move();
     });
   }
 
@@ -194,9 +204,27 @@ class Game {
     }
   }
 
+  checkCollisionsWithBullet() {
+    let totalRadius;
+    let object_array = this.allObjects();
+    let distance;
+    for(let j = 0; j < this.bullets.length; j++) {
+      for(let i = 0; i < object_array.length; i++) {
+        totalRadius = object_array[i].radius + this.bullets[j].radius;
+        distance = Util.distance(this.bullets[j].pos[0], this.bullets[j].pos[1], object_array[i].pos[0], object_array[i].pos[1])
+
+        if(distance <= totalRadius) {
+          // debugger;
+          this.removeObject(object_array[i]);
+        }
+      }
+    }
+  }
+
   step() {
     this.moveObjects();
     this.checkCollisionsWithDisc();
+    this.checkCollisionsWithBullet();
   }
 
   allObjects() {
@@ -204,7 +232,7 @@ class Game {
     // all.push(this.disc);
     // TODO: Add other objects
     all = all.concat(this.powerups);
-    all = all.concat(this.bullets);
+    // all = all.concat(this.bullets);
     return all;
 
   }
@@ -217,6 +245,16 @@ class Game {
   removePowerup(otherObject) {
     let index = this.powerups.indexOf(otherObject);
     this.powerups.splice(index, 1);
+  }
+
+  removeObject(otherObject) {
+    if(otherObject instanceof Projectile) {
+      let index = this.projectiles.indexOf(otherObject);
+      this.projectiles.splice(index, 1);
+    } else if (otherObject instanceof Bullet) {
+      let index = this.bullets.indexOf(otherObject);
+      this.bullets.splice(index, 1);
+    }
   }
 }
 
