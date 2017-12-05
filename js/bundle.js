@@ -199,22 +199,24 @@ var Game = function () {
     value: function randomPosition() {
       var x = void 0;
       var y = void 0;
-      switch (Math.floor(Math.random() * 4)) {
+      var rand = Math.floor(Math.random() * 4);
+      switch (rand) {
         case 0:
           x = -50;
           y = Math.random() * this.DIM_Y;
+          break;
         case 1:
           x = 50 + this.DIM_X;
           y = Math.random() * this.DIM_Y;
+          break;
         case 2:
           x = Math.random() * this.DIM_X;
           y = -50;
+          break;
         case 3:
           x = Math.random() * this.DIM_X;
           y = 50 + this.DIM_Y;
-        default:
-          x = 0;
-          y = 0;
+          break;
       }
       return [x, y];
     }
@@ -224,18 +226,20 @@ var Game = function () {
       var rel_x = void 0;
       var rel_y = void 0;
       if (pos[0] < this.DIM_X / 2) {
-        rel_x = this.DIM_X / 2 - pos[0];
+        rel_x = (this.DIM_X / 2 - pos[0]) * -1;
       } else {
         rel_x = pos[0] - this.DIM_X / 2;
       }
       if (pos[1] < this.DIM_Y / 2) {
-        rel_y = this.DIM_Y / 2 - pos[1];
+        rel_y = (this.DIM_Y / 2 - pos[1]) * -1;
       } else {
         rel_y = pos[1] - this.DIM_Y / 2;
       }
       var unit_vec_helper = Math.sqrt(Math.pow(rel_x, 2) + Math.pow(rel_y, 2));
-
-      return [rel_x / unit_vec_helper, rel_y / unit_vec_helper];
+      var x_unit_vec = rel_x / unit_vec_helper * 10;
+      var y_unit_vec = rel_y / unit_vec_helper * 10;
+      // debugger;
+      return [x_unit_vec, y_unit_vec];
     }
   }, {
     key: 'draw',
