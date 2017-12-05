@@ -233,9 +233,9 @@ var Game = function () {
     // TODO: Implement bullet as powerup
     // this.bullets = [];
 
-    this.disc = new _disc2.default();
     this.DIM_X = 800;
     this.DIM_Y = 800;
+    this.disc = new _disc2.default({ pos: [this.DIM_X / 2, this.DIM_Y / 2], game: this });
     this.initProjectiles = this.initProjectiles.bind(this);
     this.initProjectiles();
     this.randomPosition = this.randomPosition.bind(this);
@@ -380,17 +380,26 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Disc = function () {
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Disc = function (_MovingObject) {
+    _inherits(Disc, _MovingObject);
+
     function Disc(options) {
         _classCallCheck(this, Disc);
 
-        // super(options);
-        this.outerRadius = 150;
-        this.innerRadius = 100;
-        this.draw = this.draw.bind(this);
-        this.drawDonut = this.drawDonut.bind(this);
-        this.move = this.move.bind(this);
-        this.setRadialGradient = this.setRadialGradient.bind(this);
+        var _this = _possibleConstructorReturn(this, (Disc.__proto__ || Object.getPrototypeOf(Disc)).call(this, options));
+
+        _this.outerRadius = 150;
+        _this.innerRadius = 100;
+        _this.draw = _this.draw.bind(_this);
+        _this.drawDonut = _this.drawDonut.bind(_this);
+        _this.move = _this.move.bind(_this);
+        _this.setRadialGradient = _this.setRadialGradient.bind(_this);
+
+        return _this;
     }
 
     _createClass(Disc, [{
@@ -405,11 +414,11 @@ var Disc = function () {
         }
     }, {
         key: "drawDonut",
-        value: function drawDonut(ctx, sRadian, eRadian) {
+        value: function drawDonut(ctx, startRadian, endRadian) {
 
             ctx.beginPath();
-            ctx.arc(300, 300, this.outerRadius, sRadian, eRadian, false); // Outer: CCW
-            ctx.arc(300, 300, this.innerRadius, eRadian, sRadian, true); // Inner: CW
+            ctx.arc(this.pos[0], this.pos[1], this.outerRadius, startRadian, endRadian, false); // Outer: CCW
+            ctx.arc(this.pos[0], this.pos[1], this.innerRadius, endRadian, startRadian, true); // Inner: CW
             ctx.closePath();
 
             // add shadow
@@ -431,7 +440,7 @@ var Disc = function () {
     }, {
         key: "setRadialGradient",
         value: function setRadialGradient(ctx, sgc, bgc) {
-            var grd = ctx.createRadialGradient(300, 300, this.innerRadius + 5, 300, 300, this.outerRadius);
+            var grd = ctx.createRadialGradient(this.pos[0], this.pos[1], this.innerRadius + 5, this.pos[0], this.pos[1], this.outerRadius);
             grd.addColorStop(0, sgc);
             grd.addColorStop(1, bgc);
             ctx.fillStyle = grd;
@@ -439,7 +448,7 @@ var Disc = function () {
     }]);
 
     return Disc;
-}();
+}(_moving_object2.default);
 
 exports.default = Disc;
 

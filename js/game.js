@@ -9,9 +9,9 @@ class Game {
     // TODO: Implement bullet as powerup
     // this.bullets = [];
 
-    this.disc = new Disc();
     this.DIM_X = 800;
     this.DIM_Y = 800;
+    this.disc = new Disc({pos: [this.DIM_X / 2, this.DIM_Y / 2], game: this});
     this.initProjectiles = this.initProjectiles.bind(this);
     this.initProjectiles();
     this.randomPosition = this.randomPosition.bind(this);

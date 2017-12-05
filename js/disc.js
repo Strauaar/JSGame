@@ -1,14 +1,15 @@
 import MovingObject from './moving_object';
 
-class Disc {
+class Disc extends MovingObject{
   constructor(options){
-    // super(options);
+    super(options);
     this.outerRadius = 150;
     this.innerRadius = 100;
     this.draw = this.draw.bind(this);
     this.drawDonut = this.drawDonut.bind(this);
     this.move = this.move.bind(this);
     this.setRadialGradient = this.setRadialGradient.bind(this);
+
   }
 
   draw(ctx) {
@@ -20,11 +21,11 @@ class Disc {
     this.drawDonut(ctx, Math.PI * 4/3, Math.PI * 2)
   }
 
-  drawDonut(ctx, sRadian, eRadian){
+  drawDonut(ctx, startRadian, endRadian){
 
       ctx.beginPath();
-          ctx.arc(300, 300, this.outerRadius, sRadian, eRadian, false); // Outer: CCW
-          ctx.arc(300, 300, this.innerRadius, eRadian, sRadian, true); // Inner: CW
+          ctx.arc(this.pos[0],  this.pos[1], this.outerRadius, startRadian, endRadian, false); // Outer: CCW
+          ctx.arc(this.pos[0],  this.pos[1], this.innerRadius, endRadian, startRadian, true); // Inner: CW
       ctx.closePath();
 
       // add shadow
@@ -45,7 +46,7 @@ class Disc {
   }
 
   setRadialGradient(ctx, sgc, bgc){
-      let grd = ctx.createRadialGradient(300, 300, this.innerRadius + 5, 300, 300, this.outerRadius);
+      let grd = ctx.createRadialGradient(this.pos[0],  this.pos[1], this.innerRadius + 5, this.pos[0],  this.pos[1], this.outerRadius);
       grd.addColorStop(0,sgc);
       grd.addColorStop(1,bgc);
       ctx.fillStyle = grd;
