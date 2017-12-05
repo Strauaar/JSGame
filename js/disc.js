@@ -33,13 +33,24 @@ class Disc extends MovingObject{
 
   }
 
-  draw(ctx) {
+  draw(ctx, rel_x, rel_y, theta) {
+    let rad;
+    if(rel_x < 0 && rel_y < 0) {
+      rad = Math.PI + theta
+    } else if (rel_x > 0 && rel_y > 0) {
+      rad = theta
+    } else if (rel_x < 0 && rel_y > 0){
+      rad = (Math.PI / 2) + (Math.PI / 2 + theta)
+    } else if (rel_x > 0 && rel_y < 0) {
+      rad = (Math.PI*3/2) + (Math.PI / 2 + theta)
+    }
+
     this.setRadialGradient(ctx, "#DC1C29", "#B7161B");
-    this.drawDonut(ctx, 0, Math.PI * 2/3);
+    this.drawDonut(ctx, rad, rad + Math.PI * 2/3);
     this.setRadialGradient(ctx, "#84BC3D", "#5B8829");
-    this.drawDonut(ctx, Math.PI * 2/3, Math.PI * 4/3)
+    this.drawDonut(ctx,rad + Math.PI * 2/3, rad + Math.PI * 4/3)
     this.setRadialGradient(ctx, "#27A1D4", "#2182AD");
-    this.drawDonut(ctx, Math.PI * 4/3, Math.PI * 2)
+    this.drawDonut(ctx, rad + Math.PI * 4/3, rad + Math.PI * 2)
   }
 
   drawDonut(ctx, startRadian, endRadian){

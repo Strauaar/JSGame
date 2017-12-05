@@ -171,8 +171,8 @@ var GameView = function () {
   function GameView(ctx) {
     _classCallCheck(this, GameView);
 
-    this.game = new _game2.default();
     this.ctx = ctx;
+    this.game = new _game2.default(ctx);
     this.start = this.start.bind(this);
   }
 
@@ -226,13 +226,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Game = function () {
-  function Game() {
+  function Game(ctx) {
     _classCallCheck(this, Game);
 
     this.projectiles = [];
     // TODO: Implement bullet as powerup
     // this.bullets = [];
-
+    this.ctx = ctx;
     this.DIM_X = 800;
     this.DIM_Y = 800;
     this.disc = new _disc2.default({ pos: [this.DIM_X / 2, this.DIM_Y / 2], game: this });
@@ -322,7 +322,10 @@ var Game = function () {
       var registerMovement = function registerMovement(e) {
         rel_x = Util.relative_x(e.clientX, _this2.DIM_X);
         rel_y = Util.relative_y(e.clientY, _this2.DIM_Y);
-        console.log(rel_x, rel_y);
+        _this2.disc.draw(_this2.ctx, rel_x, rel_y, Math.atan(rel_y / rel_x));
+        console.log("rel_x", rel_x);
+        console.log("rel_y", rel_y);
+        console.log("atan", Math.atan(rel_y / rel_x));
       };
       document.addEventListener('mousemove', registerMovement);
     }
@@ -382,7 +385,7 @@ exports.default = Game;
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -400,88 +403,99 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Disc = function (_MovingObject) {
-    _inherits(Disc, _MovingObject);
+  _inherits(Disc, _MovingObject);
 
-    function Disc(options) {
-        _classCallCheck(this, Disc);
+  function Disc(options) {
+    _classCallCheck(this, Disc);
 
-        var _this = _possibleConstructorReturn(this, (Disc.__proto__ || Object.getPrototypeOf(Disc)).call(this, options));
+    var _this = _possibleConstructorReturn(this, (Disc.__proto__ || Object.getPrototypeOf(Disc)).call(this, options));
 
-        _this.outerRadius = 150;
-        _this.innerRadius = 100;
-        _this.fragments = [];
-        _this.theta = 0;
-        // this.renderFragments();
-        _this.addListener();
-        _this.draw = _this.draw.bind(_this);
-        _this.drawDonut = _this.drawDonut.bind(_this);
-        _this.move = _this.move.bind(_this);
-        _this.setRadialGradient = _this.setRadialGradient.bind(_this);
-        return _this;
+    _this.outerRadius = 150;
+    _this.innerRadius = 100;
+    _this.fragments = [];
+    _this.theta = 0;
+    // this.renderFragments();
+    _this.addListener();
+    _this.draw = _this.draw.bind(_this);
+    _this.drawDonut = _this.drawDonut.bind(_this);
+    _this.move = _this.move.bind(_this);
+    _this.setRadialGradient = _this.setRadialGradient.bind(_this);
+    return _this;
+  }
+
+  // renderFragments() {
+  //   let rel_x;
+  //   let rel_y;
+  //   const registerMovement = (e) => {
+  //     if(e.clientX < (this.DIM_X / 2)){
+  //       rel_x = ((this.DIM_X / 2) - pos[0]) * -1;
+  //     }else {
+  //       rel_x = pos[0] - (this.DIM_X / 2);
+  //     }
+  //   }
+  //   document.addEventListener('mousemove', registerMovement)
+  // }
+
+  _createClass(Disc, [{
+    key: "addListener",
+    value: function addListener() {}
+  }, {
+    key: "draw",
+    value: function draw(ctx, rel_x, rel_y, theta) {
+      var rad = void 0;
+      if (rel_x < 0 && rel_y < 0) {
+        rad = Math.PI + theta;
+      } else if (rel_x > 0 && rel_y > 0) {
+        rad = theta;
+      } else if (rel_x < 0 && rel_y > 0) {
+        rad = Math.PI / 2 + (Math.PI / 2 + theta);
+      } else if (rel_x > 0 && rel_y < 0) {
+        rad = Math.PI * 3 / 2 + (Math.PI / 2 + theta);
+      }
+
+      this.setRadialGradient(ctx, "#DC1C29", "#B7161B");
+      this.drawDonut(ctx, rad, rad + Math.PI * 2 / 3);
+      this.setRadialGradient(ctx, "#84BC3D", "#5B8829");
+      this.drawDonut(ctx, rad + Math.PI * 2 / 3, rad + Math.PI * 4 / 3);
+      this.setRadialGradient(ctx, "#27A1D4", "#2182AD");
+      this.drawDonut(ctx, rad + Math.PI * 4 / 3, rad + Math.PI * 2);
     }
+  }, {
+    key: "drawDonut",
+    value: function drawDonut(ctx, startRadian, endRadian) {
 
-    // renderFragments() {
-    //   let rel_x;
-    //   let rel_y;
-    //   const registerMovement = (e) => {
-    //     if(e.clientX < (this.DIM_X / 2)){
-    //       rel_x = ((this.DIM_X / 2) - pos[0]) * -1;
-    //     }else {
-    //       rel_x = pos[0] - (this.DIM_X / 2);
-    //     }
-    //   }
-    //   document.addEventListener('mousemove', registerMovement)
-    // }
+      ctx.beginPath();
+      ctx.arc(this.pos[0], this.pos[1], this.outerRadius, startRadian, endRadian, false); // Outer: CCW
+      ctx.arc(this.pos[0], this.pos[1], this.innerRadius, endRadian, startRadian, true); // Inner: CW
+      ctx.closePath();
 
-    _createClass(Disc, [{
-        key: "addListener",
-        value: function addListener() {}
-    }, {
-        key: "draw",
-        value: function draw(ctx) {
-            this.setRadialGradient(ctx, "#DC1C29", "#B7161B");
-            this.drawDonut(ctx, 0, Math.PI * 2 / 3);
-            this.setRadialGradient(ctx, "#84BC3D", "#5B8829");
-            this.drawDonut(ctx, Math.PI * 2 / 3, Math.PI * 4 / 3);
-            this.setRadialGradient(ctx, "#27A1D4", "#2182AD");
-            this.drawDonut(ctx, Math.PI * 4 / 3, Math.PI * 2);
-        }
-    }, {
-        key: "drawDonut",
-        value: function drawDonut(ctx, startRadian, endRadian) {
+      // add shadow
+      this.addShadow(ctx);
 
-            ctx.beginPath();
-            ctx.arc(this.pos[0], this.pos[1], this.outerRadius, startRadian, endRadian, false); // Outer: CCW
-            ctx.arc(this.pos[0], this.pos[1], this.innerRadius, endRadian, startRadian, true); // Inner: CW
-            ctx.closePath();
+      ctx.fill();
+    }
+  }, {
+    key: "addShadow",
+    value: function addShadow(ctx) {
+      ctx.shadowColor = "#333";
+      ctx.shadowBlur = 6;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
+    }
+  }, {
+    key: "move",
+    value: function move() {}
+  }, {
+    key: "setRadialGradient",
+    value: function setRadialGradient(ctx, sgc, bgc) {
+      var grd = ctx.createRadialGradient(this.pos[0], this.pos[1], this.innerRadius + 5, this.pos[0], this.pos[1], this.outerRadius);
+      grd.addColorStop(0, sgc);
+      grd.addColorStop(1, bgc);
+      ctx.fillStyle = grd;
+    }
+  }]);
 
-            // add shadow
-            this.addShadow(ctx);
-
-            ctx.fill();
-        }
-    }, {
-        key: "addShadow",
-        value: function addShadow(ctx) {
-            ctx.shadowColor = "#333";
-            ctx.shadowBlur = 6;
-            ctx.shadowOffsetX = 0;
-            ctx.shadowOffsetY = 0;
-        }
-    }, {
-        key: "move",
-        value: function move() {}
-    }, {
-        key: "setRadialGradient",
-        value: function setRadialGradient(ctx, sgc, bgc) {
-            var grd = ctx.createRadialGradient(this.pos[0], this.pos[1], this.innerRadius + 5, this.pos[0], this.pos[1], this.outerRadius);
-            grd.addColorStop(0, sgc);
-            grd.addColorStop(1, bgc);
-            ctx.fillStyle = grd;
-        }
-    }]);
-
-    return Disc;
+  return Disc;
 }(_moving_object2.default);
 
 exports.default = Disc;

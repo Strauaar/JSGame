@@ -4,11 +4,11 @@ import Projectile from './projectile';
 import * as Util from './util';
 
 class Game {
-  constructor() {
+  constructor(ctx) {
     this.projectiles = [];
     // TODO: Implement bullet as powerup
     // this.bullets = [];
-
+    this.ctx = ctx;
     this.DIM_X = 800;
     this.DIM_Y = 800;
     this.disc = new Disc({pos: [this.DIM_X / 2, this.DIM_Y / 2], game: this});
@@ -90,7 +90,10 @@ class Game {
     const registerMovement = (e) => {
       rel_x = Util.relative_x(e.clientX, this.DIM_X);
       rel_y = Util.relative_y(e.clientY, this.DIM_Y);
-      console.log(rel_x, rel_y);
+      this.disc.draw(this.ctx, rel_x, rel_y, Math.atan(rel_y/rel_x))
+      console.log("rel_x", rel_x);
+      console.log("rel_y", rel_y);
+      console.log("atan", Math.atan(rel_y/rel_x));
     }
     document.addEventListener('mousemove', registerMovement)
   }
