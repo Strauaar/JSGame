@@ -1,18 +1,22 @@
 import Disc from './disc';
 import Projectile from './projectile';
+import PowerUp from './power_up';
 import * as Util from './util';
+import Bullet from './bullet';
 
 class Game {
   constructor(ctx) {
     this.projectiles = [];
+    this.powerups = [];
     // TODO: Implement bullet as powerup
-    // this.bullets = [];
+    this.bullets = [];
     this.ctx = ctx;
     this.DIM_X = 800;
     this.DIM_Y = 800;
     this.disc = new Disc({pos: [this.DIM_X / 2, this.DIM_Y / 2], game: this});
     this.initProjectiles = this.initProjectiles.bind(this);
     this.initProjectiles();
+    this.initPowerUps();
     this.randomPosition = this.randomPosition.bind(this);
     this.findCenter = this.findCenter.bind(this);
     this.renderFragments();
@@ -22,14 +26,31 @@ class Game {
     this.checkCollisionsWithDisc = this.checkCollisionsWithDisc.bind(this);
     this.step = this.step.bind(this);
     this.allObjects = this.allObjects.bind(this);
+    this.shootBullet = this.shootBullet.bind(this);
   }
 
   initProjectiles() {
     let position;
     setInterval( () => {
       position = this.randomPosition();
-      this.projectiles.push(new Projectile({color: Util.randomColor(), pos: position, vel: this.findCenter(position), game: this}));
-    }, 4000)
+      this.projectiles.push(new Projectile({color: Util.randomColor(), pos: position, vel: this.findCenter(position), radius: 20, game: this}));
+    }, 5000)
+  }
+
+  initPowerUps() {
+    let position;
+    let random_number;
+    position = this.randomPosition();
+    this.powerups.push(new PowerUp({pos:position, vel: this.findCenter(position), game: this, disc: this.disc}));
+    setInterval( () => {
+      random_number = Math.floor(Math.random() * 3);
+      switch(random_number) {
+        default:
+          position = this.randomPosition();
+          this.powerups.push(new PowerUp({pos:position, vel: this.findCenter(position), game: this, disc: this.disc}));
+          break;
+      }
+    }, 30000)
   }
 
   randomPosition() {
@@ -94,12 +115,15 @@ class Game {
       rel_x = Util.relative_x(e.clientX, this.DIM_X);
       rel_y = Util.relative_y(e.clientY, this.DIM_Y);
       theta = Math.atan(rel_y/rel_x);
+      // console.log("rel_x", rel_x);
+      // console.log("rel_y", rel_y);
+      // console.log("theta", theta);
       if(this.disc.start_time === 0){
           this.disc.start_time = Date.now();
           this.disc.start_angle = Util.calculateRad(rel_x, rel_y, theta);
+          // console.log("strt_angle", this.disc.start_angle);
       }
       this.disc.end_angle = Util.calculateRad(rel_x, rel_y, theta);
-      // console.log(this.disc.end_angle);
       this.disc.dTheta = this.disc.end_angle - this.disc.start_angle;
       let angular_vel = Util.calculateAngVelocity(this.disc);
       this.disc.angular_vel = angular_vel;
@@ -123,6 +147,7 @@ class Game {
       theta = Math.atan(rel_y/rel_x);
       this.disc.end_time = Date.now();
       this.disc.start_time = 0;
+      this.disc.dTheta = Math.PI/2;
       setInterval(() => {this.disc.draw(this.ctx, rel_x, rel_y, theta)}, 1);
     };
 
@@ -177,9 +202,15 @@ class Game {
     let all = this.projectiles.slice();
     // all.push(this.disc);
     // TODO: Add other objects
-    // all = all.concat()
+    all = all.concat(this.powerups);
+    all = all.concat(this.bullets);
     return all;
 
+  }
+
+  shootBullet(options) {
+    options.game = this.game;
+    this.bullets.push(new Bullet(options));
   }
 }
 

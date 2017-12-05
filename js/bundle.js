@@ -98,12 +98,20 @@ var MovingObject = function () {
       // console.log(this);
       ctx.fillStyle = this.color;
       ctx.beginPath();
-      ctx.arc(this.pos[0], this.pos[1], 20, 0, 2 * Math.PI, false);
+      ctx.arc(this.pos[0], this.pos[1], this.radius, 0, 2 * Math.PI, false);
       ctx.fill();
     }
   }, {
     key: "move",
     value: function move() {
+      // if(this.pos[0] < 0 || this.pos[0] > this.game.DIM_X) {
+      //   let index = this.game.projectiles.indexOf(this);
+      //   this.game.projectiles.splice(index, 1);
+      // }
+      // if(this.pos[1] < 0 || this.pos[1] > this.game.DIM_Y) {
+      //   let index = this.game.projectiles.indexOf(this);
+      //   this.game.projectiles.splice(index, 1);
+      // }
       this.pos[0] += this.vel[0];
       this.pos[1] += this.vel[1];
     }
@@ -214,9 +222,17 @@ var _projectile = __webpack_require__(5);
 
 var _projectile2 = _interopRequireDefault(_projectile);
 
+var _power_up = __webpack_require__(8);
+
+var _power_up2 = _interopRequireDefault(_power_up);
+
 var _util = __webpack_require__(6);
 
 var Util = _interopRequireWildcard(_util);
+
+var _bullet = __webpack_require__(9);
+
+var _bullet2 = _interopRequireDefault(_bullet);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -229,14 +245,16 @@ var Game = function () {
     _classCallCheck(this, Game);
 
     this.projectiles = [];
+    this.powerups = [];
     // TODO: Implement bullet as powerup
-    // this.bullets = [];
+    this.bullets = [];
     this.ctx = ctx;
     this.DIM_X = 800;
     this.DIM_Y = 800;
     this.disc = new _disc2.default({ pos: [this.DIM_X / 2, this.DIM_Y / 2], game: this });
     this.initProjectiles = this.initProjectiles.bind(this);
     this.initProjectiles();
+    this.initPowerUps();
     this.randomPosition = this.randomPosition.bind(this);
     this.findCenter = this.findCenter.bind(this);
     this.renderFragments();
@@ -246,6 +264,7 @@ var Game = function () {
     this.checkCollisionsWithDisc = this.checkCollisionsWithDisc.bind(this);
     this.step = this.step.bind(this);
     this.allObjects = this.allObjects.bind(this);
+    this.shootBullet = this.shootBullet.bind(this);
   }
 
   _createClass(Game, [{
@@ -256,8 +275,27 @@ var Game = function () {
       var position = void 0;
       setInterval(function () {
         position = _this.randomPosition();
-        _this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: position, vel: _this.findCenter(position), game: _this }));
-      }, 4000);
+        _this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: position, vel: _this.findCenter(position), radius: 20, game: _this }));
+      }, 5000);
+    }
+  }, {
+    key: 'initPowerUps',
+    value: function initPowerUps() {
+      var _this2 = this;
+
+      var position = void 0;
+      var random_number = void 0;
+      position = this.randomPosition();
+      this.powerups.push(new _power_up2.default({ pos: position, vel: this.findCenter(position), game: this, disc: this.disc }));
+      setInterval(function () {
+        random_number = Math.floor(Math.random() * 3);
+        switch (random_number) {
+          default:
+            position = _this2.randomPosition();
+            _this2.powerups.push(new _power_up2.default({ pos: position, vel: _this2.findCenter(position), game: _this2, disc: _this2.disc }));
+            break;
+        }
+      }, 30000);
     }
   }, {
     key: 'randomPosition',
@@ -314,7 +352,7 @@ var Game = function () {
   }, {
     key: 'renderFragments',
     value: function renderFragments() {
-      var _this2 = this;
+      var _this3 = this;
 
       var rel_x = void 0;
       var rel_y = void 0;
@@ -324,19 +362,22 @@ var Game = function () {
       this.disc.start_time = 1;
       var registerMovement = function registerMovement(e) {
         clearTimeout(timeout);
-        rel_x = Util.relative_x(e.clientX, _this2.DIM_X);
-        rel_y = Util.relative_y(e.clientY, _this2.DIM_Y);
+        rel_x = Util.relative_x(e.clientX, _this3.DIM_X);
+        rel_y = Util.relative_y(e.clientY, _this3.DIM_Y);
         theta = Math.atan(rel_y / rel_x);
-        if (_this2.disc.start_time === 0) {
-          _this2.disc.start_time = Date.now();
-          _this2.disc.start_angle = Util.calculateRad(rel_x, rel_y, theta);
+        // console.log("rel_x", rel_x);
+        // console.log("rel_y", rel_y);
+        // console.log("theta", theta);
+        if (_this3.disc.start_time === 0) {
+          _this3.disc.start_time = Date.now();
+          _this3.disc.start_angle = Util.calculateRad(rel_x, rel_y, theta);
+          // console.log("strt_angle", this.disc.start_angle);
         }
-        _this2.disc.end_angle = Util.calculateRad(rel_x, rel_y, theta);
-        // console.log(this.disc.end_angle);
-        _this2.disc.dTheta = _this2.disc.end_angle - _this2.disc.start_angle;
-        var angular_vel = Util.calculateAngVelocity(_this2.disc);
-        _this2.disc.angular_vel = angular_vel;
-        _this2.disc.draw(_this2.ctx, rel_x, rel_y, theta);
+        _this3.disc.end_angle = Util.calculateRad(rel_x, rel_y, theta);
+        _this3.disc.dTheta = _this3.disc.end_angle - _this3.disc.start_angle;
+        var angular_vel = Util.calculateAngVelocity(_this3.disc);
+        _this3.disc.angular_vel = angular_vel;
+        _this3.disc.draw(_this3.ctx, rel_x, rel_y, theta);
         timeout = setTimeout(function () {
           var event = new CustomEvent("mousestop", {
             detail: {
@@ -351,13 +392,14 @@ var Game = function () {
       };
 
       var registerStaticPosition = function registerStaticPosition(e) {
-        rel_x = Util.relative_x(e.detail.clientX, _this2.DIM_X);
-        rel_y = Util.relative_y(e.detail.clientY, _this2.DIM_Y);
+        rel_x = Util.relative_x(e.detail.clientX, _this3.DIM_X);
+        rel_y = Util.relative_y(e.detail.clientY, _this3.DIM_Y);
         theta = Math.atan(rel_y / rel_x);
-        _this2.disc.end_time = Date.now();
-        _this2.disc.start_time = 0;
+        _this3.disc.end_time = Date.now();
+        _this3.disc.start_time = 0;
+        _this3.disc.dTheta = Math.PI / 2;
         setInterval(function () {
-          _this2.disc.draw(_this2.ctx, rel_x, rel_y, theta);
+          _this3.disc.draw(_this3.ctx, rel_x, rel_y, theta);
         }, 1);
       };
 
@@ -415,8 +457,15 @@ var Game = function () {
       var all = this.projectiles.slice();
       // all.push(this.disc);
       // TODO: Add other objects
-      // all = all.concat()
+      all = all.concat(this.powerups);
+      all = all.concat(this.bullets);
       return all;
+    }
+  }, {
+    key: 'shootBullet',
+    value: function shootBullet(options) {
+      options.game = this.game;
+      this.bullets.push(new _bullet2.default(options));
     }
   }]);
 
@@ -441,6 +490,14 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _moving_object = __webpack_require__(0);
 
 var _moving_object2 = _interopRequireDefault(_moving_object);
+
+var _projectile = __webpack_require__(5);
+
+var _projectile2 = _interopRequireDefault(_projectile);
+
+var _power_up = __webpack_require__(8);
+
+var _power_up2 = _interopRequireDefault(_power_up);
 
 var _util = __webpack_require__(6);
 
@@ -542,8 +599,24 @@ var Disc = function (_MovingObject) {
   }, {
     key: 'caluclateCollision',
     value: function caluclateCollision(otherObject) {
-      otherObject.vel[0] = -1 * (Math.cos(this.dTheta) * this.outerRadius * this.angular_vel) + otherObject.vel[0];
-      otherObject.vel[1] = -1 * (Math.sin(this.dTheta) * this.outerRadius * this.angular_vel) + otherObject.vel[1];
+      if (otherObject instanceof _projectile2.default) {
+        otherObject.vel[0] = -1 * (Math.sin(this.dTheta) * this.outerRadius * this.angular_vel) + otherObject.vel[0];
+        otherObject.vel[1] = Math.cos(this.dTheta) * this.outerRadius * this.angular_vel + otherObject.vel[1];
+      } else if (otherObject instanceof _power_up2.default) {
+        var duration = void 0;
+        setTimeout(function () {
+          console.log("disabling");
+          otherObejct.enablePowerup(false);
+        }, 2000);
+        console.log("enabling");
+        otherObject.enablePowerup(true);
+      }
+    }
+  }, {
+    key: 'shoot',
+    value: function shoot(x, y) {
+      var vel_vectors = this.game.findCenter([x, y]);
+      this.game.shootBullet({ pos: [this.game.DIM_X / 2, this.game.DIM_Y / 2], vel: vel_vectors, color: 'black', radius: 2 });
     }
   }]);
 
@@ -665,6 +738,107 @@ var calculateAngVelocity = exports.calculateAngVelocity = function calculateAngV
   var omega = dTheta / dTime;
   return omega;
 };
+
+/***/ }),
+/* 7 */,
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _moving_object = __webpack_require__(0);
+
+var _moving_object2 = _interopRequireDefault(_moving_object);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var PowerUp = function (_MovingObject) {
+  _inherits(PowerUp, _MovingObject);
+
+  function PowerUp(options) {
+    _classCallCheck(this, PowerUp);
+
+    options.radius = 10;
+    options.color = 'yellow';
+
+    var _this = _possibleConstructorReturn(this, (PowerUp.__proto__ || Object.getPrototypeOf(PowerUp)).call(this, options));
+
+    _this.disc = options.disc;
+    return _this;
+  }
+
+  _createClass(PowerUp, [{
+    key: 'enablePowerup',
+    value: function enablePowerup(toggle) {
+      var _this2 = this;
+
+      if (toggle === true && this.toggle !== true) {
+        this.toggle = toggle;
+        document.addEventListener('click', function (e) {
+          console.log(e);
+          _this2.disc.shoot(e.clientX, e.clientY);
+        });
+      } else {
+        this.toggle = false;
+        // removeEventListener
+      }
+    }
+  }]);
+
+  return PowerUp;
+}(_moving_object2.default);
+
+exports.default = PowerUp;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _moving_object = __webpack_require__(0);
+
+var _moving_object2 = _interopRequireDefault(_moving_object);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Bullet = function (_MovingObject) {
+  _inherits(Bullet, _MovingObject);
+
+  function Bullet(options) {
+    _classCallCheck(this, Bullet);
+
+    return _possibleConstructorReturn(this, (Bullet.__proto__ || Object.getPrototypeOf(Bullet)).call(this, options));
+  }
+
+  return Bullet;
+}(_moving_object2.default);
+
+exports.default = Bullet;
 
 /***/ })
 /******/ ]);

@@ -1,4 +1,6 @@
 import MovingObject from './moving_object';
+import Projectile from './projectile';
+import PowerUp from './power_up';
 import * as Util from './util';
 
 class Disc extends MovingObject{
@@ -76,8 +78,23 @@ class Disc extends MovingObject{
   }
 
   caluclateCollision(otherObject) {
-    otherObject.vel[0] = -1 * (Math.cos(this.dTheta) * this.outerRadius * this.angular_vel) + otherObject.vel[0];
-    otherObject.vel[1] = -1 * (Math.sin(this.dTheta) * this.outerRadius * this.angular_vel) + otherObject.vel[1];
+    if (otherObject instanceof Projectile) {
+      otherObject.vel[0] = -1 * (Math.sin(this.dTheta) * this.outerRadius * this.angular_vel) + otherObject.vel[0];
+      otherObject.vel[1] = (Math.cos(this.dTheta) * this.outerRadius * this.angular_vel) + otherObject.vel[1];
+    } else if (otherObject instanceof PowerUp) {
+      let duration;
+      setTimeout(() => {
+        console.log("disabling");
+        otherObejct.enablePowerup(false);
+      }, 2000);
+      console.log("enabling");
+      otherObject.enablePowerup(true);
+    }
+  }
+
+  shoot(x, y) {
+    let vel_vectors = this.game.findCenter([x,y]);
+    this.game.shootBullet({pos:[this.game.DIM_X / 2, this.game.DIM_Y / 2], vel: vel_vectors, color: 'black', radius: 2})
   }
 
 }
