@@ -240,6 +240,7 @@ var Game = function () {
     this.initProjectiles();
     this.randomPosition = this.randomPosition.bind(this);
     this.findCenter = this.findCenter.bind(this);
+    this.renderFragments();
     this.draw = this.draw.bind(this);
     this.moveObjects = this.moveObjects.bind(this);
     this.wrap = this.wrap.bind(this);
@@ -310,6 +311,20 @@ var Game = function () {
       var x_unit_vec = rel_x / unit_vec_helper * -10;
       var y_unit_vec = rel_y / unit_vec_helper * -10;
       return [x_unit_vec, y_unit_vec];
+    }
+  }, {
+    key: 'renderFragments',
+    value: function renderFragments() {
+      var _this2 = this;
+
+      var rel_x = void 0;
+      var rel_y = void 0;
+      var registerMovement = function registerMovement(e) {
+        rel_x = Util.relative_x(e.clientX, _this2.DIM_X);
+        rel_y = Util.relative_y(e.clientY, _this2.DIM_Y);
+        console.log(rel_x, rel_y);
+      };
+      document.addEventListener('mousemove', registerMovement);
     }
   }, {
     key: 'draw',
@@ -394,15 +409,34 @@ var Disc = function (_MovingObject) {
 
         _this.outerRadius = 150;
         _this.innerRadius = 100;
+        _this.fragments = [];
+        _this.theta = 0;
+        // this.renderFragments();
+        _this.addListener();
         _this.draw = _this.draw.bind(_this);
         _this.drawDonut = _this.drawDonut.bind(_this);
         _this.move = _this.move.bind(_this);
         _this.setRadialGradient = _this.setRadialGradient.bind(_this);
-
         return _this;
     }
 
+    // renderFragments() {
+    //   let rel_x;
+    //   let rel_y;
+    //   const registerMovement = (e) => {
+    //     if(e.clientX < (this.DIM_X / 2)){
+    //       rel_x = ((this.DIM_X / 2) - pos[0]) * -1;
+    //     }else {
+    //       rel_x = pos[0] - (this.DIM_X / 2);
+    //     }
+    //   }
+    //   document.addEventListener('mousemove', registerMovement)
+    // }
+
     _createClass(Disc, [{
+        key: "addListener",
+        value: function addListener() {}
+    }, {
         key: "draw",
         value: function draw(ctx) {
             this.setRadialGradient(ctx, "#DC1C29", "#B7161B");
@@ -430,7 +464,7 @@ var Disc = function (_MovingObject) {
         key: "addShadow",
         value: function addShadow(ctx) {
             ctx.shadowColor = "#333";
-            ctx.shadowBlur = 5;
+            ctx.shadowBlur = 6;
             ctx.shadowOffsetX = 0;
             ctx.shadowOffsetY = 0;
         }
@@ -519,6 +553,26 @@ var canvasHeight = exports.canvasHeight = function canvasHeight() {
 
 var canvasWidth = exports.canvasWidth = function canvasWidth() {
   return window.innerWidth;
+};
+
+var relative_x = exports.relative_x = function relative_x(x_coord, x_dim) {
+  var rel_x = void 0;
+  if (x_coord < x_dim / 2) {
+    rel_x = (x_dim / 2 - x_coord) * -1;
+  } else {
+    rel_x = x_coord - x_dim / 2;
+  }
+  return rel_x;
+};
+
+var relative_y = exports.relative_y = function relative_y(y_coord, y_dim) {
+  var rel_y = void 0;
+  if (y_coord < y_dim / 2) {
+    rel_y = y_dim / 2 - y_coord;
+  } else {
+    rel_y = (y_coord - y_dim / 2) * -1;
+  }
+  return rel_y;
 };
 
 /***/ })

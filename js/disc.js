@@ -1,14 +1,35 @@
 import MovingObject from './moving_object';
 
+
 class Disc extends MovingObject{
   constructor(options){
     super(options);
     this.outerRadius = 150;
     this.innerRadius = 100;
+    this.fragments = [];
+    this.theta = 0;
+    // this.renderFragments();
+    this.addListener();
     this.draw = this.draw.bind(this);
     this.drawDonut = this.drawDonut.bind(this);
     this.move = this.move.bind(this);
     this.setRadialGradient = this.setRadialGradient.bind(this);
+  }
+
+  // renderFragments() {
+  //   let rel_x;
+  //   let rel_y;
+  //   const registerMovement = (e) => {
+  //     if(e.clientX < (this.DIM_X / 2)){
+  //       rel_x = ((this.DIM_X / 2) - pos[0]) * -1;
+  //     }else {
+  //       rel_x = pos[0] - (this.DIM_X / 2);
+  //     }
+  //   }
+  //   document.addEventListener('mousemove', registerMovement)
+  // }
+
+  addListener() {
 
   }
 
@@ -36,7 +57,7 @@ class Disc extends MovingObject{
 
   addShadow(ctx){
       ctx.shadowColor = "#333";
-      ctx.shadowBlur = 5;
+      ctx.shadowBlur = 6;
       ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 0;
   }

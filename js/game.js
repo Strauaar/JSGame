@@ -16,6 +16,7 @@ class Game {
     this.initProjectiles();
     this.randomPosition = this.randomPosition.bind(this);
     this.findCenter = this.findCenter.bind(this);
+    this.renderFragments();
     this.draw = this.draw.bind(this);
     this.moveObjects = this.moveObjects.bind(this);
     this.wrap = this.wrap.bind(this);
@@ -81,6 +82,17 @@ class Game {
     let x_unit_vec = (rel_x/unit_vec_helper) * -10;
     let y_unit_vec = (rel_y/unit_vec_helper) * -10;
     return [x_unit_vec, y_unit_vec];
+  }
+
+  renderFragments() {
+    let rel_x;
+    let rel_y;
+    const registerMovement = (e) => {
+      rel_x = Util.relative_x(e.clientX, this.DIM_X);
+      rel_y = Util.relative_y(e.clientY, this.DIM_Y);
+      console.log(rel_x, rel_y);
+    }
+    document.addEventListener('mousemove', registerMovement)
   }
 
   draw(ctx) {
