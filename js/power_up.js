@@ -6,20 +6,24 @@ class PowerUp extends MovingObject {
     options.color = 'yellow';
     super(options);
     this.disc = options.disc;
+    this.toggle = false;
   }
 
   enablePowerup(toggle) {
     if(toggle === true && this.toggle !== true) {
       this.toggle = toggle;
-      document.addEventListener('click', (e) => {
-        console.log(e);
-        this.disc.shoot(e.clientX, e.clientY);
-      })
-    } else {
+      this.powerup = PowerUp.addShooter.bind(this);
+      document.addEventListener('click', this.powerup)
+    } else if(toggle === false) {
+      console.log("disable");
       this.toggle = false;
-      // removeEventListener
+      document.removeEventListener('click', this.powerup)
     }
   }
+}
+
+PowerUp.addShooter = function(e){
+  this.disc.shoot(e.clientX, e.clientY)
 }
 
 export default PowerUp;

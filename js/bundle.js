@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -139,7 +139,186 @@ exports.default = MovingObject;
 "use strict";
 
 
-var _game_view = __webpack_require__(2);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _moving_object = __webpack_require__(0);
+
+var _moving_object2 = _interopRequireDefault(_moving_object);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Projectile = function (_MovingObject) {
+  _inherits(Projectile, _MovingObject);
+
+  function Projectile(options) {
+    _classCallCheck(this, Projectile);
+
+    options.radius = 30;
+    return _possibleConstructorReturn(this, (Projectile.__proto__ || Object.getPrototypeOf(Projectile)).call(this, options));
+  }
+
+  _createClass(Projectile, [{
+    key: 'collideWith',
+    value: function collideWith(otherObject) {}
+  }]);
+
+  return Projectile;
+}(_moving_object2.default);
+
+exports.default = Projectile;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _moving_object = __webpack_require__(0);
+
+var _moving_object2 = _interopRequireDefault(_moving_object);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var PowerUp = function (_MovingObject) {
+  _inherits(PowerUp, _MovingObject);
+
+  function PowerUp(options) {
+    _classCallCheck(this, PowerUp);
+
+    options.radius = 10;
+    options.color = 'yellow';
+
+    var _this = _possibleConstructorReturn(this, (PowerUp.__proto__ || Object.getPrototypeOf(PowerUp)).call(this, options));
+
+    _this.disc = options.disc;
+    _this.toggle = false;
+    return _this;
+  }
+
+  _createClass(PowerUp, [{
+    key: 'enablePowerup',
+    value: function enablePowerup(toggle) {
+      if (toggle === true && this.toggle !== true) {
+        this.toggle = toggle;
+        this.powerup = PowerUp.addShooter.bind(this);
+        document.addEventListener('click', this.powerup);
+      } else if (toggle === false) {
+        console.log("disable");
+        this.toggle = false;
+        document.removeEventListener('click', this.powerup);
+      }
+    }
+  }]);
+
+  return PowerUp;
+}(_moving_object2.default);
+
+PowerUp.addShooter = function (e) {
+  this.disc.shoot(e.clientX, e.clientY);
+};
+
+exports.default = PowerUp;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var COLOR = ['red', 'blue', 'green'];
+
+var randomColor = exports.randomColor = function randomColor() {
+  return COLOR[Math.floor(Math.random() * COLOR.length)];
+};
+
+var canvasHeight = exports.canvasHeight = function canvasHeight() {
+  return window.innerHeight;
+};
+
+var canvasWidth = exports.canvasWidth = function canvasWidth() {
+  return window.innerWidth;
+};
+
+var relative_x = exports.relative_x = function relative_x(x_coord, x_dim) {
+  var rel_x = void 0;
+  if (x_coord < x_dim / 2) {
+    rel_x = (x_dim / 2 - x_coord) * -1;
+  } else {
+    rel_x = x_coord - x_dim / 2;
+  }
+  return rel_x;
+};
+
+var relative_y = exports.relative_y = function relative_y(y_coord, y_dim) {
+  var rel_y = void 0;
+  if (y_coord < y_dim / 2) {
+    rel_y = y_dim / 2 - y_coord;
+  } else {
+    rel_y = (y_coord - y_dim / 2) * -1;
+  }
+  return rel_y;
+};
+
+var distance = exports.distance = function distance(x1, y1, x2, y2) {
+  return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+};
+
+var calculateRad = exports.calculateRad = function calculateRad(rel_x, rel_y, theta) {
+  var rad = void 0;
+  if (rel_x < 0 && rel_y < 0) {
+    rad = Math.PI + theta;
+  } else if (rel_x > 0 && rel_y > 0) {
+    rad = theta;
+  } else if (rel_x < 0 && rel_y > 0) {
+    rad = Math.PI / 2 + (Math.PI / 2 + theta);
+  } else if (rel_x > 0 && rel_y < 0) {
+    rad = Math.PI * 3 / 2 + (Math.PI / 2 + theta);
+  }
+  return rad;
+};
+
+var calculateAngVelocity = exports.calculateAngVelocity = function calculateAngVelocity(disc) {
+  var dTheta = disc.end_angle - disc.start_angle;
+  var dTime = disc.end_time - disc.start_time;
+  var omega = dTheta / dTime;
+  return omega;
+};
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _game_view = __webpack_require__(5);
 
 var _game_view2 = _interopRequireDefault(_game_view);
 
@@ -155,7 +334,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /***/ }),
-/* 2 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -167,7 +346,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _game = __webpack_require__(3);
+var _game = __webpack_require__(6);
 
 var _game2 = _interopRequireDefault(_game);
 
@@ -202,7 +381,7 @@ var GameView = function () {
 exports.default = GameView;
 
 /***/ }),
-/* 3 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -214,23 +393,23 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _disc = __webpack_require__(4);
+var _disc = __webpack_require__(7);
 
 var _disc2 = _interopRequireDefault(_disc);
 
-var _projectile = __webpack_require__(5);
+var _projectile = __webpack_require__(1);
 
 var _projectile2 = _interopRequireDefault(_projectile);
 
-var _power_up = __webpack_require__(8);
+var _power_up = __webpack_require__(2);
 
 var _power_up2 = _interopRequireDefault(_power_up);
 
-var _util = __webpack_require__(6);
+var _util = __webpack_require__(3);
 
 var Util = _interopRequireWildcard(_util);
 
-var _bullet = __webpack_require__(9);
+var _bullet = __webpack_require__(8);
 
 var _bullet2 = _interopRequireDefault(_bullet);
 
@@ -265,6 +444,7 @@ var Game = function () {
     this.step = this.step.bind(this);
     this.allObjects = this.allObjects.bind(this);
     this.shootBullet = this.shootBullet.bind(this);
+    this.removePowerup = this.removePowerup.bind(this);
   }
 
   _createClass(Game, [{
@@ -467,6 +647,12 @@ var Game = function () {
       options.game = this.game;
       this.bullets.push(new _bullet2.default(options));
     }
+  }, {
+    key: 'removePowerup',
+    value: function removePowerup(otherObject) {
+      var index = this.powerups.indexOf(otherObject);
+      this.powerups.splice(index, 1);
+    }
   }]);
 
   return Game;
@@ -475,7 +661,7 @@ var Game = function () {
 exports.default = Game;
 
 /***/ }),
-/* 4 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -491,15 +677,15 @@ var _moving_object = __webpack_require__(0);
 
 var _moving_object2 = _interopRequireDefault(_moving_object);
 
-var _projectile = __webpack_require__(5);
+var _projectile = __webpack_require__(1);
 
 var _projectile2 = _interopRequireDefault(_projectile);
 
-var _power_up = __webpack_require__(8);
+var _power_up = __webpack_require__(2);
 
 var _power_up2 = _interopRequireDefault(_power_up);
 
-var _util = __webpack_require__(6);
+var _util = __webpack_require__(3);
 
 var Util = _interopRequireWildcard(_util);
 
@@ -531,6 +717,7 @@ var Disc = function (_MovingObject) {
     _this.move = _this.move.bind(_this);
     _this.setRadialGradient = _this.setRadialGradient.bind(_this);
     _this.caluclateCollision = _this.caluclateCollision.bind(_this);
+    _this.enablePowerup = _this.enablePowerup.bind(_this);
     return _this;
   }
 
@@ -603,14 +790,18 @@ var Disc = function (_MovingObject) {
         otherObject.vel[0] = -1 * (Math.sin(this.dTheta) * this.outerRadius * this.angular_vel) + otherObject.vel[0];
         otherObject.vel[1] = Math.cos(this.dTheta) * this.outerRadius * this.angular_vel + otherObject.vel[1];
       } else if (otherObject instanceof _power_up2.default) {
-        var duration = void 0;
-        setTimeout(function () {
-          console.log("disabling");
-          otherObejct.enablePowerup(false);
-        }, 2000);
-        console.log("enabling");
-        otherObject.enablePowerup(true);
+        this.enablePowerup(otherObject);
+        this.game.removePowerup(otherObject);
       }
+    }
+  }, {
+    key: 'enablePowerup',
+    value: function enablePowerup(powerup) {
+      console.log("enabling");
+      powerup.enablePowerup(true);
+      setTimeout(function () {
+        powerup.enablePowerup(false);
+      }, 5000);
     }
   }, {
     key: 'shoot',
@@ -626,185 +817,7 @@ var Disc = function (_MovingObject) {
 exports.default = Disc;
 
 /***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _moving_object = __webpack_require__(0);
-
-var _moving_object2 = _interopRequireDefault(_moving_object);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Projectile = function (_MovingObject) {
-  _inherits(Projectile, _MovingObject);
-
-  function Projectile(options) {
-    _classCallCheck(this, Projectile);
-
-    options.radius = 5;
-    return _possibleConstructorReturn(this, (Projectile.__proto__ || Object.getPrototypeOf(Projectile)).call(this, options));
-  }
-
-  _createClass(Projectile, [{
-    key: 'collideWith',
-    value: function collideWith(otherObject) {}
-  }]);
-
-  return Projectile;
-}(_moving_object2.default);
-
-exports.default = Projectile;
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var COLOR = ['red', 'blue', 'green'];
-
-var randomColor = exports.randomColor = function randomColor() {
-  return COLOR[Math.floor(Math.random() * COLOR.length)];
-};
-
-var canvasHeight = exports.canvasHeight = function canvasHeight() {
-  return window.innerHeight;
-};
-
-var canvasWidth = exports.canvasWidth = function canvasWidth() {
-  return window.innerWidth;
-};
-
-var relative_x = exports.relative_x = function relative_x(x_coord, x_dim) {
-  var rel_x = void 0;
-  if (x_coord < x_dim / 2) {
-    rel_x = (x_dim / 2 - x_coord) * -1;
-  } else {
-    rel_x = x_coord - x_dim / 2;
-  }
-  return rel_x;
-};
-
-var relative_y = exports.relative_y = function relative_y(y_coord, y_dim) {
-  var rel_y = void 0;
-  if (y_coord < y_dim / 2) {
-    rel_y = y_dim / 2 - y_coord;
-  } else {
-    rel_y = (y_coord - y_dim / 2) * -1;
-  }
-  return rel_y;
-};
-
-var distance = exports.distance = function distance(x1, y1, x2, y2) {
-  return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-};
-
-var calculateRad = exports.calculateRad = function calculateRad(rel_x, rel_y, theta) {
-  var rad = void 0;
-  if (rel_x < 0 && rel_y < 0) {
-    rad = Math.PI + theta;
-  } else if (rel_x > 0 && rel_y > 0) {
-    rad = theta;
-  } else if (rel_x < 0 && rel_y > 0) {
-    rad = Math.PI / 2 + (Math.PI / 2 + theta);
-  } else if (rel_x > 0 && rel_y < 0) {
-    rad = Math.PI * 3 / 2 + (Math.PI / 2 + theta);
-  }
-  return rad;
-};
-
-var calculateAngVelocity = exports.calculateAngVelocity = function calculateAngVelocity(disc) {
-  var dTheta = disc.end_angle - disc.start_angle;
-  var dTime = disc.end_time - disc.start_time;
-  var omega = dTheta / dTime;
-  return omega;
-};
-
-/***/ }),
-/* 7 */,
 /* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _moving_object = __webpack_require__(0);
-
-var _moving_object2 = _interopRequireDefault(_moving_object);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var PowerUp = function (_MovingObject) {
-  _inherits(PowerUp, _MovingObject);
-
-  function PowerUp(options) {
-    _classCallCheck(this, PowerUp);
-
-    options.radius = 10;
-    options.color = 'yellow';
-
-    var _this = _possibleConstructorReturn(this, (PowerUp.__proto__ || Object.getPrototypeOf(PowerUp)).call(this, options));
-
-    _this.disc = options.disc;
-    return _this;
-  }
-
-  _createClass(PowerUp, [{
-    key: 'enablePowerup',
-    value: function enablePowerup(toggle) {
-      var _this2 = this;
-
-      if (toggle === true && this.toggle !== true) {
-        this.toggle = toggle;
-        document.addEventListener('click', function (e) {
-          console.log(e);
-          _this2.disc.shoot(e.clientX, e.clientY);
-        });
-      } else {
-        this.toggle = false;
-        // removeEventListener
-      }
-    }
-  }]);
-
-  return PowerUp;
-}(_moving_object2.default);
-
-exports.default = PowerUp;
-
-/***/ }),
-/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

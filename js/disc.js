@@ -16,6 +16,7 @@ class Disc extends MovingObject{
     this.move = this.move.bind(this);
     this.setRadialGradient = this.setRadialGradient.bind(this);
     this.caluclateCollision = this.caluclateCollision.bind(this);
+    this.enablePowerup = this.enablePowerup.bind(this);
   }
 
   // renderFragments() {
@@ -82,14 +83,17 @@ class Disc extends MovingObject{
       otherObject.vel[0] = -1 * (Math.sin(this.dTheta) * this.outerRadius * this.angular_vel) + otherObject.vel[0];
       otherObject.vel[1] = (Math.cos(this.dTheta) * this.outerRadius * this.angular_vel) + otherObject.vel[1];
     } else if (otherObject instanceof PowerUp) {
-      let duration;
-      setTimeout(() => {
-        console.log("disabling");
-        otherObejct.enablePowerup(false);
-      }, 2000);
-      console.log("enabling");
-      otherObject.enablePowerup(true);
+      this.enablePowerup(otherObject);
+      this.game.removePowerup(otherObject);
     }
+  }
+
+  enablePowerup(powerup) {
+    console.log("enabling");
+    powerup.enablePowerup(true);
+    setTimeout(() => {
+      powerup.enablePowerup(false);
+    }, 5000)
   }
 
   shoot(x, y) {

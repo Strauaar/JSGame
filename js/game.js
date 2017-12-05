@@ -27,6 +27,7 @@ class Game {
     this.step = this.step.bind(this);
     this.allObjects = this.allObjects.bind(this);
     this.shootBullet = this.shootBullet.bind(this);
+    this.removePowerup = this.removePowerup.bind(this);
   }
 
   initProjectiles() {
@@ -211,6 +212,11 @@ class Game {
   shootBullet(options) {
     options.game = this.game;
     this.bullets.push(new Bullet(options));
+  }
+
+  removePowerup(otherObject) {
+    let index = this.powerups.indexOf(otherObject);
+    this.powerups.splice(index, 1);
   }
 }
 
