@@ -78,6 +78,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 document.addEventListener('DOMContentLoaded', function () {
   var canvas = document.getElementById('game-canvas');
+  canvas.width = 800;
+  canvas.height = 800;
   var ctx = canvas.getContext('2d');
   var gameView = new _game_view2.default(ctx);
   gameView.start(ctx);
@@ -167,11 +169,12 @@ var Game = function () {
     // this.bullets = [];
 
     // this.disc = new Disc(params here);
-    this.DIM_X = window.innerWidth;
-    this.DIM_Y = window.innerHeight;
+    this.DIM_X = 800;
+    this.DIM_Y = 800;
     this.initProjectiles = this.initProjectiles.bind(this);
     this.initProjectiles();
-
+    this.randomPosition = this.randomPosition.bind(this);
+    this.findCenter = this.findCenter.bind(this);
     this.draw = this.draw.bind(this);
     this.moveObjects = this.moveObjects.bind(this);
     this.wrap = this.wrap.bind(this);
@@ -185,18 +188,48 @@ var Game = function () {
     value: function initProjectiles() {
       var _this = this;
 
-      var x = window.innerWidth / 2;
-      var y = window.innerHeight / 2;
+      var position = void 0;
       setInterval(function () {
-        // console.log(this.projectiles[0].pos);
-        _this.projectiles.push(new _projectile2.default({ color: 'red', pos: [0, 0], vel: [1, 1], game: _this }));
+        position = _this.randomPosition();
+        _this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: position, vel: _this.findCenter(position), game: _this }));
       }, 1000);
-      // setInterval( () => {
-      //
-      //   console.log(this.projectiles[0].pos);
-      // }, 1000)
+    }
+  }, {
+    key: 'randomPosition',
+    value: function randomPosition() {
+      // let x_bounds_left = [canvasWidth() - 50, 0];
+      // let x_bounds_right = [canvasWidth(), canvasWidth() + 50];
+      // let y_bounds_top = [canvasHeight() - 50, 0];
+      // let y_bounds_bottom = [canvasHeight(), canvasHeight() + 50];
+      var x = void 0;
+      var y = void 0;
+      switch (Math.floor(Math.random() * 5)) {
 
-      // }, 1000);
+        default:
+          x = 0;
+          y = 0;
+
+      }
+      return [x, y];
+    }
+  }, {
+    key: 'findCenter',
+    value: function findCenter(pos) {
+      var rel_x = void 0;
+      var rel_y = void 0;
+      if (pos[0] < this.DIM_X / 2) {
+        rel_x = this.DIM_X / 2 - pos[0];
+      } else {
+        rel_x = pos[0] - this.DIM_X / 2;
+      }
+      if (pos[1] < this.DIM_Y / 2) {
+        rel_y = this.DIM_Y / 2 - pos[1];
+      } else {
+        rel_y = pos[1] - this.DIM_Y / 2;
+      }
+      var unit_vec_helper = Math.sqrt(Math.pow(rel_x, 2) + Math.pow(rel_y, 2));
+
+      return [rel_x / unit_vec_helper, rel_y / unit_vec_helper];
     }
   }, {
     key: 'draw',
@@ -323,22 +356,22 @@ var MovingObject = function () {
   }
 
   _createClass(MovingObject, [{
-    key: 'draw',
+    key: "draw",
     value: function draw(ctx) {
       // console.log(this);
-      ctx.fillStyle = 'green';
+      ctx.fillStyle = this.color;
       ctx.beginPath();
       ctx.arc(this.pos[0], this.pos[1], 20, 0, 2 * Math.PI, false);
       ctx.fill();
     }
   }, {
-    key: 'move',
+    key: "move",
     value: function move() {
       this.pos[0] += this.vel[0];
       this.pos[1] += this.vel[1];
     }
   }, {
-    key: 'didCollideWith',
+    key: "didCollideWith",
     value: function didCollideWith(otherObejct) {
       // let totalRadius = this.radius + otherObejct.radius;
       // if (distance formula <= totalRadius){
@@ -376,16 +409,6 @@ var canvasHeight = exports.canvasHeight = function canvasHeight() {
 
 var canvasWidth = exports.canvasWidth = function canvasWidth() {
   return window.innerWidth;
-};
-
-var randomPosition = exports.randomPosition = function randomPosition() {
-  // let x_bounds_left = [canvasWidth() - 50, 0];
-  // let x_bounds_right = [canvasWidth(), canvasWidth() + 50];
-  // let y_bounds_top = [canvasHeight() - 50, 0];
-  // let y_bounds_bottom = [canvasHeight(), canvasHeight() + 50];
-  var x = Math.random() * canvaswidth();
-  var y = Math.random() * canvasHeight();
-  return [x, y];
 };
 
 /***/ })

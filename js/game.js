@@ -9,11 +9,12 @@ class Game {
     // this.bullets = [];
 
     // this.disc = new Disc(params here);
-    this.DIM_X = window.innerWidth;
-    this.DIM_Y = window.innerHeight;
+    this.DIM_X = 800;
+    this.DIM_Y = 800;
     this.initProjectiles = this.initProjectiles.bind(this);
     this.initProjectiles();
-
+    this.randomPosition = this.randomPosition.bind(this);
+    this.findCenter = this.findCenter.bind(this);
     this.draw = this.draw.bind(this);
     this.moveObjects = this.moveObjects.bind(this);
     this.wrap = this.wrap.bind(this);
@@ -24,17 +25,47 @@ class Game {
   }
 
   initProjectiles() {
-    let x = window.innerWidth / 2;
-    let y = window.innerHeight / 2;
+    let position;
     setInterval( () => {
-      // console.log(this.projectiles[0].pos);
-      this.projectiles.push(new Projectile({color: 'red', pos: [0, 0], vel: [1,1], game: this}));}, 1000)
-      // setInterval( () => {
-      //
-      //   console.log(this.projectiles[0].pos);
-      // }, 1000)
+      position = this.randomPosition();
+      this.projectiles.push(new Projectile({color: Util.randomColor(), pos: position, vel: this.findCenter(position), game: this}));
+    }, 1000)
+  }
 
-    // }, 1000);
+  randomPosition() {
+    // let x_bounds_left = [canvasWidth() - 50, 0];
+    // let x_bounds_right = [canvasWidth(), canvasWidth() + 50];
+    // let y_bounds_top = [canvasHeight() - 50, 0];
+    // let y_bounds_bottom = [canvasHeight(), canvasHeight() + 50];
+    let x;
+    let y;
+    switch(Math.floor(Math.random() * 5)) {
+
+
+      default:
+        x = 0;
+        y = 0;
+
+    }
+    return [x,y];
+  };
+
+  findCenter(pos) {
+    let rel_x;
+    let rel_y;
+    if(pos[0] < (this.DIM_X / 2)){
+      rel_x = (this.DIM_X / 2) - pos[0];
+    } else {
+      rel_x = pos[0] - (this.DIM_X / 2);
+    }
+    if(pos[1] < (this.DIM_Y / 2)){
+      rel_y = (this.DIM_Y / 2) - pos[1];
+    } else {
+      rel_y = pos[1] - (this.DIM_Y / 2);
+    }
+    let unit_vec_helper = Math.sqrt(Math.pow(rel_x, 2) + Math.pow(rel_y, 2));
+
+    return [rel_x/unit_vec_helper, rel_y/unit_vec_helper];
   }
 
   draw(ctx) {

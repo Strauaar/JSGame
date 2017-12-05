@@ -9,7 +9,6 @@ class GameView {
 
 
   start(ctx) {
-
     setInterval( () => {
       this.game.step();
       this.game.draw(ctx);
