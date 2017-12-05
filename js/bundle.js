@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -70,7 +70,68 @@
 "use strict";
 
 
-var _game_view = __webpack_require__(1);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var MovingObject = function () {
+  function MovingObject(options) {
+    _classCallCheck(this, MovingObject);
+
+    this.pos = options.pos;
+    this.vel = options.vel;
+    this.radius = options.radius;
+    this.game = options.game;
+    this.color = options.color;
+    this.draw = this.draw.bind(this);
+    this.move = this.move.bind(this);
+    this.didCollideWith = this.didCollideWith.bind(this);
+  }
+
+  _createClass(MovingObject, [{
+    key: "draw",
+    value: function draw(ctx) {
+      // console.log(this);
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      ctx.arc(this.pos[0], this.pos[1], 20, 0, 2 * Math.PI, false);
+      ctx.fill();
+    }
+  }, {
+    key: "move",
+    value: function move() {
+      this.pos[0] += this.vel[0];
+      this.pos[1] += this.vel[1];
+    }
+  }, {
+    key: "didCollideWith",
+    value: function didCollideWith(otherObejct) {
+      // let totalRadius = this.radius + otherObejct.radius;
+      // if (distance formula <= totalRadius){
+      // return true;
+      // } else {
+      // return false;
+      // }
+    }
+  }]);
+
+  return MovingObject;
+}();
+
+exports.default = MovingObject;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _game_view = __webpack_require__(2);
 
 var _game_view2 = _interopRequireDefault(_game_view);
 
@@ -86,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -98,7 +159,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _game = __webpack_require__(2);
+var _game = __webpack_require__(3);
 
 var _game2 = _interopRequireDefault(_game);
 
@@ -133,7 +194,7 @@ var GameView = function () {
 exports.default = GameView;
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -146,15 +207,15 @@ Object.defineProperty(exports, "__esModule", {
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // TODO: import game components
 
 
-var _disc = __webpack_require__(6);
+var _disc = __webpack_require__(4);
 
 var _disc2 = _interopRequireDefault(_disc);
 
-var _projectile = __webpack_require__(3);
+var _projectile = __webpack_require__(5);
 
 var _projectile2 = _interopRequireDefault(_projectile);
 
-var _util = __webpack_require__(5);
+var _util = __webpack_require__(6);
 
 var Util = _interopRequireWildcard(_util);
 
@@ -248,15 +309,14 @@ var Game = function () {
       var unit_vec_helper = Math.sqrt(Math.pow(rel_x, 2) + Math.pow(rel_y, 2));
       var x_unit_vec = rel_x / unit_vec_helper * -10;
       var y_unit_vec = rel_y / unit_vec_helper * -10;
-      debugger;
       return [x_unit_vec, y_unit_vec];
     }
   }, {
     key: 'draw',
     value: function draw(ctx) {
       ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
-      this.projectiles.forEach(function (projectile) {
-        projectile.draw(ctx);
+      this.allObjects().forEach(function (obj) {
+        obj.draw(ctx);
       });
     }
   }, {
@@ -265,8 +325,8 @@ var Game = function () {
       // this.allObjects().forEach(object => {
       //   object.move();
       // });
-      this.projectiles.forEach(function (projectile) {
-        projectile.move();
+      this.allObjects().forEach(function (obj) {
+        obj.move();
       });
     }
   }, {
@@ -286,12 +346,11 @@ var Game = function () {
   }, {
     key: 'allObjects',
     value: function allObjects() {
-      // let all = this.projectiles.slice();
-      // all.push(this.disc);
+      var all = this.projectiles.slice();
+      all.push(this.disc);
       // TODO: Add other objects
       // all = all.concat()
-      // return all;
-
+      return all;
     }
   }]);
 
@@ -301,7 +360,91 @@ var Game = function () {
 exports.default = Game;
 
 /***/ }),
-/* 3 */
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _moving_object = __webpack_require__(0);
+
+var _moving_object2 = _interopRequireDefault(_moving_object);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Disc = function () {
+    function Disc(options) {
+        _classCallCheck(this, Disc);
+
+        // super(options);
+        this.outerRadius = 150;
+        this.innerRadius = 100;
+        this.draw = this.draw.bind(this);
+        this.drawDonut = this.drawDonut.bind(this);
+        this.move = this.move.bind(this);
+        this.setRadialGradient = this.setRadialGradient.bind(this);
+    }
+
+    _createClass(Disc, [{
+        key: "draw",
+        value: function draw(ctx) {
+            this.setRadialGradient(ctx, "#DC1C29", "#B7161B");
+            this.drawDonut(ctx, 0, Math.PI * 2 / 3);
+            this.setRadialGradient(ctx, "#84BC3D", "#5B8829");
+            this.drawDonut(ctx, Math.PI * 2 / 3, Math.PI * 4 / 3);
+            this.setRadialGradient(ctx, "#27A1D4", "#2182AD");
+            this.drawDonut(ctx, Math.PI * 4 / 3, Math.PI * 2);
+        }
+    }, {
+        key: "drawDonut",
+        value: function drawDonut(ctx, sRadian, eRadian) {
+
+            ctx.beginPath();
+            ctx.arc(300, 300, this.outerRadius, sRadian, eRadian, false); // Outer: CCW
+            ctx.arc(300, 300, this.innerRadius, eRadian, sRadian, true); // Inner: CW
+            ctx.closePath();
+
+            // add shadow
+            this.addShadow(ctx);
+
+            ctx.fill();
+        }
+    }, {
+        key: "addShadow",
+        value: function addShadow(ctx) {
+            ctx.shadowColor = "#333";
+            ctx.shadowBlur = 5;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+        }
+    }, {
+        key: "move",
+        value: function move() {}
+    }, {
+        key: "setRadialGradient",
+        value: function setRadialGradient(ctx, sgc, bgc) {
+            var grd = ctx.createRadialGradient(300, 300, this.innerRadius + 5, 300, 300, this.outerRadius);
+            grd.addColorStop(0, sgc);
+            grd.addColorStop(1, bgc);
+            ctx.fillStyle = grd;
+        }
+    }]);
+
+    return Disc;
+}();
+
+exports.default = Disc;
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -313,7 +456,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _moving_object = __webpack_require__(4);
+var _moving_object = __webpack_require__(0);
 
 var _moving_object2 = _interopRequireDefault(_moving_object);
 
@@ -346,68 +489,7 @@ var Projectile = function (_MovingObject) {
 exports.default = Projectile;
 
 /***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var MovingObject = function () {
-  function MovingObject(options) {
-    _classCallCheck(this, MovingObject);
-
-    this.pos = options.pos;
-    this.vel = options.vel;
-    this.radius = options.radius;
-    this.game = options.game;
-    this.color = options.color;
-    this.draw = this.draw.bind(this);
-    this.move = this.move.bind(this);
-    this.didCollideWith = this.didCollideWith.bind(this);
-  }
-
-  _createClass(MovingObject, [{
-    key: "draw",
-    value: function draw(ctx) {
-      // console.log(this);
-      ctx.fillStyle = this.color;
-      ctx.beginPath();
-      ctx.arc(this.pos[0], this.pos[1], 20, 0, 2 * Math.PI, false);
-      ctx.fill();
-    }
-  }, {
-    key: "move",
-    value: function move() {
-      this.pos[0] += this.vel[0];
-      this.pos[1] += this.vel[1];
-    }
-  }, {
-    key: "didCollideWith",
-    value: function didCollideWith(otherObejct) {
-      // let totalRadius = this.radius + otherObejct.radius;
-      // if (distance formula <= totalRadius){
-      // return true;
-      // } else {
-      // return false;
-      // }
-    }
-  }]);
-
-  return MovingObject;
-}();
-
-exports.default = MovingObject;
-
-/***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -429,78 +511,6 @@ var canvasHeight = exports.canvasHeight = function canvasHeight() {
 var canvasWidth = exports.canvasWidth = function canvasWidth() {
   return window.innerWidth;
 };
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _moving_object = __webpack_require__(4);
-
-var _moving_object2 = _interopRequireDefault(_moving_object);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Disc = function (_MovingObject) {
-  _inherits(Disc, _MovingObject);
-
-  function Disc(options) {
-    _classCallCheck(this, Disc);
-
-    var _this = _possibleConstructorReturn(this, (Disc.__proto__ || Object.getPrototypeOf(Disc)).call(this, options));
-
-    _this.outerRadius = 150;
-    _this.innerRadius = 100;
-    _this.draw = _this.draw.bind(_this);
-    _this.drawDonut = _this.drawDonut.bind(_this);
-    _this.move = _this.move.bind(_this);
-    return _this;
-  }
-
-  _createClass(Disc, [{
-    key: 'draw',
-    value: function draw(ctx) {
-      this.drawDonut(ctx, 0, Math.PI * 2 / 3);
-      this.drawDonut(ctx, Math.PI * 2 / 3, Math.PI * 4 / 3);
-      this.drawDonut(ctx, Math.PI * 4 / 3, Math.PI * 2);
-    }
-  }, {
-    key: 'drawDonut',
-    value: function drawDonut(ctx, sRadian, eRadian) {
-
-      ctx.beginPath();
-      ctx.arc(300, 300, this.outerRadius, sRadian, eRadian, false); // Outer: CCW
-      ctx.arc(300, 300, this.innerRadius, eRadian, sRadian, true); // Inner: CW
-      ctx.closePath();
-
-      // add shadow
-      // addShadow();
-
-      ctx.fill();
-    }
-  }, {
-    key: 'move',
-    value: function move() {}
-  }]);
-
-  return Disc;
-}(_moving_object2.default);
-
-exports.default = Disc;
 
 /***/ })
 /******/ ]);

@@ -80,14 +80,13 @@ class Game {
     let unit_vec_helper = Math.sqrt(Math.pow(rel_x, 2) + Math.pow(rel_y, 2));
     let x_unit_vec = (rel_x/unit_vec_helper) * -10;
     let y_unit_vec = (rel_y/unit_vec_helper) * -10;
-    debugger;
     return [x_unit_vec, y_unit_vec];
   }
 
   draw(ctx) {
     ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
-    this.projectiles.forEach(projectile => {
-      projectile.draw(ctx);
+    this.allObjects().forEach(obj => {
+      obj.draw(ctx);
     });
   }
 
@@ -95,8 +94,8 @@ class Game {
     // this.allObjects().forEach(object => {
     //   object.move();
     // });
-    this.projectiles.forEach(projectile => {
-      projectile.move();
+    this.allObjects().forEach(obj => {
+      obj.move();
     });
   }
 
@@ -114,11 +113,11 @@ class Game {
   }
 
   allObjects() {
-    // let all = this.projectiles.slice();
-    // all.push(this.disc);
+    let all = this.projectiles.slice();
+    all.push(this.disc);
     // TODO: Add other objects
     // all = all.concat()
-    // return all;
+    return all;
 
   }
 }
