@@ -257,7 +257,7 @@ var Game = function () {
       setInterval(function () {
         position = _this.randomPosition();
         _this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: position, vel: _this.findCenter(position), game: _this }));
-      }, 1000);
+      }, 4000);
     }
   }, {
     key: 'randomPosition',
@@ -320,15 +320,18 @@ var Game = function () {
       var rel_y = void 0;
       var timeout = void 0;
       var start_time = void 0;
+      var theta = void 0;
       this.disc.start_time = 1;
       var registerMovement = function registerMovement(e) {
         clearTimeout(timeout);
-        if (_this2.disc.start_time === 0) {
-          _this2.disc.start_time = Date.now();
-        }
         rel_x = Util.relative_x(e.clientX, _this2.DIM_X);
         rel_y = Util.relative_y(e.clientY, _this2.DIM_Y);
-        _this2.disc.draw(_this2.ctx, rel_x, rel_y, Math.atan(rel_y / rel_x));
+        theta = Math.atan(rel_y / rel_x);
+        if (_this2.disc.start_time === 0) {
+          _this2.disc.start_time = Date.now();
+          _this2.disc.start_angle = Util.calculateRad(rel_x, rel_y, theta);
+        }
+        _this2.disc.draw(_this2.ctx, rel_x, rel_y, theta);
         timeout = setTimeout(function () {
           var event = new CustomEvent("mousestop", {
             detail: {
@@ -343,13 +346,16 @@ var Game = function () {
       };
 
       var registerStaticPosition = function registerStaticPosition(e) {
-        _this2.disc.end_time = Date.now();
-        console.log(_this2.disc.end_time - _this2.disc.start_time);
-        _this2.disc.start_time = 0;
         rel_x = Util.relative_x(e.detail.clientX, _this2.DIM_X);
         rel_y = Util.relative_y(e.detail.clientY, _this2.DIM_Y);
+        theta = Math.atan(rel_y / rel_x);
+        _this2.disc.end_time = Date.now();
+        _this2.disc.end_angle = Util.calculateRad(rel_x, rel_y, theta);
+        // console.log(this.disc.end_time - this.disc.start_time);
+        // console.log(this.disc.end_angle - this.disc.start_angle);
+        _this2.disc.start_time = 0;
         setInterval(function () {
-          _this2.disc.draw(_this2.ctx, rel_x, rel_y, Math.atan(rel_y / rel_x));
+          _this2.disc.draw(_this2.ctx, rel_x, rel_y, theta);
         }, 1);
       };
 
@@ -433,6 +439,12 @@ var _moving_object = __webpack_require__(0);
 
 var _moving_object2 = _interopRequireDefault(_moving_object);
 
+var _util = __webpack_require__(6);
+
+var Util = _interopRequireWildcard(_util);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -476,21 +488,13 @@ var Disc = function (_MovingObject) {
   // }
 
   _createClass(Disc, [{
-    key: "draw",
+    key: 'draw',
     value: function draw(ctx, rel_x, rel_y, theta) {
-      var rad = void 0;
-      if (rel_x < 0 && rel_y < 0) {
-        rad = Math.PI + theta;
-      } else if (rel_x > 0 && rel_y > 0) {
-        rad = theta;
-      } else if (rel_x < 0 && rel_y > 0) {
-        rad = Math.PI / 2 + (Math.PI / 2 + theta);
-      } else if (rel_x > 0 && rel_y < 0) {
-        rad = Math.PI * 3 / 2 + (Math.PI / 2 + theta);
-      }
-      this.rel_x = rel_x;
-      this.rel_y = rel_y;
-      this.theta = theta;
+
+      var rad = Util.calculateRad(rel_x, rel_y, theta);
+      // this.rel_x = rel_x;
+      // this.rel_y = rel_y;
+      // this.theta = theta;
 
       this.setRadialGradient(ctx, "#DC1C29", "#B7161B");
       this.drawDonut(ctx, -rad, -rad + Math.PI * 2 / 3);
@@ -500,7 +504,7 @@ var Disc = function (_MovingObject) {
       this.drawDonut(ctx, -rad + Math.PI * 4 / 3, -rad + Math.PI * 2);
     }
   }, {
-    key: "drawDonut",
+    key: 'drawDonut',
     value: function drawDonut(ctx, startRadian, endRadian) {
 
       ctx.beginPath();
@@ -514,7 +518,7 @@ var Disc = function (_MovingObject) {
       ctx.fill();
     }
   }, {
-    key: "addShadow",
+    key: 'addShadow',
     value: function addShadow(ctx) {
       ctx.shadowColor = "#333";
       ctx.shadowBlur = 6;
@@ -522,10 +526,10 @@ var Disc = function (_MovingObject) {
       ctx.shadowOffsetY = 0;
     }
   }, {
-    key: "move",
+    key: 'move',
     value: function move() {}
   }, {
-    key: "setRadialGradient",
+    key: 'setRadialGradient',
     value: function setRadialGradient(ctx, sgc, bgc) {
       var grd = ctx.createRadialGradient(this.pos[0], this.pos[1], this.innerRadius + 5, this.pos[0], this.pos[1], this.outerRadius);
       grd.addColorStop(0, sgc);
@@ -533,7 +537,7 @@ var Disc = function (_MovingObject) {
       ctx.fillStyle = grd;
     }
   }, {
-    key: "caluclateCollision",
+    key: 'caluclateCollision',
     value: function caluclateCollision(otherObject) {
 
       otherObject.vel[0] = -1 * otherObject.vel[0];
@@ -637,6 +641,20 @@ var relative_y = exports.relative_y = function relative_y(y_coord, y_dim) {
 
 var distance = exports.distance = function distance(x1, y1, x2, y2) {
   return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+};
+
+var calculateRad = exports.calculateRad = function calculateRad(rel_x, rel_y, theta) {
+  var rad = void 0;
+  if (rel_x < 0 && rel_y < 0) {
+    rad = Math.PI + theta;
+  } else if (rel_x > 0 && rel_y > 0) {
+    rad = theta;
+  } else if (rel_x < 0 && rel_y > 0) {
+    rad = Math.PI / 2 + (Math.PI / 2 + theta);
+  } else if (rel_x > 0 && rel_y < 0) {
+    rad = Math.PI * 3 / 2 + (Math.PI / 2 + theta);
+  }
+  return rad;
 };
 
 /***/ })

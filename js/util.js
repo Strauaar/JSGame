@@ -35,3 +35,17 @@ export const relative_y = (y_coord, y_dim) => {
 export const distance = (x1, y1, x2, y2) => {
   return Math.sqrt(Math.pow((x2-x1), 2) + Math.pow((y2-y1), 2));
 };
+
+export const calculateRad = (rel_x, rel_y, theta) => {
+  let rad;
+  if(rel_x < 0 && rel_y < 0) {
+    rad = Math.PI + theta
+  } else if (rel_x > 0 && rel_y > 0) {
+    rad = theta
+  } else if (rel_x < 0 && rel_y > 0){
+    rad = (Math.PI / 2) + (Math.PI / 2 + theta)
+  } else if (rel_x > 0 && rel_y < 0) {
+    rad = (Math.PI*3/2) + (Math.PI / 2 + theta)
+  }
+  return rad;
+}

@@ -29,7 +29,7 @@ class Game {
     setInterval( () => {
       position = this.randomPosition();
       this.projectiles.push(new Projectile({color: Util.randomColor(), pos: position, vel: this.findCenter(position), game: this}));
-    }, 1000)
+    }, 4000)
   }
 
   randomPosition() {
@@ -87,15 +87,18 @@ class Game {
     let rel_y;
     let timeout;
     let start_time;
+    let theta;
     this.disc.start_time = 1;
     const registerMovement = (e) => {
       clearTimeout(timeout);
-      if(this.disc.start_time === 0){
-          this.disc.start_time = Date.now();
-      }
       rel_x = Util.relative_x(e.clientX, this.DIM_X);
       rel_y = Util.relative_y(e.clientY, this.DIM_Y);
-      this.disc.draw(this.ctx, rel_x, rel_y, Math.atan(rel_y/rel_x));
+      theta = Math.atan(rel_y/rel_x);
+      if(this.disc.start_time === 0){
+          this.disc.start_time = Date.now();
+          this.disc.start_angle = Util.calculateRad(rel_x, rel_y, theta);
+      }
+      this.disc.draw(this.ctx, rel_x, rel_y, theta);
       timeout = setTimeout(function () {
           var event = new CustomEvent("mousestop", {
               detail: {
@@ -110,12 +113,15 @@ class Game {
     };
 
     const registerStaticPosition = (e) => {
-      this.disc.end_time = Date.now();
-      console.log(this.disc.end_time - this.disc.start_time);
-      this.disc.start_time = 0;
       rel_x = Util.relative_x(e.detail.clientX, this.DIM_X);
       rel_y = Util.relative_y(e.detail.clientY, this.DIM_Y);
-      setInterval(() => {this.disc.draw(this.ctx, rel_x, rel_y, Math.atan(rel_y/rel_x))}, 1);
+      theta = Math.atan(rel_y/rel_x);
+      this.disc.end_time = Date.now();
+      this.disc.end_angle = Util.calculateRad(rel_x, rel_y, theta);
+      // console.log(this.disc.end_time - this.disc.start_time);
+      // console.log(this.disc.end_angle - this.disc.start_angle);
+      this.disc.start_time = 0;
+      setInterval(() => {this.disc.draw(this.ctx, rel_x, rel_y, theta)}, 1);
     };
 
     document.addEventListener('mousemove', registerMovement);

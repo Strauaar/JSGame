@@ -1,5 +1,5 @@
 import MovingObject from './moving_object';
-
+import * as Util from './util';
 
 class Disc extends MovingObject{
   constructor(options){
@@ -30,19 +30,11 @@ class Disc extends MovingObject{
   // }
 
   draw(ctx, rel_x, rel_y, theta) {
-    let rad;
-    if(rel_x < 0 && rel_y < 0) {
-      rad = Math.PI + theta
-    } else if (rel_x > 0 && rel_y > 0) {
-      rad = theta
-    } else if (rel_x < 0 && rel_y > 0){
-      rad = (Math.PI / 2) + (Math.PI / 2 + theta)
-    } else if (rel_x > 0 && rel_y < 0) {
-      rad = (Math.PI*3/2) + (Math.PI / 2 + theta)
-    }
-    this.rel_x = rel_x;
-    this.rel_y = rel_y;
-    this.theta = theta;
+
+    let rad = Util.calculateRad(rel_x, rel_y, theta);
+    // this.rel_x = rel_x;
+    // this.rel_y = rel_y;
+    // this.theta = theta;
 
     this.setRadialGradient(ctx, "#DC1C29", "#B7161B");
     this.drawDonut(ctx, -rad, -rad + Math.PI * 2/3);
@@ -84,7 +76,7 @@ class Disc extends MovingObject{
   }
 
   caluclateCollision(otherObject) {
-    
+
     otherObject.vel[0] = -1 * otherObject.vel[0];
     otherObject.vel[1] = -1 * otherObject.vel[1];
   }
