@@ -348,21 +348,6 @@ var Game = function () {
 
       document.addEventListener('mousemove', registerMovement);
       document.addEventListener('mousestop', registerStaticPosition);
-
-      // document.addEventListener('mousemove', function (e) {
-      //     clearTimeout(timeout);
-      //     timeout = setTimeout(function () {
-      //         var event = new CustomEvent("mousestop", {
-      //             detail: {
-      //                 clientX: e.clientX,
-      //                 clientY: e.clientY
-      //             },
-      //             bubbles: true,
-      //             cancelable: true
-      //         });
-      //         e.target.dispatchEvent(event);
-      //     }, mouseStopDelay);
-      // });
     }
   }, {
     key: 'draw',
@@ -450,7 +435,6 @@ var Disc = function (_MovingObject) {
     _this.fragments = [];
     _this.theta = 0;
     // this.renderFragments();
-    _this.addListener();
     _this.draw = _this.draw.bind(_this);
     _this.drawDonut = _this.drawDonut.bind(_this);
     _this.move = _this.move.bind(_this);
@@ -472,9 +456,6 @@ var Disc = function (_MovingObject) {
   // }
 
   _createClass(Disc, [{
-    key: "addListener",
-    value: function addListener() {}
-  }, {
     key: "draw",
     value: function draw(ctx, rel_x, rel_y, theta) {
       var rad = void 0;
@@ -487,6 +468,9 @@ var Disc = function (_MovingObject) {
       } else if (rel_x > 0 && rel_y < 0) {
         rad = Math.PI * 3 / 2 + (Math.PI / 2 + theta);
       }
+      this.rel_x = rel_x;
+      this.rel_y = rel_y;
+      this.theta = theta;
 
       this.setRadialGradient(ctx, "#DC1C29", "#B7161B");
       this.drawDonut(ctx, -rad, -rad + Math.PI * 2 / 3);

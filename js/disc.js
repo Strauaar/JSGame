@@ -9,7 +9,6 @@ class Disc extends MovingObject{
     this.fragments = [];
     this.theta = 0;
     // this.renderFragments();
-    this.addListener();
     this.draw = this.draw.bind(this);
     this.drawDonut = this.drawDonut.bind(this);
     this.move = this.move.bind(this);
@@ -29,10 +28,6 @@ class Disc extends MovingObject{
   //   document.addEventListener('mousemove', registerMovement)
   // }
 
-  addListener() {
-
-  }
-
   draw(ctx, rel_x, rel_y, theta) {
     let rad;
     if(rel_x < 0 && rel_y < 0) {
@@ -44,6 +39,9 @@ class Disc extends MovingObject{
     } else if (rel_x > 0 && rel_y < 0) {
       rad = (Math.PI*3/2) + (Math.PI / 2 + theta)
     }
+    this.rel_x = rel_x;
+    this.rel_y = rel_y;
+    this.theta = theta;
 
     this.setRadialGradient(ctx, "#DC1C29", "#B7161B");
     this.drawDonut(ctx, -rad, -rad + Math.PI * 2/3);

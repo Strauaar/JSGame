@@ -111,23 +111,8 @@ class Game {
       setInterval(() => {this.disc.draw(this.ctx, rel_x, rel_y, Math.atan(rel_y/rel_x))}, 1);
     };
 
-    document.addEventListener('mousemove', registerMovement)
-    document.addEventListener('mousestop', registerStaticPosition)
-
-    // document.addEventListener('mousemove', function (e) {
-    //     clearTimeout(timeout);
-    //     timeout = setTimeout(function () {
-    //         var event = new CustomEvent("mousestop", {
-    //             detail: {
-    //                 clientX: e.clientX,
-    //                 clientY: e.clientY
-    //             },
-    //             bubbles: true,
-    //             cancelable: true
-    //         });
-    //         e.target.dispatchEvent(event);
-    //     }, mouseStopDelay);
-    // });
+    document.addEventListener('mousemove', registerMovement);
+    document.addEventListener('mousestop', registerStaticPosition);
   }
 
   draw(ctx) {
