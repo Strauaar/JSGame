@@ -225,20 +225,26 @@ var Game = function () {
     value: function findCenter(pos) {
       var rel_x = void 0;
       var rel_y = void 0;
-      if (pos[0] < this.DIM_X / 2) {
+
+      if (pos[0] < 0) {
+        rel_x = this.DIM_X / 2 * -1 + pos[0];
+      } else if (pos[0] < this.DIM_X / 2) {
         rel_x = (this.DIM_X / 2 - pos[0]) * -1;
       } else {
         rel_x = pos[0] - this.DIM_X / 2;
       }
-      if (pos[1] < this.DIM_Y / 2) {
+
+      if (pos[1] < 0) {
+        rel_y = this.DIM_Y / 2 * -1 + pos[1];
+      } else if (pos[1] < this.DIM_Y / 2) {
         rel_y = (this.DIM_Y / 2 - pos[1]) * -1;
       } else {
         rel_y = pos[1] - this.DIM_Y / 2;
       }
       var unit_vec_helper = Math.sqrt(Math.pow(rel_x, 2) + Math.pow(rel_y, 2));
-      var x_unit_vec = rel_x / unit_vec_helper * 10;
-      var y_unit_vec = rel_y / unit_vec_helper * 10;
-      // debugger;
+      var x_unit_vec = rel_x / unit_vec_helper * -10;
+      var y_unit_vec = rel_y / unit_vec_helper * -10;
+      debugger;
       return [x_unit_vec, y_unit_vec];
     }
   }, {

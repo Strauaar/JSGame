@@ -60,20 +60,26 @@ class Game {
   findCenter(pos) {
     let rel_x;
     let rel_y;
-    if(pos[0] < (this.DIM_X / 2)){
+
+    if(pos[0] < 0) {
+      rel_x = (this.DIM_X / 2 * -1) + pos[0];
+    }else if(pos[0] < (this.DIM_X / 2)){
       rel_x = ((this.DIM_X / 2) - pos[0]) * -1;
-    } else {
+    }else {
       rel_x = pos[0] - (this.DIM_X / 2);
     }
-    if(pos[1] < (this.DIM_Y / 2)){
+
+    if(pos[1] < 0) {
+      rel_y = (this.DIM_Y / 2 * -1) + pos[1];
+    }else if(pos[1] < (this.DIM_Y / 2)){
       rel_y = ((this.DIM_Y / 2) - pos[1]) * -1;
     } else {
       rel_y = pos[1] - (this.DIM_Y / 2);
     }
     let unit_vec_helper = Math.sqrt(Math.pow(rel_x, 2) + Math.pow(rel_y, 2));
-    let x_unit_vec = (rel_x/unit_vec_helper) * 10;
-    let y_unit_vec = (rel_y/unit_vec_helper) * 10;
-    // debugger;
+    let x_unit_vec = (rel_x/unit_vec_helper) * -10;
+    let y_unit_vec = (rel_y/unit_vec_helper) * -10;
+    debugger;
     return [x_unit_vec, y_unit_vec];
   }
 
