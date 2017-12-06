@@ -149,7 +149,7 @@ class Game {
               cancelable: true
           });
           e.target.dispatchEvent(event);
-      }, 1000);
+      }, 50);
     };
 
     const registerStaticPosition = (e) => {
@@ -159,7 +159,7 @@ class Game {
       // this.disc.theta = Math.atan(this.disc.rel_y/this.disc.rel_x);
       this.disc.end_time = Date.now();
       this.disc.start_time = 0;
-      this.disc.dTheta = Math.PI/2;
+      // this.disc.dTheta = Math.PI/2;
     };
 
     document.addEventListener('mousemove', registerMovement);
@@ -183,7 +183,7 @@ class Game {
     });
     // console.log("rel_x", this.disc.rel_x);
     // console.log("rel_y", this.disc.rel_y);
-    // console.log("ang_vel", this.disc.angular_vel);
+    console.log("ang_vel", this.disc.angular_vel);
     this.disc.draw(this.ctx, this.disc.rel_x, this.disc.rel_y, this.disc.theta);
 
     // this.goals.forEach(goal => {
