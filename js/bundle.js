@@ -304,10 +304,11 @@ var calculateRad = exports.calculateRad = function calculateRad(rel_x, rel_y, th
   return rad;
 };
 
-var calculateAngVelocity = exports.calculateAngVelocity = function calculateAngVelocity(disc) {
-  var dTheta = disc.end_angle - disc.start_angle;
-  var dTime = disc.end_time - disc.start_time;
+var calculateAngVelocity = exports.calculateAngVelocity = function calculateAngVelocity(start_angle, end_angle, start_time, end_time) {
+  var dTheta = end_angle - start_angle;
+  var dTime = end_time - start_time;
   var omega = dTheta / dTime;
+  // debugger
   return omega;
 };
 
@@ -461,7 +462,6 @@ var Game = function () {
     key: 'initDisc',
     value: function initDisc() {
       this.disc = new _disc2.default({ pos: [this.DIM_X / 2, this.DIM_Y / 2], game: this });
-      this.disc.draw(this.ctx, 100, 100, Math.PI / 4);
     }
   }, {
     key: 'initGoals',
@@ -556,9 +556,11 @@ var Game = function () {
       var _this3 = this;
 
       var timeout = void 0;
+      var angular_vel = void 0;
       this.disc.start_time = 1;
       var registerMovement = function registerMovement(e) {
         clearTimeout(timeout);
+        console.log("moving");
         _this3.disc.rel_x = Util.relative_x(e.clientX, _this3.DIM_X);
         _this3.disc.rel_y = Util.relative_y(e.clientY, _this3.DIM_Y);
         _this3.disc.theta = Math.atan(_this3.disc.rel_y / _this3.disc.rel_x);
@@ -568,7 +570,8 @@ var Game = function () {
         }
         _this3.disc.end_angle = Util.calculateRad(_this3.disc.rel_x, _this3.disc.rel_y, _this3.disc.theta);
         _this3.disc.dTheta = _this3.disc.end_angle - _this3.disc.start_angle;
-        _this3.disc.angular_vel = Util.calculateAngVelocity(_this3.disc);
+        angular_vel = Util.calculateAngVelocity(_this3.disc.start_angle, _this3.disc.end_angle, _this3.disc.start_time, _this3.disc.end_time);
+        _this3.disc.angular_vel = angular_vel;
         timeout = setTimeout(function () {
           var event = new CustomEvent("mousestop", {
             detail: {
@@ -579,13 +582,14 @@ var Game = function () {
             cancelable: true
           });
           e.target.dispatchEvent(event);
-        }, 1);
+        }, 1000);
       };
 
       var registerStaticPosition = function registerStaticPosition(e) {
+        console.log("stopped");
         _this3.disc.rel_x = Util.relative_x(e.detail.clientX, _this3.DIM_X);
         _this3.disc.rel_y = Util.relative_y(e.detail.clientY, _this3.DIM_Y);
-        _this3.disc.theta = Math.atan(_this3.disc.rel_y / _this3.disc.rel_x);
+        // this.disc.theta = Math.atan(this.disc.rel_y/this.disc.rel_x);
         _this3.disc.end_time = Date.now();
         _this3.disc.start_time = 0;
         _this3.disc.dTheta = Math.PI / 2;
@@ -608,6 +612,12 @@ var Game = function () {
       this.bullets.forEach(function (bullet) {
         bullet.draw(ctx);
       });
+      this.goals.forEach(function (goal) {
+        goal.draw(ctx);
+      });
+      // console.log("rel_x", this.disc.rel_x);
+      // console.log("rel_y", this.disc.rel_y);
+      // console.log("ang_vel", this.disc.angular_vel);
       this.disc.draw(this.ctx, this.disc.rel_x, this.disc.rel_y, this.disc.theta);
 
       // this.goals.forEach(goal => {
@@ -877,8 +887,10 @@ var Disc = function (_MovingObject) {
       // let
       // console.log(this.end_);
       if (otherObject instanceof _projectile2.default) {
-        otherObject.vel[0] = Math.sin(this.dTheta) * 100 * this.angular_vel + otherObject.vel[0];
-        otherObject.vel[1] = -1 * (Math.sin(this.dTheta) * 100 * this.angular_vel) + otherObject.vel[1];
+        otherObject.vel[0] = -1 * otherObject.vel[0];
+        // ((Math.sin(this.dTheta)) * 100 * this.angular_vel) + ;
+        otherObject.vel[1] = -1 * otherObject.vel[1];
+        // debugger
       } else if (otherObject instanceof _power_up2.default) {
         this.enablePowerup(otherObject);
         this.game.removePowerup(otherObject);

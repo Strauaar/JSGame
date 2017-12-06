@@ -41,7 +41,6 @@ class Game {
 
   initDisc() {
     this.disc = new Disc({pos: [this.DIM_X / 2, this.DIM_Y / 2], game: this});
-    this.disc.draw(this.ctx, 100, 100, Math.PI/4)
   }
 
   initGoals() {
@@ -124,9 +123,11 @@ class Game {
 
   renderFragments() {
     let timeout;
+    let angular_vel;
     this.disc.start_time = 1;
     const registerMovement = (e) => {
       clearTimeout(timeout);
+      console.log("moving");
       this.disc.rel_x = Util.relative_x(e.clientX, this.DIM_X);
       this.disc.rel_y = Util.relative_y(e.clientY, this.DIM_Y);
       this.disc.theta = Math.atan(this.disc.rel_y/this.disc.rel_x);
@@ -136,7 +137,8 @@ class Game {
       }
       this.disc.end_angle = Util.calculateRad(this.disc.rel_x, this.disc.rel_y, this.disc.theta);
       this.disc.dTheta = this.disc.end_angle - this.disc.start_angle;
-      this.disc.angular_vel = Util.calculateAngVelocity(this.disc);
+      angular_vel = Util.calculateAngVelocity(this.disc.start_angle, this.disc.end_angle, this.disc.start_time, this.disc.end_time);
+      this.disc.angular_vel = angular_vel;
       timeout = setTimeout(function () {
           var event = new CustomEvent("mousestop", {
               detail: {
@@ -147,13 +149,14 @@ class Game {
               cancelable: true
           });
           e.target.dispatchEvent(event);
-      }, 1);
+      }, 1000);
     };
 
     const registerStaticPosition = (e) => {
+      console.log("stopped");
       this.disc.rel_x = Util.relative_x(e.detail.clientX, this.DIM_X);
       this.disc.rel_y = Util.relative_y(e.detail.clientY, this.DIM_Y);
-      this.disc.theta = Math.atan(this.disc.rel_y/this.disc.rel_x);
+      // this.disc.theta = Math.atan(this.disc.rel_y/this.disc.rel_x);
       this.disc.end_time = Date.now();
       this.disc.start_time = 0;
       this.disc.dTheta = Math.PI/2;
@@ -175,6 +178,12 @@ class Game {
     this.bullets.forEach(bullet => {
       bullet.draw(ctx);
     });
+    this.goals.forEach(goal => {
+      goal.draw(ctx);
+    });
+    // console.log("rel_x", this.disc.rel_x);
+    // console.log("rel_y", this.disc.rel_y);
+    // console.log("ang_vel", this.disc.angular_vel);
     this.disc.draw(this.ctx, this.disc.rel_x, this.disc.rel_y, this.disc.theta);
 
     // this.goals.forEach(goal => {
