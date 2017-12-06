@@ -860,8 +860,8 @@ var Disc = function (_MovingObject) {
       // let
       // console.log(this.end_);
       if (otherObject instanceof _projectile2.default) {
-        otherObject.vel[0] = (Math.sin(this.dTheta) + Math.cos(this.dTheta)) * this.outerRadius * this.angular_vel + otherObject.vel[0];
-        otherObject.vel[1] = -1 * (Math.sin(this.dTheta) * this.outerRadius * this.angular_vel) + otherObject.vel[1];
+        otherObject.vel[0] = Math.sin(this.dTheta) * 100 * this.angular_vel + otherObject.vel[0];
+        otherObject.vel[1] = -1 * (Math.sin(this.dTheta) * 100 * this.angular_vel) + otherObject.vel[1];
       } else if (otherObject instanceof _power_up2.default) {
         this.enablePowerup(otherObject);
         this.game.removePowerup(otherObject);

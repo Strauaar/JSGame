@@ -82,8 +82,8 @@ class Disc extends MovingObject{
     // let
     // console.log(this.end_);
     if (otherObject instanceof Projectile) {
-      otherObject.vel[0] = ((Math.sin(this.dTheta) + Math.cos(this.dTheta)) * this.outerRadius * this.angular_vel) + otherObject.vel[0];
-      otherObject.vel[1] = -1* ((Math.sin(this.dTheta)) * this.outerRadius * this.angular_vel) + otherObject.vel[1];
+      otherObject.vel[0] = ((Math.sin(this.dTheta)) * 100 * this.angular_vel) + otherObject.vel[0];
+      otherObject.vel[1] = -1* ((Math.sin(this.dTheta)) * 100 * this.angular_vel) + otherObject.vel[1];
     } else if (otherObject instanceof PowerUp) {
       this.enablePowerup(otherObject);
       this.game.removePowerup(otherObject);
