@@ -366,12 +366,11 @@ var GameView = function () {
   _createClass(GameView, [{
     key: 'start',
     value: function start(ctx) {
-      var _this = this;
-
-      setInterval(function () {
-        _this.game.step();
-        _this.game.draw(ctx);
-      }, 60);
+      requestAnimationFrame(this.game.anim(ctx));
+      // setInterval( () => {
+      //   this.game.step();
+      //   this.game.draw(ctx);
+      // }, 60);
     }
   }]);
 
@@ -432,6 +431,7 @@ var Game = function () {
     // TODO: Implement bullet as powerup
     this.bullets = [];
     this.goals = [];
+    this.score = 0;
     this.ctx = ctx;
     this.DIM_X = 800;
     this.DIM_Y = 800;
@@ -444,6 +444,7 @@ var Game = function () {
     this.findCenter = this.findCenter.bind(this);
     this.renderFragments();
     this.draw = this.draw.bind(this);
+    this.anim = this.anim.bind(this);
     this.moveObjects = this.moveObjects.bind(this);
     this.wrap = this.wrap.bind(this);
     this.checkCollisionsWithDisc = this.checkCollisionsWithDisc.bind(this);
@@ -606,15 +607,28 @@ var Game = function () {
       ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
       // ctx.fillStyle = "#2c2d23";
       // ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
+      ctx.font = "30px Arial";
+      ctx.fillText(this.score, 10, 50);
       this.allObjects().forEach(function (obj) {
         obj.draw(ctx);
       });
       this.bullets.forEach(function (bullet) {
         bullet.draw(ctx);
       });
-      this.goals.forEach(function (goal) {
-        goal.draw(ctx);
-      });
+      // this.goals.forEach(goal => {
+      //   goal.draw(ctx);
+      // })
+    }
+  }, {
+    key: 'anim',
+    value: function anim(ctx) {
+      var _this4 = this;
+
+      return function () {
+        _this4.step();
+        _this4.draw(ctx);
+        requestAnimationFrame(_this4.anim(ctx));
+      };
     }
   }, {
     key: 'moveObjects',
@@ -679,7 +693,10 @@ var Game = function () {
           totalRadius = object_array[i].radius + this.goals[j].radius;
           distance = Util.distance(this.goals[j].pos[0], this.goals[j].pos[1], object_array[i].pos[0], object_array[i].pos[1]);
 
-          if (distance <= totalRadius && object_array[i] instanceof _projectile2.default) {}
+          if (distance <= totalRadius && object_array[i] instanceof _projectile2.default) {
+
+            this.score += 1;
+          }
         }
       }
     }

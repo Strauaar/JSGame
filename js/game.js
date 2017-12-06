@@ -12,6 +12,7 @@ class Game {
     // TODO: Implement bullet as powerup
     this.bullets = [];
     this.goals = [];
+    this.score = 0;
     this.ctx = ctx;
     this.DIM_X = 800;
     this.DIM_Y = 800;
@@ -24,6 +25,7 @@ class Game {
     this.findCenter = this.findCenter.bind(this);
     this.renderFragments();
     this.draw = this.draw.bind(this);
+    this.anim = this.anim.bind(this);
     this.moveObjects = this.moveObjects.bind(this);
     this.wrap = this.wrap.bind(this);
     this.checkCollisionsWithDisc = this.checkCollisionsWithDisc.bind(this);
@@ -171,15 +173,25 @@ class Game {
     ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
     // ctx.fillStyle = "#2c2d23";
     // ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
+    ctx.font = "30px Arial";
+    ctx.fillText(this.score,10,50);
     this.allObjects().forEach(obj => {
       obj.draw(ctx);
     });
     this.bullets.forEach(bullet => {
       bullet.draw(ctx);
     });
-    this.goals.forEach(goal => {
-      goal.draw(ctx);
-    })
+    // this.goals.forEach(goal => {
+    //   goal.draw(ctx);
+    // })
+  }
+
+  anim(ctx) {
+    return () => {
+      this.step();
+      this.draw(ctx);
+      requestAnimationFrame(this.anim(ctx))
+    }
   }
 
   moveObjects() {
@@ -244,6 +256,7 @@ class Game {
 
         if(distance <= totalRadius && object_array[i] instanceof Projectile) {
 
+          this.score += 1
         }
       }
     }
