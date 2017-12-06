@@ -17,6 +17,7 @@ class Disc extends MovingObject{
     this.setRadialGradient = this.setRadialGradient.bind(this);
     this.caluclateCollision = this.caluclateCollision.bind(this);
     this.enablePowerup = this.enablePowerup.bind(this);
+
   }
 
   // renderFragments() {
@@ -32,7 +33,7 @@ class Disc extends MovingObject{
   //   document.addEventListener('mousemove', registerMovement)
   // }
 
-  draw(ctx, rel_x, rel_y, theta) {
+  draw(ctx, rel_x = 10, rel_y = 10, theta = Math.PI/4) {
     // console.log(this.end_angle);
     let rad = Util.calculateRad(rel_x, rel_y, theta);
     // this.rel_x = rel_x;

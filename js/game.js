@@ -16,13 +16,13 @@ class Game {
     this.ctx = ctx;
     this.DIM_X = 800;
     this.DIM_Y = 800;
-    this.disc = new Disc({pos: [this.DIM_X / 2, this.DIM_Y / 2], game: this});
     this.initProjectiles = this.initProjectiles.bind(this);
     this.initGoals();
     this.initProjectiles();
     this.initPowerUps();
     this.randomPosition = this.randomPosition.bind(this);
     this.findCenter = this.findCenter.bind(this);
+    this.initDisc();
     this.renderFragments();
     this.draw = this.draw.bind(this);
     this.anim = this.anim.bind(this);
@@ -37,6 +37,11 @@ class Game {
     this.shootBullet = this.shootBullet.bind(this);
     this.removePowerup = this.removePowerup.bind(this);
     this.removeObject = this.removeObject.bind(this);
+  }
+
+  initDisc() {
+    this.disc = new Disc({pos: [this.DIM_X / 2, this.DIM_Y / 2], game: this});
+    this.disc.draw(this.ctx, 100, 100, Math.PI/4)
   }
 
   initGoals() {
@@ -118,30 +123,20 @@ class Game {
   }
 
   renderFragments() {
-    let rel_x;
-    let rel_y;
     let timeout;
-    let start_time;
-    let theta;
     this.disc.start_time = 1;
     const registerMovement = (e) => {
       clearTimeout(timeout);
-      rel_x = Util.relative_x(e.clientX, this.DIM_X);
-      rel_y = Util.relative_y(e.clientY, this.DIM_Y);
-      theta = Math.atan(rel_y/rel_x);
-      // console.log("rel_x", rel_x);
-      // console.log("rel_y", rel_y);
-      // console.log("theta", theta);
+      this.disc.rel_x = Util.relative_x(e.clientX, this.DIM_X);
+      this.disc.rel_y = Util.relative_y(e.clientY, this.DIM_Y);
+      this.disc.theta = Math.atan(this.disc.rel_y/this.disc.rel_x);
       if(this.disc.start_time === 0){
           this.disc.start_time = Date.now();
-          this.disc.start_angle = Util.calculateRad(rel_x, rel_y, theta);
-          // console.log("strt_angle", this.disc.start_angle);
+          this.disc.start_angle = Util.calculateRad(this.disc.rel_x, this.disc.rel_y, this.disc.theta);
       }
-      this.disc.end_angle = Util.calculateRad(rel_x, rel_y, theta);
+      this.disc.end_angle = Util.calculateRad(this.disc.rel_x, this.disc.rel_y, this.disc.theta);
       this.disc.dTheta = this.disc.end_angle - this.disc.start_angle;
-      let angular_vel = Util.calculateAngVelocity(this.disc);
-      this.disc.angular_vel = angular_vel;
-      this.disc.draw(this.ctx, rel_x, rel_y, theta);
+      this.disc.angular_vel = Util.calculateAngVelocity(this.disc);
       timeout = setTimeout(function () {
           var event = new CustomEvent("mousestop", {
               detail: {
@@ -156,13 +151,12 @@ class Game {
     };
 
     const registerStaticPosition = (e) => {
-      rel_x = Util.relative_x(e.detail.clientX, this.DIM_X);
-      rel_y = Util.relative_y(e.detail.clientY, this.DIM_Y);
-      theta = Math.atan(rel_y/rel_x);
+      this.disc.rel_x = Util.relative_x(e.detail.clientX, this.DIM_X);
+      this.disc.rel_y = Util.relative_y(e.detail.clientY, this.DIM_Y);
+      this.disc.theta = Math.atan(this.disc.rel_y/this.disc.rel_x);
       this.disc.end_time = Date.now();
       this.disc.start_time = 0;
       this.disc.dTheta = Math.PI/2;
-      setInterval(() => {this.disc.draw(this.ctx, rel_x, rel_y, theta)}, 1);
     };
 
     document.addEventListener('mousemove', registerMovement);
@@ -181,6 +175,8 @@ class Game {
     this.bullets.forEach(bullet => {
       bullet.draw(ctx);
     });
+    this.disc.draw(this.ctx, this.disc.rel_x, this.disc.rel_y, this.disc.theta);
+
     // this.goals.forEach(goal => {
     //   goal.draw(ctx);
     // })

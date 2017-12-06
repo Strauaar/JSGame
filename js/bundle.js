@@ -435,13 +435,13 @@ var Game = function () {
     this.ctx = ctx;
     this.DIM_X = 800;
     this.DIM_Y = 800;
-    this.disc = new _disc2.default({ pos: [this.DIM_X / 2, this.DIM_Y / 2], game: this });
     this.initProjectiles = this.initProjectiles.bind(this);
     this.initGoals();
     this.initProjectiles();
     this.initPowerUps();
     this.randomPosition = this.randomPosition.bind(this);
     this.findCenter = this.findCenter.bind(this);
+    this.initDisc();
     this.renderFragments();
     this.draw = this.draw.bind(this);
     this.anim = this.anim.bind(this);
@@ -458,6 +458,12 @@ var Game = function () {
   }
 
   _createClass(Game, [{
+    key: 'initDisc',
+    value: function initDisc() {
+      this.disc = new _disc2.default({ pos: [this.DIM_X / 2, this.DIM_Y / 2], game: this });
+      this.disc.draw(this.ctx, 100, 100, Math.PI / 4);
+    }
+  }, {
     key: 'initGoals',
     value: function initGoals() {
       this.goals.push(new _goal2.default({ pos: [200, 200], game: this, radius: 20 }));
@@ -549,30 +555,20 @@ var Game = function () {
     value: function renderFragments() {
       var _this3 = this;
 
-      var rel_x = void 0;
-      var rel_y = void 0;
       var timeout = void 0;
-      var start_time = void 0;
-      var theta = void 0;
       this.disc.start_time = 1;
       var registerMovement = function registerMovement(e) {
         clearTimeout(timeout);
-        rel_x = Util.relative_x(e.clientX, _this3.DIM_X);
-        rel_y = Util.relative_y(e.clientY, _this3.DIM_Y);
-        theta = Math.atan(rel_y / rel_x);
-        // console.log("rel_x", rel_x);
-        // console.log("rel_y", rel_y);
-        // console.log("theta", theta);
+        _this3.disc.rel_x = Util.relative_x(e.clientX, _this3.DIM_X);
+        _this3.disc.rel_y = Util.relative_y(e.clientY, _this3.DIM_Y);
+        _this3.disc.theta = Math.atan(_this3.disc.rel_y / _this3.disc.rel_x);
         if (_this3.disc.start_time === 0) {
           _this3.disc.start_time = Date.now();
-          _this3.disc.start_angle = Util.calculateRad(rel_x, rel_y, theta);
-          // console.log("strt_angle", this.disc.start_angle);
+          _this3.disc.start_angle = Util.calculateRad(_this3.disc.rel_x, _this3.disc.rel_y, _this3.disc.theta);
         }
-        _this3.disc.end_angle = Util.calculateRad(rel_x, rel_y, theta);
+        _this3.disc.end_angle = Util.calculateRad(_this3.disc.rel_x, _this3.disc.rel_y, _this3.disc.theta);
         _this3.disc.dTheta = _this3.disc.end_angle - _this3.disc.start_angle;
-        var angular_vel = Util.calculateAngVelocity(_this3.disc);
-        _this3.disc.angular_vel = angular_vel;
-        _this3.disc.draw(_this3.ctx, rel_x, rel_y, theta);
+        _this3.disc.angular_vel = Util.calculateAngVelocity(_this3.disc);
         timeout = setTimeout(function () {
           var event = new CustomEvent("mousestop", {
             detail: {
@@ -587,15 +583,12 @@ var Game = function () {
       };
 
       var registerStaticPosition = function registerStaticPosition(e) {
-        rel_x = Util.relative_x(e.detail.clientX, _this3.DIM_X);
-        rel_y = Util.relative_y(e.detail.clientY, _this3.DIM_Y);
-        theta = Math.atan(rel_y / rel_x);
+        _this3.disc.rel_x = Util.relative_x(e.detail.clientX, _this3.DIM_X);
+        _this3.disc.rel_y = Util.relative_y(e.detail.clientY, _this3.DIM_Y);
+        _this3.disc.theta = Math.atan(_this3.disc.rel_y / _this3.disc.rel_x);
         _this3.disc.end_time = Date.now();
         _this3.disc.start_time = 0;
         _this3.disc.dTheta = Math.PI / 2;
-        setInterval(function () {
-          _this3.disc.draw(_this3.ctx, rel_x, rel_y, theta);
-        }, 1);
       };
 
       document.addEventListener('mousemove', registerMovement);
@@ -615,6 +608,8 @@ var Game = function () {
       this.bullets.forEach(function (bullet) {
         bullet.draw(ctx);
       });
+      this.disc.draw(this.ctx, this.disc.rel_x, this.disc.rel_y, this.disc.theta);
+
       // this.goals.forEach(goal => {
       //   goal.draw(ctx);
       // })
@@ -806,6 +801,7 @@ var Disc = function (_MovingObject) {
     _this.setRadialGradient = _this.setRadialGradient.bind(_this);
     _this.caluclateCollision = _this.caluclateCollision.bind(_this);
     _this.enablePowerup = _this.enablePowerup.bind(_this);
+
     return _this;
   }
 
@@ -824,7 +820,11 @@ var Disc = function (_MovingObject) {
 
   _createClass(Disc, [{
     key: 'draw',
-    value: function draw(ctx, rel_x, rel_y, theta) {
+    value: function draw(ctx) {
+      var rel_x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 10;
+      var rel_y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
+      var theta = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : Math.PI / 4;
+
       // console.log(this.end_angle);
       var rad = Util.calculateRad(rel_x, rel_y, theta);
       // this.rel_x = rel_x;
