@@ -564,14 +564,16 @@ var Game = function () {
         _this3.disc.rel_x = Util.relative_x(e.clientX, _this3.DIM_X);
         _this3.disc.rel_y = Util.relative_y(e.clientY, _this3.DIM_Y);
         _this3.disc.theta = Math.atan(_this3.disc.rel_y / _this3.disc.rel_x);
-        if (_this3.disc.start_time === 0) {
+        if (_this3.disc.start_time === 1) {
           _this3.disc.start_time = Date.now();
           _this3.disc.start_angle = Util.calculateRad(_this3.disc.rel_x, _this3.disc.rel_y, _this3.disc.theta);
         }
         _this3.disc.end_angle = Util.calculateRad(_this3.disc.rel_x, _this3.disc.rel_y, _this3.disc.theta);
         _this3.disc.dTheta = _this3.disc.end_angle - _this3.disc.start_angle;
-        angular_vel = Util.calculateAngVelocity(_this3.disc.start_angle, _this3.disc.end_angle, _this3.disc.start_time, _this3.disc.end_time);
-        _this3.disc.angular_vel = angular_vel;
+        // angular_vel =
+        _this3.disc.end_time = Date.now();
+
+        _this3.disc.angular_vel = Util.calculateAngVelocity(_this3.disc.start_angle, _this3.disc.end_angle, _this3.disc.start_time, _this3.disc.end_time);
         timeout = setTimeout(function () {
           var event = new CustomEvent("mousestop", {
             detail: {
@@ -590,8 +592,8 @@ var Game = function () {
         _this3.disc.rel_x = Util.relative_x(e.detail.clientX, _this3.DIM_X);
         _this3.disc.rel_y = Util.relative_y(e.detail.clientY, _this3.DIM_Y);
         // this.disc.theta = Math.atan(this.disc.rel_y/this.disc.rel_x);
-        _this3.disc.end_time = Date.now();
-        _this3.disc.start_time = 0;
+        // this.disc.end_time = Date.now();
+        _this3.disc.start_time = 1;
         // this.disc.dTheta = Math.PI/2;
       };
 
@@ -804,6 +806,7 @@ var Disc = function (_MovingObject) {
     _this.innerRadius = 100;
     _this.fragments = [];
     _this.theta = 0;
+    _this.angular_vel = 0;
     // this.renderFragments();
     _this.draw = _this.draw.bind(_this);
     _this.drawDonut = _this.drawDonut.bind(_this);
@@ -884,13 +887,21 @@ var Disc = function (_MovingObject) {
   }, {
     key: 'caluclateCollision',
     value: function caluclateCollision(otherObject) {
-      // let
-      // console.log(this.end_);
+      var rel_x = Util.relative_x(otherObject.pos[0]);
+      var rel_y = Util.relative_y(otherObject.pos[1]);
       if (otherObject instanceof _projectile2.default) {
-        otherObject.vel[0] = -1 * otherObject.vel[0];
-        // ((Math.sin(this.dTheta)) * 100 * this.angular_vel) + ;
-        otherObject.vel[1] = -1 * otherObject.vel[1];
-        // debugger
+        if (rel_x > 0 && rel_y === 0) {
+          otherObject.vel[0] = -1 * otherObject.vel[0];
+          otherObject.vel[1] = this.angular_vel * 10;
+        } else if (rel_x > 0 && rel_y > 0) {
+          otherObject.vel[0] = Math.sin(this.dTheta) * this.angular_vel + otherObject.vel[0];
+          otherObject.vel[1] = -1 * (Math.cos(this.dTheta) * this.angular_vel + otherObject.vel[1]);
+        } else if (rel_x === 0 && rel_y > 0) {
+          otherObject.vel[0] = -1 * (this.angular_vel * 10);
+          otherObject.vel[1] = -1 * otherObject.vel[1];
+        } else if (rel_x < 0 && rel_y > 0) {
+          otherObject.vel[0] = -1 * Math.cos(this.dTheta) * this.angular_vel + otherObject.vel[0];
+        }
       } else if (otherObject instanceof _power_up2.default) {
         this.enablePowerup(otherObject);
         this.game.removePowerup(otherObject);

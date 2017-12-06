@@ -10,6 +10,7 @@ class Disc extends MovingObject{
     this.innerRadius = 100;
     this.fragments = [];
     this.theta = 0;
+    this.angular_vel = 0;
     // this.renderFragments();
     this.draw = this.draw.bind(this);
     this.drawDonut = this.drawDonut.bind(this);
@@ -80,13 +81,21 @@ class Disc extends MovingObject{
   }
 
   caluclateCollision(otherObject) {
-    // let
-    // console.log(this.end_);
+    let rel_x = Util.relative_x(otherObject.pos[0]);
+    let rel_y = Util.relative_y(otherObject.pos[1]);
     if (otherObject instanceof Projectile) {
-      otherObject.vel[0] = (-1 * otherObject.vel[0]);
-      // ((Math.sin(this.dTheta)) * 100 * this.angular_vel) + ;
-      otherObject.vel[1] = (-1 *  otherObject.vel[1]);
-      // debugger
+      if(rel_x > 0 && rel_y === 0){
+        otherObject.vel[0] = -1 * otherObject.vel[0];
+        otherObject.vel[1] = (this.angular_vel * 10);
+      } else if (rel_x > 0 && rel_y > 0) {
+        otherObject.vel[0] = (Math.sin(this.dTheta) * this.angular_vel) + otherObject.vel[0];
+        otherObject.vel[1] = -1 * ((Math.cos(this.dTheta) * this.angular_vel) + otherObject.vel[1]);
+      } else if (rel_x === 0 && rel_y > 0) {
+        otherObject.vel[0] = -1 * (this.angular_vel * 10);
+        otherObject.vel[1] = -1 * otherObject.vel[1];
+      } else if (rel_x < 0 && rel_y > 0) {
+        otherObject.vel[0] = (-1 * Math.cos(this.dTheta) * this.angular_vel) + otherObject.vel[0]
+      }
     } else if (otherObject instanceof PowerUp) {
       this.enablePowerup(otherObject);
       this.game.removePowerup(otherObject);

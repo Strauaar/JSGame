@@ -131,14 +131,16 @@ class Game {
       this.disc.rel_x = Util.relative_x(e.clientX, this.DIM_X);
       this.disc.rel_y = Util.relative_y(e.clientY, this.DIM_Y);
       this.disc.theta = Math.atan(this.disc.rel_y/this.disc.rel_x);
-      if(this.disc.start_time === 0){
+      if(this.disc.start_time === 1){
           this.disc.start_time = Date.now();
           this.disc.start_angle = Util.calculateRad(this.disc.rel_x, this.disc.rel_y, this.disc.theta);
       }
       this.disc.end_angle = Util.calculateRad(this.disc.rel_x, this.disc.rel_y, this.disc.theta);
       this.disc.dTheta = this.disc.end_angle - this.disc.start_angle;
-      angular_vel = Util.calculateAngVelocity(this.disc.start_angle, this.disc.end_angle, this.disc.start_time, this.disc.end_time);
-      this.disc.angular_vel = angular_vel;
+      // angular_vel =
+      this.disc.end_time = Date.now();
+
+      this.disc.angular_vel = Util.calculateAngVelocity(this.disc.start_angle, this.disc.end_angle, this.disc.start_time, this.disc.end_time);
       timeout = setTimeout(function () {
           var event = new CustomEvent("mousestop", {
               detail: {
@@ -157,8 +159,8 @@ class Game {
       this.disc.rel_x = Util.relative_x(e.detail.clientX, this.DIM_X);
       this.disc.rel_y = Util.relative_y(e.detail.clientY, this.DIM_Y);
       // this.disc.theta = Math.atan(this.disc.rel_y/this.disc.rel_x);
-      this.disc.end_time = Date.now();
-      this.disc.start_time = 0;
+      // this.disc.end_time = Date.now();
+      this.disc.start_time = 1;
       // this.disc.dTheta = Math.PI/2;
     };
 
