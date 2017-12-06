@@ -1,4 +1,5 @@
 import Disc from './disc';
+import Goal from './goal';
 import Projectile from './projectile';
 import PowerUp from './power_up';
 import * as Util from './util';
@@ -10,11 +11,13 @@ class Game {
     this.powerups = [];
     // TODO: Implement bullet as powerup
     this.bullets = [];
+    this.goals = [];
     this.ctx = ctx;
     this.DIM_X = 800;
     this.DIM_Y = 800;
     this.disc = new Disc({pos: [this.DIM_X / 2, this.DIM_Y / 2], game: this});
     this.initProjectiles = this.initProjectiles.bind(this);
+    this.initGoals();
     this.initProjectiles();
     this.initPowerUps();
     this.randomPosition = this.randomPosition.bind(this);
@@ -25,11 +28,17 @@ class Game {
     this.wrap = this.wrap.bind(this);
     this.checkCollisionsWithDisc = this.checkCollisionsWithDisc.bind(this);
     this.checkCollisionsWithBullet = this.checkCollisionsWithBullet.bind(this);
+    this.checkCollisionsWithGoal =
+    this.checkCollisionsWithGoal.bind(this);
     this.step = this.step.bind(this);
     this.allObjects = this.allObjects.bind(this);
     this.shootBullet = this.shootBullet.bind(this);
     this.removePowerup = this.removePowerup.bind(this);
     this.removeObject = this.removeObject.bind(this);
+  }
+
+  initGoals() {
+    this.goals.push(new Goal({pos: [200, 200], game: this, radius: 20}))
   }
 
   initProjectiles() {
@@ -167,6 +176,9 @@ class Game {
     });
     this.bullets.forEach(bullet => {
       bullet.draw(ctx);
+    });
+    this.goals.forEach(goal => {
+      goal.draw(ctx);
     })
   }
 
@@ -175,6 +187,7 @@ class Game {
     //   object.move();
     // });
     // console.log(this.disc.dTheta);
+
     this.allObjects().forEach(obj => {
       obj.move();
     });
@@ -214,8 +227,23 @@ class Game {
         distance = Util.distance(this.bullets[j].pos[0], this.bullets[j].pos[1], object_array[i].pos[0], object_array[i].pos[1])
 
         if(distance <= totalRadius) {
-          // debugger;
           this.removeObject(object_array[i]);
+        }
+      }
+    }
+  }
+
+  checkCollisionsWithGoal() {
+    let totalRadius;
+    let object_array = this.allObjects();
+    let distance;
+    for(let j = 0; j < this.goals.length; j++) {
+      for(let i = 0; i < object_array.length; i++) {
+        totalRadius = object_array[i].radius + this.goals[j].radius;
+        distance = Util.distance(this.goals[j].pos[0], this.goals[j].pos[1], object_array[i].pos[0], object_array[i].pos[1])
+
+        if(distance <= totalRadius && object_array[i] instanceof Projectile) {
+
         }
       }
     }
@@ -225,6 +253,7 @@ class Game {
     this.moveObjects();
     this.checkCollisionsWithDisc();
     this.checkCollisionsWithBullet();
+    this.checkCollisionsWithGoal();
   }
 
   allObjects() {

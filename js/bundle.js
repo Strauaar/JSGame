@@ -397,6 +397,10 @@ var _disc = __webpack_require__(7);
 
 var _disc2 = _interopRequireDefault(_disc);
 
+var _goal = __webpack_require__(9);
+
+var _goal2 = _interopRequireDefault(_goal);
+
 var _projectile = __webpack_require__(1);
 
 var _projectile2 = _interopRequireDefault(_projectile);
@@ -427,11 +431,13 @@ var Game = function () {
     this.powerups = [];
     // TODO: Implement bullet as powerup
     this.bullets = [];
+    this.goals = [];
     this.ctx = ctx;
     this.DIM_X = 800;
     this.DIM_Y = 800;
     this.disc = new _disc2.default({ pos: [this.DIM_X / 2, this.DIM_Y / 2], game: this });
     this.initProjectiles = this.initProjectiles.bind(this);
+    this.initGoals();
     this.initProjectiles();
     this.initPowerUps();
     this.randomPosition = this.randomPosition.bind(this);
@@ -442,6 +448,7 @@ var Game = function () {
     this.wrap = this.wrap.bind(this);
     this.checkCollisionsWithDisc = this.checkCollisionsWithDisc.bind(this);
     this.checkCollisionsWithBullet = this.checkCollisionsWithBullet.bind(this);
+    this.checkCollisionsWithGoal = this.checkCollisionsWithGoal.bind(this);
     this.step = this.step.bind(this);
     this.allObjects = this.allObjects.bind(this);
     this.shootBullet = this.shootBullet.bind(this);
@@ -450,6 +457,11 @@ var Game = function () {
   }
 
   _createClass(Game, [{
+    key: 'initGoals',
+    value: function initGoals() {
+      this.goals.push(new _goal2.default({ pos: [200, 200], game: this, radius: 20 }));
+    }
+  }, {
     key: 'initProjectiles',
     value: function initProjectiles() {
       var _this = this;
@@ -600,6 +612,9 @@ var Game = function () {
       this.bullets.forEach(function (bullet) {
         bullet.draw(ctx);
       });
+      this.goals.forEach(function (goal) {
+        goal.draw(ctx);
+      });
     }
   }, {
     key: 'moveObjects',
@@ -608,6 +623,7 @@ var Game = function () {
       //   object.move();
       // });
       // console.log(this.disc.dTheta);
+
       this.allObjects().forEach(function (obj) {
         obj.move();
       });
@@ -647,9 +663,23 @@ var Game = function () {
           distance = Util.distance(this.bullets[j].pos[0], this.bullets[j].pos[1], object_array[i].pos[0], object_array[i].pos[1]);
 
           if (distance <= totalRadius) {
-            // debugger;
             this.removeObject(object_array[i]);
           }
+        }
+      }
+    }
+  }, {
+    key: 'checkCollisionsWithGoal',
+    value: function checkCollisionsWithGoal() {
+      var totalRadius = void 0;
+      var object_array = this.allObjects();
+      var distance = void 0;
+      for (var j = 0; j < this.goals.length; j++) {
+        for (var i = 0; i < object_array.length; i++) {
+          totalRadius = object_array[i].radius + this.goals[j].radius;
+          distance = Util.distance(this.goals[j].pos[0], this.goals[j].pos[1], object_array[i].pos[0], object_array[i].pos[1]);
+
+          if (distance <= totalRadius && object_array[i] instanceof _projectile2.default) {}
         }
       }
     }
@@ -659,6 +689,7 @@ var Game = function () {
       this.moveObjects();
       this.checkCollisionsWithDisc();
       this.checkCollisionsWithBullet();
+      this.checkCollisionsWithGoal();
     }
   }, {
     key: 'allObjects',
@@ -777,7 +808,7 @@ var Disc = function (_MovingObject) {
   _createClass(Disc, [{
     key: 'draw',
     value: function draw(ctx, rel_x, rel_y, theta) {
-      console.log(this.end_angle);
+      // console.log(this.end_angle);
       var rad = Util.calculateRad(rel_x, rel_y, theta);
       // this.rel_x = rel_x;
       // this.rel_y = rel_y;
@@ -893,6 +924,58 @@ var Bullet = function (_MovingObject) {
 }(_moving_object2.default);
 
 exports.default = Bullet;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _moving_object = __webpack_require__(0);
+
+var _moving_object2 = _interopRequireDefault(_moving_object);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Goal = function (_MovingObject) {
+  _inherits(Goal, _MovingObject);
+
+  function Goal(options) {
+    _classCallCheck(this, Goal);
+
+    options.color = 'grey';
+    options.vel = [0, 0];
+    options.color = 'green';
+    return _possibleConstructorReturn(this, (Goal.__proto__ || Object.getPrototypeOf(Goal)).call(this, options));
+  }
+
+  _createClass(Goal, [{
+    key: 'draw',
+    value: function draw(ctx) {
+      ctx.fillStyle = this.color || 'red';
+      ctx.beginPath();
+      ctx.arc(this.pos[0], this.pos[1], this.radius, 2 * Math.PI, false);
+      ctx.fill();
+    }
+  }]);
+
+  return Goal;
+}(_moving_object2.default);
+
+exports.default = Goal;
 
 /***/ })
 /******/ ]);

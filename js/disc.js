@@ -33,7 +33,7 @@ class Disc extends MovingObject{
   // }
 
   draw(ctx, rel_x, rel_y, theta) {
-    console.log(this.end_angle);
+    // console.log(this.end_angle);
     let rad = Util.calculateRad(rel_x, rel_y, theta);
     // this.rel_x = rel_x;
     // this.rel_y = rel_y;
