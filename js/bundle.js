@@ -477,7 +477,7 @@ var Game = function () {
             _this2.powerups.push(new _power_up2.default({ pos: position, vel: _this2.findCenter(position), game: _this2, disc: _this2.disc }));
             break;
         }
-      }, 5000);
+      }, 10000);
     }
   }, {
     key: 'randomPosition',
@@ -777,7 +777,7 @@ var Disc = function (_MovingObject) {
   _createClass(Disc, [{
     key: 'draw',
     value: function draw(ctx, rel_x, rel_y, theta) {
-
+      console.log(this.end_angle);
       var rad = Util.calculateRad(rel_x, rel_y, theta);
       // this.rel_x = rel_x;
       // this.rel_y = rel_y;
@@ -826,9 +826,11 @@ var Disc = function (_MovingObject) {
   }, {
     key: 'caluclateCollision',
     value: function caluclateCollision(otherObject) {
+      // let
+      // console.log(this.end_);
       if (otherObject instanceof _projectile2.default) {
-        otherObject.vel[0] = -1 * (Math.sin(this.dTheta) * this.outerRadius * this.angular_vel) + otherObject.vel[0];
-        otherObject.vel[1] = Math.cos(this.dTheta) * this.outerRadius * this.angular_vel + otherObject.vel[1];
+        otherObject.vel[0] = (Math.sin(this.dTheta) + Math.cos(this.dTheta)) * this.outerRadius * this.angular_vel + otherObject.vel[0];
+        otherObject.vel[1] = -1 * (Math.sin(this.dTheta) * this.outerRadius * this.angular_vel) + otherObject.vel[1];
       } else if (otherObject instanceof _power_up2.default) {
         this.enablePowerup(otherObject);
         this.game.removePowerup(otherObject);
@@ -837,7 +839,6 @@ var Disc = function (_MovingObject) {
   }, {
     key: 'enablePowerup',
     value: function enablePowerup(powerup) {
-      console.log("enabling");
       powerup.enablePowerup(true);
       setTimeout(function () {
         powerup.enablePowerup(false);

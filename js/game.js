@@ -53,7 +53,7 @@ class Game {
           this.powerups.push(new PowerUp({pos:position, vel: this.findCenter(position), game: this, disc: this.disc}));
           break;
       }
-    }, 5000)
+    }, 10000)
   }
 
   randomPosition() {

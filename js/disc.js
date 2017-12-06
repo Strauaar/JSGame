@@ -33,7 +33,7 @@ class Disc extends MovingObject{
   // }
 
   draw(ctx, rel_x, rel_y, theta) {
-
+    console.log(this.end_angle);
     let rad = Util.calculateRad(rel_x, rel_y, theta);
     // this.rel_x = rel_x;
     // this.rel_y = rel_y;
@@ -79,9 +79,11 @@ class Disc extends MovingObject{
   }
 
   caluclateCollision(otherObject) {
+    // let
+    // console.log(this.end_);
     if (otherObject instanceof Projectile) {
-      otherObject.vel[0] = -1 * (Math.sin(this.dTheta) * this.outerRadius * this.angular_vel) + otherObject.vel[0];
-      otherObject.vel[1] = (Math.cos(this.dTheta) * this.outerRadius * this.angular_vel) + otherObject.vel[1];
+      otherObject.vel[0] = ((Math.sin(this.dTheta) + Math.cos(this.dTheta)) * this.outerRadius * this.angular_vel) + otherObject.vel[0];
+      otherObject.vel[1] = -1* ((Math.sin(this.dTheta)) * this.outerRadius * this.angular_vel) + otherObject.vel[1];
     } else if (otherObject instanceof PowerUp) {
       this.enablePowerup(otherObject);
       this.game.removePowerup(otherObject);
@@ -89,7 +91,6 @@ class Disc extends MovingObject{
   }
 
   enablePowerup(powerup) {
-    console.log("enabling");
     powerup.enablePowerup(true);
     setTimeout(() => {
       powerup.enablePowerup(false);
