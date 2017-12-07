@@ -473,9 +473,9 @@ var Game = function () {
     key: 'initTest',
     value: function initTest() {
       // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,0], vel: this.findCenter([800,0]), radius: 20, game: this}));
-      // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,0], vel: this.findCenter([0,0]), radius: 20, game: this}));
+      this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: [0, 0], vel: this.findCenter([0, 0]), radius: 20, game: this }));
       // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,800], vel: this.findCenter([0,800]), radius: 20, game: this}));
-      this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: [800, 800], vel: this.findCenter([800, 800]), radius: 20, game: this }));
+      // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,800], vel: this.findCenter([800,800]), radius: 20, game: this}));
     }
   }, {
     key: 'initProjectiles',
@@ -952,32 +952,32 @@ var Disc = function (_MovingObject) {
           //   otherObject.vel[1] = (this.angular_vel ) ;
           // }
           else if (rel_x > 0 && rel_y > 0) {
-              otherObject.vel[0] = -1 * (this.angular_vel + otherObject.vel[0]);
-              otherObject.vel[1] = this.angular_vel + otherObject.vel[1];
+              otherObject.vel[0] = otherObject.vel[0] + angular_vel * 100;
+              otherObject.vel[1] = angular_vel * 100 + otherObject.vel[1];
             }
             // else if (rel_x === 0 && rel_y > 0) {
-            //   otherObject.vel[0] = -1 * (this.angular_vel );
+            //   otherObject.vel[0] = -1 * (angular_vel );
             //   otherObject.vel[1] = -1 * otherObject.vel[1] ;
             // }
             else if (rel_x < 0 && rel_y > 0) {
-                otherObject.vel[0] = this.angular_vel + -1 * otherObject.vel[0];
-                otherObject.vel[1] = this.angular_vel + otherObject.vel[1];
+                otherObject.vel[0] = otherObject.vel[0] + angular_vel * 100;
+                otherObject.vel[1] = -1 * angular_vel * 100 + otherObject.vel[1];
               }
               // else if (rel_x < 0 && rel_y === 0) {
               //   otherObject.vel[0] = -1 * otherObject.vel[0] ;
-              //   otherObject.vel[1] = -1 * this.angular_vel ;
+              //   otherObject.vel[1] = -1 * angular_vel ;
               // }
               else if (rel_x < 0 && rel_y < 0) {
-                  otherObject.vel[0] = this.angular_vel + otherObject.vel[0];
-                  otherObject.vel[1] = this.angular_vel + otherObject.vel[1];
+                  otherObject.vel[0] = angular_vel * 100 + otherObject.vel[0];
+                  otherObject.vel[1] = -1 * (angular_vel * 100 + otherObject.vel[1]);
                 }
                 // else if (rel_x === 0 && rel_y < 0) {
-                //   otherObject.vel[0] = this.angular_vel ;
+                //   otherObject.vel[0] = angular_vel ;
                 //   otherObject.vel[1] = -1 * otherObject.vel[1] ;
                 // }
                 else if (rel_x > 0 && rel_y < 0) {
-                    otherObject.vel[0] = -1 * this.angular_vel + -1 * otherObject.vel[0];
-                    otherObject.vel[1] = -1 * (this.angular_vel + otherObject.vel[1]);
+                    otherObject.vel[0] = angular_vel * 100 + otherObject.vel[0];
+                    otherObject.vel[1] = -1 * angular_vel * 100 + otherObject.vel[1];
                   }
         }
       } else if (otherObject instanceof _power_up2.default) {
