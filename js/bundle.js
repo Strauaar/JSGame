@@ -910,19 +910,28 @@ var Disc = function (_MovingObject) {
       var angular_vel = void 0;
 
       if (otherObject instanceof _projectile2.default) {
-        var rim_contact_x_coord = Math.cos(this.rad) * this.outerRadius;
-        var rim_contact_y_coord = Math.sin(this.rad) * this.outerRadius;
-        var rim_coord = [rim_contact_x_coord, rim_contact_y_coord];
         var contact_point_x = Util.relative_x(otherObject.pos[0], this.game.DIM_X);
         var contact_point_y = Util.relative_y(otherObject.pos[1], this.game.DIM_Y);
         var angle = Math.atan(contact_point_y / contact_point_x);
         var abs_theta = Util.calculateRad(contact_point_x, contact_point_y, angle);
+        // calculate the difference between the angle of the mouse position to the contact point
+        var theta_diff = Math.abs(abs_theta - this.rad);
+
         console.log("abs_theta", abs_theta);
         console.log("rad", this.rad);
-        console.log("rim", rim_coord);
+        // console.log("rim", rim_coord);
         console.log("pos", otherObject.pos);
-        debugger;
-        if (otherObject.stuck === false) {} else if (this.angular_vel >= 0) {
+        if (otherObject.stuck === false) {
+          // convert pos with respect to this.end_angle
+          //theta + delta Theta mod Math.pi * 2
+          var new_theta = (abs_theta + theta_diff) % Math.PI * 2;
+          var c = 150 * Math.cos(new_theta);
+          var d = 150 * Math.sin(new_theta);
+          otherObject.pos = [c, d];
+          debugger;
+          // convert pos to canvas coor
+          otherObject.vel = [0, 0];
+        } else if (this.angular_vel >= 0) {
           if (isNaN(this.angular_vel) || this.angular_vel === 0) {
             otherObject.vel[0] = -1 * otherObject.vel[0];
             otherObject.vel[1] = -1 * otherObject.vel[1];
