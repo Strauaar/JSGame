@@ -102,10 +102,19 @@ class Disc extends MovingObject{
         // convert pos with respect to this.end_angle
         //theta + delta Theta mod Math.pi * 2
         let new_theta = (abs_theta + theta_diff) % Math.PI * 2;
-        let c = 150 * Math.cos(new_theta);
-        let d = 150 * Math.sin(new_theta);
-        otherObject.pos = [c,d]
-        debugger
+        let new_rel_x = 150 * Math.cos(new_theta);
+        let new_rel_y = 150 * Math.sin(new_theta);
+
+        // debugger
+        let mid_screen_x = this.game.DIM_X;
+        let mid_screen_y = this.game.DIM_Y;
+        if(otherObject.pos[0] > mid_screen_x && otherObject.pos[1] < mid_screen_y) {
+          otherObject.pos[0] = mid_screen_x + new_rel_x;
+          otherObject.pos[1] = mid_screen_y - new_rel_y;
+        } else if (otherObject.pos[0] < mid_screen_x && otherObject[1].pos[1] < mid_screen_y) {
+          otherObject.pos[0] = mid_screen_x + new_rel_x;
+          otherObject.pos[1] = mid_screen_y - new_rel_y;
+        }
         // convert pos to canvas coor
         otherObject.vel = [0,0];
       } else if(this.angular_vel >= 0) {
