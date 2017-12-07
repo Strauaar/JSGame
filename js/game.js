@@ -18,7 +18,7 @@ class Game {
     this.DIM_Y = 800;
     this.initProjectiles = this.initProjectiles.bind(this);
     this.initGoals();
-    this.initProjectiles();
+    // this.initProjectiles();
     this.initPowerUps();
     this.randomPosition = this.randomPosition.bind(this);
     this.findCenter = this.findCenter.bind(this);
@@ -37,6 +37,7 @@ class Game {
     this.shootBullet = this.shootBullet.bind(this);
     this.removePowerup = this.removePowerup.bind(this);
     this.removeObject = this.removeObject.bind(this);
+    this.initTest();
   }
 
   initDisc() {
@@ -45,6 +46,13 @@ class Game {
 
   initGoals() {
     this.goals.push(new Goal({pos: [200, 200], game: this, radius: 20}))
+  }
+
+  initTest() {
+    this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,0], vel: this.findCenter([800,0]), radius: 20, game: this}));
+    this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,0], vel: this.findCenter([0,0]), radius: 20, game: this}));
+    this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,800], vel: this.findCenter([0,800]), radius: 20, game: this}));
+    this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,800], vel: this.findCenter([800,800]), radius: 20, game: this}));
   }
 
   initProjectiles() {
@@ -116,8 +124,8 @@ class Game {
       rel_y = pos[1] - (this.DIM_Y / 2);
     }
     let unit_vec_helper = Math.sqrt(Math.pow(rel_x, 2) + Math.pow(rel_y, 2));
-    let x_unit_vec = (rel_x/unit_vec_helper) * -10;
-    let y_unit_vec = (rel_y/unit_vec_helper) * -10;
+    let x_unit_vec = (rel_x/unit_vec_helper) * -2;
+    let y_unit_vec = (rel_y/unit_vec_helper) * -2;
     return [x_unit_vec, y_unit_vec];
   }
 

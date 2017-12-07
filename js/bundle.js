@@ -397,7 +397,7 @@ var _disc = __webpack_require__(7);
 
 var _disc2 = _interopRequireDefault(_disc);
 
-var _goal = __webpack_require__(9);
+var _goal = __webpack_require__(8);
 
 var _goal2 = _interopRequireDefault(_goal);
 
@@ -413,7 +413,7 @@ var _util = __webpack_require__(3);
 
 var Util = _interopRequireWildcard(_util);
 
-var _bullet = __webpack_require__(8);
+var _bullet = __webpack_require__(9);
 
 var _bullet2 = _interopRequireDefault(_bullet);
 
@@ -438,7 +438,7 @@ var Game = function () {
     this.DIM_Y = 800;
     this.initProjectiles = this.initProjectiles.bind(this);
     this.initGoals();
-    this.initProjectiles();
+    // this.initProjectiles();
     this.initPowerUps();
     this.randomPosition = this.randomPosition.bind(this);
     this.findCenter = this.findCenter.bind(this);
@@ -456,6 +456,7 @@ var Game = function () {
     this.shootBullet = this.shootBullet.bind(this);
     this.removePowerup = this.removePowerup.bind(this);
     this.removeObject = this.removeObject.bind(this);
+    this.initTest();
   }
 
   _createClass(Game, [{
@@ -467,6 +468,14 @@ var Game = function () {
     key: 'initGoals',
     value: function initGoals() {
       this.goals.push(new _goal2.default({ pos: [200, 200], game: this, radius: 20 }));
+    }
+  }, {
+    key: 'initTest',
+    value: function initTest() {
+      this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: [800, 0], vel: this.findCenter([800, 0]), radius: 20, game: this }));
+      this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: [0, 0], vel: this.findCenter([0, 0]), radius: 20, game: this }));
+      this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: [0, 800], vel: this.findCenter([0, 800]), radius: 20, game: this }));
+      this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: [800, 800], vel: this.findCenter([800, 800]), radius: 20, game: this }));
     }
   }, {
     key: 'initProjectiles',
@@ -546,8 +555,8 @@ var Game = function () {
         rel_y = pos[1] - this.DIM_Y / 2;
       }
       var unit_vec_helper = Math.sqrt(Math.pow(rel_x, 2) + Math.pow(rel_y, 2));
-      var x_unit_vec = rel_x / unit_vec_helper * -10;
-      var y_unit_vec = rel_y / unit_vec_helper * -10;
+      var x_unit_vec = rel_x / unit_vec_helper * -2;
+      var y_unit_vec = rel_y / unit_vec_helper * -2;
       return [x_unit_vec, y_unit_vec];
     }
   }, {
@@ -887,31 +896,37 @@ var Disc = function (_MovingObject) {
   }, {
     key: 'caluclateCollision',
     value: function caluclateCollision(otherObject) {
-      var rel_x = Util.relative_x(otherObject.pos[0]);
-      var rel_y = Util.relative_y(otherObject.pos[1]);
+      var rel_x = Util.relative_x(otherObject.pos[0], 800);
+      var rel_y = Util.relative_y(otherObject.pos[1], 800);
       if (otherObject instanceof _projectile2.default) {
+        // debugger
         if (rel_x > 0 && rel_y === 0) {
-          otherObject.vel[0] = -1 * otherObject.vel[0];
-          otherObject.vel[1] = this.angular_vel * 10;
+          otherObject.vel[0] = -1 * otherObject.vel[0] * 5;
+          otherObject.vel[1] = this.angular_vel * 5;
         } else if (rel_x > 0 && rel_y > 0) {
-          otherObject.vel[0] = Math.sin(this.dTheta) * this.angular_vel + otherObject.vel[0];
-          otherObject.vel[1] = -1 * (Math.cos(this.dTheta) * this.angular_vel + otherObject.vel[1]);
+          otherObject.vel[0] = (Math.sin(this.dTheta) * this.angular_vel + otherObject.vel[0]) * 5;
+          otherObject.vel[1] = -1 * (Math.cos(this.dTheta) * this.angular_vel + otherObject.vel[1]) * 5;
         } else if (rel_x === 0 && rel_y > 0) {
-          otherObject.vel[0] = -1 * (this.angular_vel * 10);
-          otherObject.vel[1] = -1 * otherObject.vel[1];
+          otherObject.vel[0] = -1 * (this.angular_vel * 5);
+          otherObject.vel[1] = -1 * otherObject.vel[1] * 5;
         } else if (rel_x < 0 && rel_y > 0) {
-          otherObject.vel[0] = -1 * Math.cos(this.dTheta) * this.angular_vel + -1 * otherObject.vel[0];
+          otherObject.vel[0] = (-1 * Math.cos(this.dTheta) * this.angular_vel + -1 * otherObject.vel[0]) * 5;
+          otherObject.vel[1] = (-1 * Math.sin(this.dTheta) * this.angular_vel + -1 * otherObject.vel[1]) * 5;
         } else if (rel_x < 0 && rel_y === 0) {
-          otherObject.vel[0] = -1 * otherObject.vel[0];
-          otherObject.vel[1] = -1 * this.angular_vel * 10;
+          otherObject.vel[0] = -1 * otherObject.vel[0] * 5;
+          otherObject.vel[1] = -1 * this.angular_vel * 5;
         } else if (rel_x < 0 && rel_y < 0) {
-          otherObject.vel[0] = Math.sin(this.dTheta) * this.angular_vel + otherObject.vel[0];
-          otherObject.vel[1] = -1 * Math.cos(this.dTheta) * this.angular_vel + -1 * otherObject.vel[1];
+          otherObject.vel[0] = (Math.sin(this.dTheta) * this.angular_vel + otherObject.vel[0]) * 5;
+          otherObject.vel[1] = (-1 * Math.cos(this.dTheta) * this.angular_vel + -1 * otherObject.vel[1]) * 5;
         } else if (rel_x === 0 && rel_y < 0) {
-          otherObject.vel[0] = this.angular_vel * 10;
-          otherObject.vel[1] = -1 * otherObject.vel[1];
+          otherObject.vel[0] = this.angular_vel * 5;
+          otherObject.vel[1] = -1 * otherObject.vel[1] * 5;
         } else if (rel_x > 0 && rel_y < 0) {
-          otherObject.vel[0] = -1 * Math.cos(this.dTheta) * this.angular_vel + -1 * otherObject.vel[0];
+          otherObject.vel[0] = (-1 * Math.cos(this.dTheta) * this.angular_vel + -1 * otherObject.vel[0]) * 5;
+          otherObject.vel[1] = (Math.sin(this.dTheta) * this.angular_vel + otherObject.vel[1]) * 5;
+        } else {
+          otherObject.vel[0] = -1 * otherObject.vel[0] * 5;
+          otherObject.vel[1] = -1 * otherObject.vel[1] * 5;
         }
       } else if (otherObject instanceof _power_up2.default) {
         this.enablePowerup(otherObject);
@@ -941,43 +956,6 @@ exports.default = Disc;
 
 /***/ }),
 /* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _moving_object = __webpack_require__(0);
-
-var _moving_object2 = _interopRequireDefault(_moving_object);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Bullet = function (_MovingObject) {
-  _inherits(Bullet, _MovingObject);
-
-  function Bullet(options) {
-    _classCallCheck(this, Bullet);
-
-    return _possibleConstructorReturn(this, (Bullet.__proto__ || Object.getPrototypeOf(Bullet)).call(this, options));
-  }
-
-  return Bullet;
-}(_moving_object2.default);
-
-exports.default = Bullet;
-
-/***/ }),
-/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1027,6 +1005,43 @@ var Goal = function (_MovingObject) {
 }(_moving_object2.default);
 
 exports.default = Goal;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _moving_object = __webpack_require__(0);
+
+var _moving_object2 = _interopRequireDefault(_moving_object);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Bullet = function (_MovingObject) {
+  _inherits(Bullet, _MovingObject);
+
+  function Bullet(options) {
+    _classCallCheck(this, Bullet);
+
+    return _possibleConstructorReturn(this, (Bullet.__proto__ || Object.getPrototypeOf(Bullet)).call(this, options));
+  }
+
+  return Bullet;
+}(_moving_object2.default);
+
+exports.default = Bullet;
 
 /***/ })
 /******/ ]);
