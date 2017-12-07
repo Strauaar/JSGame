@@ -150,16 +150,16 @@ class Disc extends MovingObject{
         //   otherObject.vel[1] = -1 * angular_vel ;
         // }
         else if (rel_x < 0 && rel_y < 0) {
-          otherObject.vel[0] = ((angular_vel * 100) + otherObject.vel[0]) ;
-          otherObject.vel[1] = -1 * ((angular_vel * 100) + otherObject.vel[1]) ;
+          otherObject.vel[0] = -1 * ((angular_vel * 100) + otherObject.vel[0]) ;
+          otherObject.vel[1] = ((angular_vel * 100) + otherObject.vel[1]) ;
         }
         // else if (rel_x === 0 && rel_y < 0) {
         //   otherObject.vel[0] = angular_vel ;
         //   otherObject.vel[1] = -1 * otherObject.vel[1] ;
         // }
         else if (rel_x > 0 && rel_y < 0) {
-          otherObject.vel[0] = ((angular_vel * 100) + otherObject.vel[0]) ;
-          otherObject.vel[1] = ((-1 * angular_vel * 100) + otherObject.vel[1]) ;
+          otherObject.vel[0] = (( -1 * angular_vel * 100) + otherObject.vel[0]) ;
+          otherObject.vel[1] = ((angular_vel * 100) + otherObject.vel[1]) ;
         }
       }
     } else if (otherObject instanceof PowerUp) {
