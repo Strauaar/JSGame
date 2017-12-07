@@ -114,6 +114,12 @@ class Disc extends MovingObject{
         } else if (otherObject.pos[0] < mid_screen_x && otherObject.pos[1] < mid_screen_y) {
           otherObject.pos[0] = mid_screen_x + new_rel_x;
           otherObject.pos[1] = mid_screen_y - new_rel_y;
+        } else if (otherObject.pos[0] < mid_screen_x && otherObject.pos[1] > mid_screen_y) {
+          otherObject.pos[0] = mid_screen_x + new_rel_x;
+          otherObject.pos[1] = mid_screen_y - new_rel_y;
+        } else if (otherObject.pos[0] > mid_screen_x && otherObject.pos[1] > mid_screen_y) {
+          otherObject.pos[0] = mid_screen_x + new_rel_x;
+          otherObject.pos[1] = mid_screen_y + new_rel_y;
         }
         // convert pos to canvas coor
         otherObject.vel = [0,0];
