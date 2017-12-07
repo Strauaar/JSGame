@@ -49,9 +49,9 @@ class Game {
   }
 
   initTest() {
-    this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,0], vel: this.findCenter([800,0]), radius: 20, game: this}));
-    this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,0], vel: this.findCenter([0,0]), radius: 20, game: this}));
-    this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,800], vel: this.findCenter([0,800]), radius: 20, game: this}));
+    // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,0], vel: this.findCenter([800,0]), radius: 20, game: this}));
+    // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,0], vel: this.findCenter([0,0]), radius: 20, game: this}));
+    // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,800], vel: this.findCenter([0,800]), radius: 20, game: this}));
     this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,800], vel: this.findCenter([800,800]), radius: 20, game: this}));
   }
 
@@ -177,9 +177,12 @@ class Game {
   }
 
   draw(ctx) {
+    // console.log("x_vel", this.projectiles[0].vel[0]);
+    // console.log("y_vel", this.projectiles[0].vel[1]);
+    // console.log(this.disc.angular_vel);
     ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
-    // ctx.fillStyle = "#2c2d23";
-    // ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
+    ctx.fillStyle = "#2c2d23";
+    ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
     ctx.font = "30px Arial";
     ctx.fillText(this.score,10,50);
     this.allObjects().forEach(obj => {

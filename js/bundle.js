@@ -472,9 +472,9 @@ var Game = function () {
   }, {
     key: 'initTest',
     value: function initTest() {
-      this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: [800, 0], vel: this.findCenter([800, 0]), radius: 20, game: this }));
-      this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: [0, 0], vel: this.findCenter([0, 0]), radius: 20, game: this }));
-      this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: [0, 800], vel: this.findCenter([0, 800]), radius: 20, game: this }));
+      // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,0], vel: this.findCenter([800,0]), radius: 20, game: this}));
+      // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,0], vel: this.findCenter([0,0]), radius: 20, game: this}));
+      // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,800], vel: this.findCenter([0,800]), radius: 20, game: this}));
       this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: [800, 800], vel: this.findCenter([800, 800]), radius: 20, game: this }));
     }
   }, {
@@ -612,9 +612,12 @@ var Game = function () {
   }, {
     key: 'draw',
     value: function draw(ctx) {
+      // console.log("x_vel", this.projectiles[0].vel[0]);
+      // console.log("y_vel", this.projectiles[0].vel[1]);
+      // console.log(this.disc.angular_vel);
       ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
-      // ctx.fillStyle = "#2c2d23";
-      // ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
+      ctx.fillStyle = "#2c2d23";
+      ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
       ctx.font = "30px Arial";
       ctx.fillText(this.score, 10, 50);
       this.allObjects().forEach(function (obj) {
@@ -853,7 +856,7 @@ var Disc = function (_MovingObject) {
       // this.rel_y = rel_y;
       // this.theta = theta;
 
-      this.setRadialGradient(ctx, "#DC1C29", "#B7161B");
+      this.setRadialGradient(ctx, "#DC1C29", "#B74536");
       this.drawDonut(ctx, -rad, -rad + Math.PI * 2 / 3);
       this.setRadialGradient(ctx, "#84BC3D", "#5B8829");
       this.drawDonut(ctx, -rad + Math.PI * 2 / 3, -rad + Math.PI * 4 / 3);
@@ -898,8 +901,9 @@ var Disc = function (_MovingObject) {
     value: function caluclateCollision(otherObject) {
       var rel_x = Util.relative_x(otherObject.pos[0], 800);
       var rel_y = Util.relative_y(otherObject.pos[1], 800);
+      var angular_vel = void 0;
       if (otherObject instanceof _projectile2.default) {
-        // debugger
+
         if (this.angular_vel >= 0) {
           if (isNaN(this.angular_vel) || this.angular_vel === 0) {
             otherObject.vel[0] = -1 * otherObject.vel[0];
@@ -910,34 +914,35 @@ var Disc = function (_MovingObject) {
           //   otherObject.vel[1] = (this.angular_vel ) ;
           // }
           else if (rel_x > 0 && rel_y > 0) {
-              otherObject.vel[0] = Math.sin(this.dTheta) * this.angular_vel * 100 + otherObject.vel[0];
-              otherObject.vel[1] = -1 * (Math.cos(this.dTheta) * this.angular_vel * 100 + otherObject.vel[1]);
+              otherObject.vel[0] = otherObject.vel[0] - this.angular_vel * 100;
+              otherObject.vel[1] = -1 * this.angular_vel * 100 + otherObject.vel[1];
             }
             // else if (rel_x === 0 && rel_y > 0) {
             //   otherObject.vel[0] = -1 * (this.angular_vel );
             //   otherObject.vel[1] = -1 * otherObject.vel[1] ;
             // }
             else if (rel_x < 0 && rel_y > 0) {
-                otherObject.vel[0] = -1 * Math.cos(this.dTheta) * this.angular_vel * 100 + -1 * otherObject.vel[0];
-                otherObject.vel[1] = -1 * Math.sin(this.dTheta) * this.angular_vel * 100 + otherObject.vel[1];
+                otherObject.vel[0] = otherObject.vel[0] - this.angular_vel * 100;
+                otherObject.vel[1] = this.angular_vel * 100 + otherObject.vel[1];
               }
               // else if (rel_x < 0 && rel_y === 0) {
               //   otherObject.vel[0] = -1 * otherObject.vel[0] ;
               //   otherObject.vel[1] = -1 * this.angular_vel ;
               // }
               else if (rel_x < 0 && rel_y < 0) {
-                  otherObject.vel[0] = Math.sin(this.dTheta) * this.angular_vel * 100 + otherObject.vel[0];
-                  otherObject.vel[1] = -1 * Math.cos(this.dTheta) * this.angular_vel * 100 + -1 * otherObject.vel[1];
+                  otherObject.vel[0] = this.angular_vel * 100 + otherObject.vel[0];
+                  otherObject.vel[1] = -1 * (this.angular_vel * 100 + otherObject.vel[1]);
                 }
                 // else if (rel_x === 0 && rel_y < 0) {
                 //   otherObject.vel[0] = this.angular_vel ;
                 //   otherObject.vel[1] = -1 * otherObject.vel[1] ;
                 // }
                 else if (rel_x > 0 && rel_y < 0) {
-                    otherObject.vel[0] = -1 * Math.cos(this.dTheta) * this.angular_vel * 100 + -1 * otherObject.vel[0];
-                    otherObject.vel[1] = Math.sin(this.dTheta) * this.angular_vel * 100 + otherObject.vel[1];
+                    otherObject.vel[0] = this.angular_vel * 100 + otherObject.vel[0];
+                    otherObject.vel[1] = -1 * this.angular_vel * 100 + otherObject.vel[1];
                   }
         } else {
+          angular_vel = Math.abs(this.angular_vel);
           if (isNaN(this.angular_vel) || this.angular_vel === 0) {
             otherObject.vel[0] = -1 * otherObject.vel[0];
             otherObject.vel[1] = -1 * otherObject.vel[1];
@@ -947,32 +952,32 @@ var Disc = function (_MovingObject) {
           //   otherObject.vel[1] = (this.angular_vel ) ;
           // }
           else if (rel_x > 0 && rel_y > 0) {
-              otherObject.vel[0] = -1 * (Math.sin(this.dTheta) * this.angular_vel + otherObject.vel[0]);
-              otherObject.vel[1] = Math.cos(this.dTheta) * this.angular_vel + otherObject.vel[1];
+              otherObject.vel[0] = -1 * (this.angular_vel + otherObject.vel[0]);
+              otherObject.vel[1] = this.angular_vel + otherObject.vel[1];
             }
             // else if (rel_x === 0 && rel_y > 0) {
             //   otherObject.vel[0] = -1 * (this.angular_vel );
             //   otherObject.vel[1] = -1 * otherObject.vel[1] ;
             // }
             else if (rel_x < 0 && rel_y > 0) {
-                otherObject.vel[0] = Math.cos(this.dTheta) * this.angular_vel + -1 * otherObject.vel[0];
-                otherObject.vel[1] = Math.sin(this.dTheta) * this.angular_vel + otherObject.vel[1];
+                otherObject.vel[0] = this.angular_vel + -1 * otherObject.vel[0];
+                otherObject.vel[1] = this.angular_vel + otherObject.vel[1];
               }
               // else if (rel_x < 0 && rel_y === 0) {
               //   otherObject.vel[0] = -1 * otherObject.vel[0] ;
               //   otherObject.vel[1] = -1 * this.angular_vel ;
               // }
               else if (rel_x < 0 && rel_y < 0) {
-                  otherObject.vel[0] = Math.sin(this.dTheta) * this.angular_vel + otherObject.vel[0];
-                  otherObject.vel[1] = Math.cos(this.dTheta) * this.angular_vel + otherObject.vel[1];
+                  otherObject.vel[0] = this.angular_vel + otherObject.vel[0];
+                  otherObject.vel[1] = this.angular_vel + otherObject.vel[1];
                 }
                 // else if (rel_x === 0 && rel_y < 0) {
                 //   otherObject.vel[0] = this.angular_vel ;
                 //   otherObject.vel[1] = -1 * otherObject.vel[1] ;
                 // }
                 else if (rel_x > 0 && rel_y < 0) {
-                    otherObject.vel[0] = -1 * Math.cos(this.dTheta) * this.angular_vel + -1 * otherObject.vel[0];
-                    otherObject.vel[1] = -1 * (Math.sin(this.dTheta) * this.angular_vel + otherObject.vel[1]);
+                    otherObject.vel[0] = -1 * this.angular_vel + -1 * otherObject.vel[0];
+                    otherObject.vel[1] = -1 * (this.angular_vel + otherObject.vel[1]);
                   }
         }
       } else if (otherObject instanceof _power_up2.default) {
