@@ -476,10 +476,10 @@ var Game = function () {
   }, {
     key: 'initTest',
     value: function initTest() {
-      // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,0], vel: this.findCenter([800,0]), radius: 20, game: this}));
+      this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: [800, 0], vel: this.findCenter([800, 0]), radius: 20, game: this }));
       // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,0], vel: this.findCenter([0,0]), radius: 20, game: this}));
       // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,800], vel: this.findCenter([0,800]), radius: 20, game: this}));
-      this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: [800, 800], vel: this.findCenter([800, 800]), radius: 20, game: this }));
+      // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,800], vel: this.findCenter([800,800]), radius: 20, game: this}));
     }
   }, {
     key: 'initProjectiles',
@@ -929,12 +929,12 @@ var Disc = function (_MovingObject) {
           var new_rel_y = 150 * Math.sin(new_theta);
 
           // debugger
-          var mid_screen_x = this.game.DIM_X;
-          var mid_screen_y = this.game.DIM_Y;
+          var mid_screen_x = this.game.DIM_X / 2;
+          var mid_screen_y = this.game.DIM_Y / 2;
           if (otherObject.pos[0] > mid_screen_x && otherObject.pos[1] < mid_screen_y) {
             otherObject.pos[0] = mid_screen_x + new_rel_x;
             otherObject.pos[1] = mid_screen_y - new_rel_y;
-          } else if (otherObject.pos[0] < mid_screen_x && otherObject[1].pos[1] < mid_screen_y) {
+          } else if (otherObject.pos[0] < mid_screen_x && otherObject.pos[1] < mid_screen_y) {
             otherObject.pos[0] = mid_screen_x + new_rel_x;
             otherObject.pos[1] = mid_screen_y - new_rel_y;
           }

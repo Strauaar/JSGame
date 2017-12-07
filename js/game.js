@@ -49,10 +49,10 @@ class Game {
   }
 
   initTest() {
-    // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,0], vel: this.findCenter([800,0]), radius: 20, game: this}));
+    this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,0], vel: this.findCenter([800,0]), radius: 20, game: this}));
     // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,0], vel: this.findCenter([0,0]), radius: 20, game: this}));
     // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,800], vel: this.findCenter([0,800]), radius: 20, game: this}));
-    this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,800], vel: this.findCenter([800,800]), radius: 20, game: this}));
+    // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,800], vel: this.findCenter([800,800]), radius: 20, game: this}));
   }
 
   initProjectiles() {

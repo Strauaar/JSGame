@@ -106,12 +106,12 @@ class Disc extends MovingObject{
         let new_rel_y = 150 * Math.sin(new_theta);
 
         // debugger
-        let mid_screen_x = this.game.DIM_X;
-        let mid_screen_y = this.game.DIM_Y;
+        let mid_screen_x = this.game.DIM_X/2;
+        let mid_screen_y = this.game.DIM_Y/2;
         if(otherObject.pos[0] > mid_screen_x && otherObject.pos[1] < mid_screen_y) {
           otherObject.pos[0] = mid_screen_x + new_rel_x;
           otherObject.pos[1] = mid_screen_y - new_rel_y;
-        } else if (otherObject.pos[0] < mid_screen_x && otherObject[1].pos[1] < mid_screen_y) {
+        } else if (otherObject.pos[0] < mid_screen_x && otherObject.pos[1] < mid_screen_y) {
           otherObject.pos[0] = mid_screen_x + new_rel_x;
           otherObject.pos[1] = mid_screen_y - new_rel_y;
         }
