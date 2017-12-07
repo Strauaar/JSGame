@@ -94,7 +94,18 @@ class Disc extends MovingObject{
         otherObject.vel[0] = -1 * (this.angular_vel * 10);
         otherObject.vel[1] = -1 * otherObject.vel[1];
       } else if (rel_x < 0 && rel_y > 0) {
-        otherObject.vel[0] = (-1 * Math.cos(this.dTheta) * this.angular_vel) + otherObject.vel[0]
+        otherObject.vel[0] = (-1 * Math.cos(this.dTheta) * this.angular_vel) + -1 * otherObject.vel[0];
+      } else if (rel_x < 0 && rel_y === 0) {
+        otherObject.vel[0] = -1 * otherObject.vel[0];
+        otherObject.vel[1] = -1 * this.angular_vel * 10;
+      } else if (rel_x < 0 && rel_y < 0) {
+        otherObject.vel[0] = Math.sin(this.dTheta) * this.angular_vel + otherObject.vel[0];
+        otherObject.vel[1] = (-1 *Math.cos(this.dTheta) * this.angular_vel) + -1 * otherObject.vel[1];
+      } else if (rel_x === 0 && rel_y < 0) {
+        otherObject.vel[0] = this.angular_vel * 10;
+        otherObject.vel[1] = -1 * otherObject.vel[1];
+      } else if (rel_x > 0 && rel_y < 0) {
+        otherObject.vel[0] = (-1 * Math.cos(this.dTheta) * this.angular_vel) + (-1 * otherObject.vel[0])
       }
     } else if (otherObject instanceof PowerUp) {
       this.enablePowerup(otherObject);
