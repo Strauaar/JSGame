@@ -135,7 +135,7 @@ class Game {
     this.disc.start_time = 1;
     const registerMovement = (e) => {
       clearTimeout(timeout);
-      console.log("moving");
+
       this.disc.rel_x = Util.relative_x(e.clientX, this.DIM_X);
       this.disc.rel_y = Util.relative_y(e.clientY, this.DIM_Y);
       this.disc.theta = Math.atan(this.disc.rel_y/this.disc.rel_x);
@@ -163,7 +163,7 @@ class Game {
     };
 
     const registerStaticPosition = (e) => {
-      console.log("stopped");
+      // console.log("stopped");
       this.disc.rel_x = Util.relative_x(e.detail.clientX, this.DIM_X);
       this.disc.rel_y = Util.relative_y(e.detail.clientY, this.DIM_Y);
       // this.disc.theta = Math.atan(this.disc.rel_y/this.disc.rel_x);
@@ -196,7 +196,7 @@ class Game {
     });
     // console.log("rel_x", this.disc.rel_x);
     // console.log("rel_y", this.disc.rel_y);
-    console.log("ang_vel", this.disc.angular_vel);
+    // console.log("ang_vel", this.disc.angular_vel);
     this.disc.draw(this.ctx, this.disc.rel_x, this.disc.rel_y, this.disc.theta);
 
     // this.goals.forEach(goal => {
@@ -281,6 +281,7 @@ class Game {
   }
 
   step() {
+    console.log(this.disc.rad);
     this.moveObjects();
     this.checkCollisionsWithDisc();
     this.checkCollisionsWithBullet();

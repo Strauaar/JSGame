@@ -36,17 +36,17 @@ class Disc extends MovingObject{
 
   draw(ctx, rel_x = 10, rel_y = 10, theta = Math.PI/4) {
     // console.log(this.end_angle);
-    let rad = Util.calculateRad(rel_x, rel_y, theta);
+    this.rad = Util.calculateRad(rel_x, rel_y, theta);
     // this.rel_x = rel_x;
     // this.rel_y = rel_y;
     // this.theta = theta;
 
     this.setRadialGradient(ctx, "#DC1C29", "#B74536");
-    this.drawDonut(ctx, -rad, -rad + Math.PI * 2/3);
+    this.drawDonut(ctx, -this.rad, -this.rad + Math.PI * 2/3);
     this.setRadialGradient(ctx, "#84BC3D", "#5B8829");
-    this.drawDonut(ctx,-rad + Math.PI * 2/3, -rad + Math.PI * 4/3)
+    this.drawDonut(ctx,-this.rad + Math.PI * 2/3, -this.rad + Math.PI * 4/3)
     this.setRadialGradient(ctx, "#27A1D4", "#2182AD");
-    this.drawDonut(ctx, -rad + Math.PI * 4/3, -rad + Math.PI * 2)
+    this.drawDonut(ctx, -this.rad + Math.PI * 4/3, -this.rad + Math.PI * 2)
   }
 
   drawDonut(ctx, startRadian, endRadian){
@@ -83,6 +83,12 @@ class Disc extends MovingObject{
   caluclateCollision(otherObject) {
     let rel_x = Util.relative_x(otherObject.pos[0], 800);
     let rel_y = Util.relative_y(otherObject.pos[1], 800);
+    // convert polar coordinates to cartesian coordinates
+    console.log("rad", this.rad);
+    let rim_contact_x_coord = Math.cos(this.rad) * this.outerRadius;
+    let rim_contact_y_coord = Math.sin(this.rad) * this.outerRadius;
+    let rim_coord = [rim_contact_x_coord, rim_contact_y_coord];
+    console.log(rim_coord);
     let angular_vel;
     if (otherObject instanceof Projectile) {
 

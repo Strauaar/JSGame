@@ -15,7 +15,7 @@ class PowerUp extends MovingObject {
       this.powerup = PowerUp.addShooter.bind(this);
       document.addEventListener('click', this.powerup)
     } else if(toggle === false) {
-      console.log("disable");
+      // console.log("disable");
       this.toggle = false;
       document.removeEventListener('click', this.powerup)
     }

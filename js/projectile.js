@@ -4,6 +4,7 @@ class Projectile extends MovingObject {
   constructor(options){
     options.radius = 30;
     super(options);
+    this.stuck = false;
   }
 
   collideWith(otherObject) {

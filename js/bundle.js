@@ -164,7 +164,11 @@ var Projectile = function (_MovingObject) {
     _classCallCheck(this, Projectile);
 
     options.radius = 30;
-    return _possibleConstructorReturn(this, (Projectile.__proto__ || Object.getPrototypeOf(Projectile)).call(this, options));
+
+    var _this = _possibleConstructorReturn(this, (Projectile.__proto__ || Object.getPrototypeOf(Projectile)).call(this, options));
+
+    _this.stuck = false;
+    return _this;
   }
 
   _createClass(Projectile, [{
@@ -226,7 +230,7 @@ var PowerUp = function (_MovingObject) {
         this.powerup = PowerUp.addShooter.bind(this);
         document.addEventListener('click', this.powerup);
       } else if (toggle === false) {
-        console.log("disable");
+        // console.log("disable");
         this.toggle = false;
         document.removeEventListener('click', this.powerup);
       }
@@ -569,7 +573,7 @@ var Game = function () {
       this.disc.start_time = 1;
       var registerMovement = function registerMovement(e) {
         clearTimeout(timeout);
-        console.log("moving");
+
         _this3.disc.rel_x = Util.relative_x(e.clientX, _this3.DIM_X);
         _this3.disc.rel_y = Util.relative_y(e.clientY, _this3.DIM_Y);
         _this3.disc.theta = Math.atan(_this3.disc.rel_y / _this3.disc.rel_x);
@@ -597,7 +601,7 @@ var Game = function () {
       };
 
       var registerStaticPosition = function registerStaticPosition(e) {
-        console.log("stopped");
+        // console.log("stopped");
         _this3.disc.rel_x = Util.relative_x(e.detail.clientX, _this3.DIM_X);
         _this3.disc.rel_y = Util.relative_y(e.detail.clientY, _this3.DIM_Y);
         // this.disc.theta = Math.atan(this.disc.rel_y/this.disc.rel_x);
@@ -631,7 +635,7 @@ var Game = function () {
       });
       // console.log("rel_x", this.disc.rel_x);
       // console.log("rel_y", this.disc.rel_y);
-      console.log("ang_vel", this.disc.angular_vel);
+      // console.log("ang_vel", this.disc.angular_vel);
       this.disc.draw(this.ctx, this.disc.rel_x, this.disc.rel_y, this.disc.theta);
 
       // this.goals.forEach(goal => {
@@ -722,6 +726,7 @@ var Game = function () {
   }, {
     key: 'step',
     value: function step() {
+      console.log(this.disc.rad);
       this.moveObjects();
       this.checkCollisionsWithDisc();
       this.checkCollisionsWithBullet();
@@ -851,17 +856,17 @@ var Disc = function (_MovingObject) {
       var theta = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : Math.PI / 4;
 
       // console.log(this.end_angle);
-      var rad = Util.calculateRad(rel_x, rel_y, theta);
+      this.rad = Util.calculateRad(rel_x, rel_y, theta);
       // this.rel_x = rel_x;
       // this.rel_y = rel_y;
       // this.theta = theta;
 
       this.setRadialGradient(ctx, "#DC1C29", "#B74536");
-      this.drawDonut(ctx, -rad, -rad + Math.PI * 2 / 3);
+      this.drawDonut(ctx, -this.rad, -this.rad + Math.PI * 2 / 3);
       this.setRadialGradient(ctx, "#84BC3D", "#5B8829");
-      this.drawDonut(ctx, -rad + Math.PI * 2 / 3, -rad + Math.PI * 4 / 3);
+      this.drawDonut(ctx, -this.rad + Math.PI * 2 / 3, -this.rad + Math.PI * 4 / 3);
       this.setRadialGradient(ctx, "#27A1D4", "#2182AD");
-      this.drawDonut(ctx, -rad + Math.PI * 4 / 3, -rad + Math.PI * 2);
+      this.drawDonut(ctx, -this.rad + Math.PI * 4 / 3, -this.rad + Math.PI * 2);
     }
   }, {
     key: 'drawDonut',
@@ -901,6 +906,12 @@ var Disc = function (_MovingObject) {
     value: function caluclateCollision(otherObject) {
       var rel_x = Util.relative_x(otherObject.pos[0], 800);
       var rel_y = Util.relative_y(otherObject.pos[1], 800);
+      // convert polar coordinates to cartesian coordinates
+      console.log("rad", this.rad);
+      var rim_contact_x_coord = Math.cos(this.rad) * this.outerRadius;
+      var rim_contact_y_coord = Math.sin(this.rad) * this.outerRadius;
+      var rim_coord = [rim_contact_x_coord, rim_contact_y_coord];
+      console.log(rim_coord);
       var angular_vel = void 0;
       if (otherObject instanceof _projectile2.default) {
 
