@@ -907,15 +907,22 @@ var Disc = function (_MovingObject) {
       var rel_x = Util.relative_x(otherObject.pos[0], 800);
       var rel_y = Util.relative_y(otherObject.pos[1], 800);
       // convert polar coordinates to cartesian coordinates
-      console.log("rad", this.rad);
-      var rim_contact_x_coord = Math.cos(this.rad) * this.outerRadius;
-      var rim_contact_y_coord = Math.sin(this.rad) * this.outerRadius;
-      var rim_coord = [rim_contact_x_coord, rim_contact_y_coord];
-      console.log(rim_coord);
       var angular_vel = void 0;
-      if (otherObject instanceof _projectile2.default) {
 
-        if (this.angular_vel >= 0) {
+      if (otherObject instanceof _projectile2.default) {
+        var rim_contact_x_coord = Math.cos(this.rad) * this.outerRadius;
+        var rim_contact_y_coord = Math.sin(this.rad) * this.outerRadius;
+        var rim_coord = [rim_contact_x_coord, rim_contact_y_coord];
+        var contact_point_x = Util.relative_x(otherObject.pos[0], this.game.DIM_X);
+        var contact_point_y = Util.relative_y(otherObject.pos[1], this.game.DIM_Y);
+        var angle = Math.atan(contact_point_y / contact_point_x);
+        var abs_theta = Util.calculateRad(contact_point_x, contact_point_y, angle);
+        console.log("abs_theta", abs_theta);
+        console.log("rad", this.rad);
+        console.log("rim", rim_coord);
+        console.log("pos", otherObject.pos);
+        debugger;
+        if (otherObject.stuck === false) {} else if (this.angular_vel >= 0) {
           if (isNaN(this.angular_vel) || this.angular_vel === 0) {
             otherObject.vel[0] = -1 * otherObject.vel[0];
             otherObject.vel[1] = -1 * otherObject.vel[1];
