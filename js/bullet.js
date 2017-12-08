@@ -8,7 +8,7 @@ class Bullet extends MovingObject {
   }
 
   draw(ctx) {
-    ctx.drawImage(this.drawing,100, 100, 80, 80, this.pos[0], this.pos[1], 50, 50);
+    ctx.drawImage(this.drawing,130, 130, 80, 80, this.pos[0], this.pos[1], 50, 50);
   }
 }
 

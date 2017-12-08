@@ -73,7 +73,7 @@ class Game {
     let position;
     let random_number;
     position = this.randomPosition();
-    this.powerups.push(new PowerUp({pos:position, vel: this.findCenter(position), game: this, disc: this.disc}));
+    this.powerups.push(new PowerUp({pos:position, vel: [this.findCenter(position)[0] * 10, this.findCenter(position)[1] * 10], game: this, disc: this.disc}));
     setInterval( () => {
       random_number = Math.floor(Math.random() * 3);
       switch(random_number) {
@@ -289,12 +289,16 @@ class Game {
       for(let i = 0; i < object_array.length; i++) {
         totalRadius = object_array[i].radius + this.bullets[j].radius;
         distance = Util.distance(this.bullets[j].pos[0], this.bullets[j].pos[1], object_array[i].pos[0], object_array[i].pos[1])
+        debugger
 
-        if(distance <= totalRadius) {
-          this.removeObject(object_array[i]);
-        }
+          if(distance <= totalRadius) {
+            this.removeObject(object_array[i]);
+          }
+
       }
     }
+    // debugger
+
   }
 
   checkCollisionsWithGoal() {
@@ -324,10 +328,7 @@ class Game {
 
   allObjects() {
     let all = this.projectiles.slice();
-    // all.push(this.disc);
-    // TODO: Add other objects
     all = all.concat(this.powerups);
-    // all = all.concat(this.bullets);
     return all;
 
   }

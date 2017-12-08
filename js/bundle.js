@@ -542,7 +542,7 @@ var Game = function () {
       var position = void 0;
       var random_number = void 0;
       position = this.randomPosition();
-      this.powerups.push(new _power_up2.default({ pos: position, vel: this.findCenter(position), game: this, disc: this.disc }));
+      this.powerups.push(new _power_up2.default({ pos: position, vel: [this.findCenter(position)[0] * 10, this.findCenter(position)[1] * 10], game: this, disc: this.disc }));
       setInterval(function () {
         random_number = Math.floor(Math.random() * 3);
         switch (random_number) {
@@ -765,12 +765,14 @@ var Game = function () {
         for (var i = 0; i < object_array.length; i++) {
           totalRadius = object_array[i].radius + this.bullets[j].radius;
           distance = Util.distance(this.bullets[j].pos[0], this.bullets[j].pos[1], object_array[i].pos[0], object_array[i].pos[1]);
+          debugger;
 
           if (distance <= totalRadius) {
             this.removeObject(object_array[i]);
           }
         }
       }
+      // debugger
     }
   }, {
     key: 'checkCollisionsWithGoal',
@@ -803,10 +805,7 @@ var Game = function () {
     key: 'allObjects',
     value: function allObjects() {
       var all = this.projectiles.slice();
-      // all.push(this.disc);
-      // TODO: Add other objects
       all = all.concat(this.powerups);
-      // all = all.concat(this.bullets);
       return all;
     }
   }, {
@@ -1034,7 +1033,7 @@ var Disc = function (_MovingObject) {
     value: function shoot(x, y) {
       console.log("hi");
       var vel_vectors = this.game.findCenter([x, y]);
-      this.game.shootBullet({ pos: [this.game.DIM_X / 2 - 35, this.game.DIM_Y / 2 - 35], vel: [vel_vectors[0] * -1, vel_vectors[1] * -1], color: 'black', radius: 2 });
+      this.game.shootBullet({ pos: [this.game.DIM_X / 2, this.game.DIM_Y / 2], vel: [vel_vectors[0] * -10, vel_vectors[1] * -10], color: 'black', radius: 2 });
     }
   }]);
 
@@ -1136,7 +1135,7 @@ var Bullet = function (_MovingObject) {
   _createClass(Bullet, [{
     key: "draw",
     value: function draw(ctx) {
-      ctx.drawImage(this.drawing, 100, 100, 80, 80, this.pos[0], this.pos[1], 50, 50);
+      ctx.drawImage(this.drawing, 130, 130, 80, 80, this.pos[0], this.pos[1], 50, 50);
     }
   }]);
 

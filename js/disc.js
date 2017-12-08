@@ -142,7 +142,7 @@ class Disc extends MovingObject{
   shoot(x, y) {
     console.log("hi");
     let vel_vectors = this.game.findCenter([x,y]);
-    this.game.shootBullet({pos:[(this.game.DIM_X / 2) - 35, (this.game.DIM_Y / 2) - 35], vel: [vel_vectors[0] * -1, vel_vectors[1] * -1] , color: 'black', radius: 2})
+    this.game.shootBullet({pos:[(this.game.DIM_X / 2), (this.game.DIM_Y / 2)], vel: [vel_vectors[0] * -10, vel_vectors[1] * -10] , color: 'black', radius: 2})
   }
 
 }
