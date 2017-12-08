@@ -241,14 +241,27 @@ var PowerUp = function (_MovingObject) {
   _createClass(PowerUp, [{
     key: 'enablePowerup',
     value: function enablePowerup(toggle) {
-      if (toggle === true && this.toggle !== true) {
-        this.toggle = toggle;
-        this.powerup = PowerUp.addShooter.bind(this);
-        document.addEventListener('click', this.powerup);
-      } else if (toggle === false) {
-        // console.log("disable");
-        this.toggle = false;
-        document.removeEventListener('click', this.powerup);
+
+      var num = Math.floor(Math.random() * 100);
+      if (num % 2 == 0) {
+        if (toggle === true && this.toggle !== true) {
+          this.toggle = toggle;
+          this.powerup = PowerUp.burst.bind(this);
+          document.addEventListener('click', this.powerup);
+        } else if (toggle === false) {
+          this.toggle = false;
+          document.removeEventListener('click', this.powerup);
+        }
+      } else {
+        if (toggle === true && this.toggle !== true) {
+          this.toggle = toggle;
+          this.powerup = PowerUp.addShooter.bind(this);
+          document.addEventListener('click', this.powerup);
+        } else if (toggle === false) {
+          // console.log("disable");
+          this.toggle = false;
+          document.removeEventListener('click', this.powerup);
+        }
       }
     }
   }, {
@@ -273,6 +286,10 @@ var PowerUp = function (_MovingObject) {
 
 PowerUp.addShooter = function (e) {
   this.disc.shoot(e.clientX, e.clientY);
+};
+
+PowerUp.burst = function () {
+  this.disc.burst();
 };
 
 exports.default = PowerUp;
