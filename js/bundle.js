@@ -220,6 +220,20 @@ var PowerUp = function (_MovingObject) {
     _this.toggle = false;
     _this.drawing = new Image();
     _this.drawing.src = "assets/images/frame-1.png";
+    _this.drawing1 = new Image();
+    _this.drawing1.src = "assets/images/frame-2.png";
+    _this.drawing2 = new Image();
+    _this.drawing2.src = "assets/images/frame-3.png";
+    _this.drawing3 = new Image();
+    _this.drawing3.src = "assets/images/frame-4.png";
+    _this.drawing4 = new Image();
+    _this.drawing4.src = "assets/images/frame-5.png";
+
+    _this.count = 0;
+    setInterval(function () {
+      _this.count += 1;
+      _this.count = _this.count % 4;
+    }, 190);
     return _this;
   }
 
@@ -240,7 +254,17 @@ var PowerUp = function (_MovingObject) {
   }, {
     key: 'draw',
     value: function draw(ctx) {
-      ctx.drawImage(this.drawing, this.pos[0], this.pos[1], 50, 50);
+      if (this.count === 0) {
+        ctx.drawImage(this.drawing, this.pos[0], this.pos[1], 50, 50);
+      } else if (this.count === 1) {
+        ctx.drawImage(this.drawing1, this.pos[0], this.pos[1], 50, 50);
+      } else if (this.count === 2) {
+        ctx.drawImage(this.drawing2, this.pos[0], this.pos[1], 50, 50);
+      } else if (this.count === 3) {
+        ctx.drawImage(this.drawing3, this.pos[0], this.pos[1], 50, 50);
+      } else if (this.count === 4) {
+        ctx.drawImage(this.drawing4, this.pos[0], this.pos[1], 50, 50);
+      }
     }
   }]);
 
