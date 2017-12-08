@@ -81,8 +81,8 @@ class Disc extends MovingObject{
   }
 
   caluclateCollision(otherObject) {
-    let rel_x = Util.relative_x(otherObject.pos[0], 800);
-    let rel_y = Util.relative_y(otherObject.pos[1], 800);
+    let rel_x = Util.relative_x(otherObject.pos[0], this.game.DIM_X);
+    let rel_y = Util.relative_y(otherObject.pos[1], this.game.DIM_Y);
     // convert polar coordinates to cartesian coordinates
     let angular_vel;
 
@@ -94,14 +94,17 @@ class Disc extends MovingObject{
       // calculate the difference between the angle of the mouse position to the contact point
       let theta_diff = Math.abs(abs_theta - this.rad);
 
-      console.log("abs_theta", abs_theta);
-      console.log("rad", this.rad);
-      // console.log("rim", rim_coord);
-      console.log("pos", otherObject.pos);
+      // console.log("abs_theta", abs_theta);
+      // console.log("rad", this.rad);
+      // // console.log("rim", rim_coord);
+      // console.log("pos", otherObject.pos);
       if(otherObject.stuck === false) {
         // convert pos with respect to this.end_angle
         //theta + delta Theta mod Math.pi * 2
-        let new_theta = (abs_theta + theta_diff) % Math.PI * 2;
+        otherObject.vel = [0,0];
+
+        let new_theta = (abs_theta)
+          // + theta_diff) % (Math.PI * 2);
         let new_rel_x = 150 * Math.cos(new_theta);
         let new_rel_y = 150 * Math.sin(new_theta);
 
@@ -111,10 +114,12 @@ class Disc extends MovingObject{
         if(otherObject.pos[0] > mid_screen_x && otherObject.pos[1] < mid_screen_y) {
           otherObject.pos[0] = mid_screen_x + new_rel_x;
           otherObject.pos[1] = mid_screen_y - new_rel_y;
+          console.log("pos", otherObject.pos);
+          console.log("theta diff", theta_diff);
         } else if (otherObject.pos[0] < mid_screen_x && otherObject.pos[1] < mid_screen_y) {
           otherObject.pos[0] = mid_screen_x + new_rel_x;
           otherObject.pos[1] = mid_screen_y - new_rel_y;
-        } else if (otherObject.pos[0] < mid_screen_x && otherObject.pos[1] > mid_screen_y) {
+        } else if (otherObject.pos[0] <= mid_screen_x && otherObject.pos[1] > mid_screen_y) {
           otherObject.pos[0] = mid_screen_x + new_rel_x;
           otherObject.pos[1] = mid_screen_y - new_rel_y;
         } else if (otherObject.pos[0] > mid_screen_x && otherObject.pos[1] > mid_screen_y) {
@@ -122,7 +127,6 @@ class Disc extends MovingObject{
           otherObject.pos[1] = mid_screen_y - new_rel_y;
         }
         // convert pos to canvas coor
-        otherObject.vel = [0,0];
       } else if(this.angular_vel >= 0) {
         if (isNaN(this.angular_vel) || this.angular_vel === 0){
           otherObject.vel[0] = -1 * otherObject.vel[0];
@@ -160,7 +164,7 @@ class Disc extends MovingObject{
           otherObject.vel[0] = ((this.angular_vel * 100) + otherObject.vel[0]) ;
           otherObject.vel[1] = ((-1 * this.angular_vel * 100) + otherObject.vel[1]) ;
         }
-      } else {
+      } else if (this.angular_vel < 0){
         angular_vel = Math.abs(this.angular_vel);
         if (isNaN(this.angular_vel) || this.angular_vel === 0){
           otherObject.vel[0] = -1 * otherObject.vel[0];

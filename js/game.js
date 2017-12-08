@@ -164,6 +164,7 @@ class Game {
 
     const registerStaticPosition = (e) => {
       // console.log("stopped");
+      this.disc.angular_vel = 0;
       this.disc.rel_x = Util.relative_x(e.detail.clientX, this.DIM_X);
       this.disc.rel_y = Util.relative_y(e.detail.clientY, this.DIM_Y);
       // this.disc.theta = Math.atan(this.disc.rel_y/this.disc.rel_x);
@@ -281,7 +282,7 @@ class Game {
   }
 
   step() {
-    console.log(this.disc.rad);
+    // console.log(this.disc.rad);
     this.moveObjects();
     this.checkCollisionsWithDisc();
     this.checkCollisionsWithBullet();
