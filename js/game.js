@@ -101,6 +101,7 @@ class Game {
     this.stuckCount = 0;
     this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
     this.projectiles = [];
+    this.score = 0;
     window.removeEventListener('click', this.reset)
   }
 
@@ -214,8 +215,8 @@ class Game {
     ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
     ctx.font = '80px "Press Start 2P"';
     ctx.fillStyle = 'white';
-    ctx.fillText(this.score, 70, 100);
-    if (this.stuckCount >= 1) {
+    ctx.fillText(20 - this.stuckCount, 70, 100);
+    if (this.stuckCount >= 20) {
       this.lost = true;
       this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
       ctx.fillStyle = "#2c2d23";

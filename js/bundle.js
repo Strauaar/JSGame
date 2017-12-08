@@ -593,6 +593,7 @@ var Game = function () {
       this.stuckCount = 0;
       this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
       this.projectiles = [];
+      this.score = 0;
       window.removeEventListener('click', this.reset);
     }
   }, {
@@ -710,8 +711,8 @@ var Game = function () {
       ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
       ctx.font = '80px "Press Start 2P"';
       ctx.fillStyle = 'white';
-      ctx.fillText(this.score, 70, 100);
-      if (this.stuckCount >= 1) {
+      ctx.fillText(20 - this.stuckCount, 70, 100);
+      if (this.stuckCount >= 20) {
         this.lost = true;
         this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
         ctx.fillStyle = "#2c2d23";
@@ -995,19 +996,6 @@ var Disc = function (_MovingObject) {
     return _this;
   }
 
-  // renderFragments() {
-  //   let rel_x;
-  //   let rel_y;
-  //   const registerMovement = (e) => {
-  //     if(e.clientX < (this.DIM_X / 2)){
-  //       rel_x = ((this.DIM_X / 2) - pos[0]) * -1;
-  //     }else {
-  //       rel_x = pos[0] - (this.DIM_X / 2);
-  //     }
-  //   }
-  //   document.addEventListener('mousemove', registerMovement)
-  // }
-
   _createClass(Disc, [{
     key: 'draw',
     value: function draw(ctx) {
@@ -1015,11 +1003,7 @@ var Disc = function (_MovingObject) {
       var rel_y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
       var theta = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : Math.PI / 4;
 
-      // console.log(this.end_angle);
       this.rad = Util.calculateRad(rel_x, rel_y, theta);
-      // this.rel_x = rel_x;
-      // this.rel_y = rel_y;
-      // this.theta = theta;
       this.pos[0] = this.game.DIM_X / 2;
       this.pos[1] = this.game.DIM_Y / 2;
       this.setRadialGradient(ctx, "#E81E2B", "#DC1C29");
@@ -1034,11 +1018,10 @@ var Disc = function (_MovingObject) {
     value: function drawDonut(ctx, startRadian, endRadian) {
 
       ctx.beginPath();
-      ctx.arc(this.pos[0], this.pos[1], this.outerRadius, startRadian, endRadian, false); // Outer: CCW
-      ctx.arc(this.pos[0], this.pos[1], this.innerRadius, endRadian, startRadian, true); // Inner: CW
+      ctx.arc(this.pos[0], this.pos[1], this.outerRadius, startRadian, endRadian, false);
+      ctx.arc(this.pos[0], this.pos[1], this.innerRadius, endRadian, startRadian, true);
       ctx.closePath();
 
-      // add shadow
       this.addShadow(ctx);
 
       ctx.fill();
@@ -1131,7 +1114,7 @@ var Disc = function (_MovingObject) {
         } else if (this.rad + Math.PI * 4 / 3 > abs_theta && otherObject.color === 'green') {
           console.log("green");
           this.bounce(otherObject, rel_x, rel_y);
-        } else {
+        } else if (otherObject.stuck === false) {
           otherObject.stuck = true;
           this.game.stuckCount++;
           otherObject.vel = [0, 0];
@@ -1169,6 +1152,8 @@ var Disc = function (_MovingObject) {
           var new_rel_x = this.outerRadius * Math.cos(new_theta);
           var new_rel_y = this.outerRadius * Math.sin(new_theta);
           projectiles[i].stuck = false;
+
+          //ADD SPECIFIC CONDITIONALS
           projectiles[i].pos[0] = this.game.DIM_X / 2 + new_rel_x + new_rel_x / (-1 * new_rel_x) * 50;
           projectiles[i].pos[1] = this.game.DIM_Y / 2 + new_rel_y + new_rel_y / (-1 * new_rel_y) * 50;
           projectiles[i].vel[0] = new_rel_x / Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)) * 10;

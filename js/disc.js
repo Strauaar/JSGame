@@ -21,25 +21,8 @@ class Disc extends MovingObject{
     this.bounce = this.bounce.bind(this);
   }
 
-  // renderFragments() {
-  //   let rel_x;
-  //   let rel_y;
-  //   const registerMovement = (e) => {
-  //     if(e.clientX < (this.DIM_X / 2)){
-  //       rel_x = ((this.DIM_X / 2) - pos[0]) * -1;
-  //     }else {
-  //       rel_x = pos[0] - (this.DIM_X / 2);
-  //     }
-  //   }
-  //   document.addEventListener('mousemove', registerMovement)
-  // }
-
   draw(ctx, rel_x = 10, rel_y = 10, theta = Math.PI/4) {
-    // console.log(this.end_angle);
     this.rad = Util.calculateRad(rel_x, rel_y, theta);
-    // this.rel_x = rel_x;
-    // this.rel_y = rel_y;
-    // this.theta = theta;
     this.pos[0] = this.game.DIM_X / 2;
     this.pos[1] = this.game.DIM_Y / 2;
     this.setRadialGradient(ctx, "#E81E2B", "#DC1C29");
@@ -53,11 +36,11 @@ class Disc extends MovingObject{
   drawDonut(ctx, startRadian, endRadian){
 
       ctx.beginPath();
-          ctx.arc(this.pos[0],  this.pos[1], this.outerRadius, startRadian, endRadian, false); // Outer: CCW
-          ctx.arc(this.pos[0],  this.pos[1], this.innerRadius, endRadian, startRadian, true); // Inner: CW
+          ctx.arc(this.pos[0],  this.pos[1], this.outerRadius, startRadian, endRadian, false);
+          ctx.arc(this.pos[0],  this.pos[1], this.innerRadius, endRadian, startRadian, true);
       ctx.closePath();
 
-      // add shadow
+
       this.addShadow(ctx);
 
       ctx.fill();
@@ -147,7 +130,7 @@ class Disc extends MovingObject{
       } else if ( ((this.rad + Math.PI * 4/3) > abs_theta) && otherObject.color === 'green') {
         console.log("green");
         this.bounce(otherObject, rel_x, rel_y);
-      } else {
+      } else if (otherObject.stuck === false){
         otherObject.stuck = true;
         this.game.stuckCount++;
         otherObject.vel = [0,0];
@@ -180,6 +163,8 @@ class Disc extends MovingObject{
         let new_rel_x = this.outerRadius * Math.cos(new_theta);
         let new_rel_y = this.outerRadius * Math.sin(new_theta);
         projectiles[i].stuck = false;
+
+        //ADD SPECIFIC CONDITIONALS
         projectiles[i].pos[0] = this.game.DIM_X/2 + new_rel_x + (new_rel_x/(-1* new_rel_x)) * 50;
         projectiles[i].pos[1] = this.game.DIM_Y/2 + new_rel_y + (new_rel_y/(-1 * new_rel_y)) * 50;
         projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
