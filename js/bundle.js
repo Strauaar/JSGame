@@ -1098,14 +1098,14 @@ var Bullet = function (_MovingObject) {
     var _this = _possibleConstructorReturn(this, (Bullet.__proto__ || Object.getPrototypeOf(Bullet)).call(this, options));
 
     _this.drawing = new Image();
-    _this.drawing.src = "assets/images/ball.png";
+    _this.drawing.src = "assets/images/fire.png";
     return _this;
   }
 
   _createClass(Bullet, [{
     key: "draw",
     value: function draw(ctx) {
-      ctx.drawImage(this.drawing, this.pos[0], this.pos[1], 50, 50);
+      ctx.drawImage(this.drawing, this.pos[0], this.pos[1], 20, 50);
     }
   }]);
 
