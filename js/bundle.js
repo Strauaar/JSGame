@@ -219,6 +219,7 @@ var PowerUp = function (_MovingObject) {
 
     _this.disc = options.disc;
     _this.toggle = false;
+    _this.game.power_type = null;
     _this.drawing = new Image();
     _this.drawing.src = "assets/images/frame-1.png";
     _this.drawing1 = new Image();
@@ -246,30 +247,35 @@ var PowerUp = function (_MovingObject) {
 
       if (num % 2 === 0) {
         if (toggle === true && this.toggle !== true) {
-
+          this.game.power_type = 'burst';
           this.toggle = toggle;
           this.powerup = PowerUp.burst.bind(this);
           document.addEventListener('click', this.powerup);
           debugger;
         } else if (toggle === false) {
+          this.game.power_type = null;
           this.toggle = false;
           document.removeEventListener('click', this.powerup);
         }
       } else {
         if (toggle === true && this.toggle !== true) {
+          this.game.power_type = 'shoot';
           this.toggle = toggle;
           this.powerup = PowerUp.addShooter.bind(this);
           document.addEventListener('click', this.powerup);
         } else if (toggle === false) {
           // console.log("disable");
+          this.game.power_type = null;
           this.toggle = false;
           document.removeEventListener('click', this.powerup);
         }
       }
+      debugger;
     }
   }, {
     key: 'draw',
     value: function draw(ctx) {
+
       if (this.count === 0) {
         ctx.drawImage(this.drawing, this.pos[0], this.pos[1], 50, 50);
       } else if (this.count === 1) {
@@ -711,7 +717,10 @@ var Game = function () {
       // console.log("y_vel", this.projectiles[0].vel[1]);
       // console.log(this.disc.angular_vel);
 
+      // debugger
+
       ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
+
       ctx.fillStyle = "#2c2d23";
       ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
       ctx.font = '80px "Press Start 2P"';
@@ -776,6 +785,17 @@ var Game = function () {
         });
         this.disc.draw(this.ctx, this.disc.rel_x, this.disc.rel_y, this.disc.theta);
       }
+
+      if (this.power_type === 'burst') {
+        ctx.font = '14px "Press Start 2P"';
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.fillText('Click to release!', this.DIM_X / 2 - 120, 100);
+      } else if (this.power_type === 'shoot') {
+        ctx.font = '14px "Press Start 2P"';
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.fillText('Click to shoot!', this.DIM_X / 2 - 120, 100);
+      }
+
       // console.log("rel_x", this.disc.rel_x);
       // console.log("rel_y", this.disc.rel_y);
       // console.log("ang_vel", this.disc.angular_vel);

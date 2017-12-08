@@ -215,7 +215,14 @@ class Game {
     // console.log("y_vel", this.projectiles[0].vel[1]);
     // console.log(this.disc.angular_vel);
 
+      // debugger
+
     ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
+
+
+
+
+
     ctx.fillStyle = "#2c2d23";
     ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
     ctx.font = '80px "Press Start 2P"';
@@ -280,6 +287,17 @@ class Game {
       });
       this.disc.draw(this.ctx, this.disc.rel_x, this.disc.rel_y, this.disc.theta);
     }
+
+    if (this.power_type === 'burst') {
+      ctx.font = '14px "Press Start 2P"';
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.fillText('Click to release!', this.DIM_X/2 - 120, 100);
+    } else if (this.power_type === 'shoot') {
+      ctx.font = '14px "Press Start 2P"';
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.fillText('Click to shoot!', this.DIM_X/2 - 120, 100);
+    }
+
     // console.log("rel_x", this.disc.rel_x);
     // console.log("rel_y", this.disc.rel_y);
     // console.log("ang_vel", this.disc.angular_vel);
