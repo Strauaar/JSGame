@@ -100,6 +100,8 @@ class Game {
     this.lost = false;
     this.stuckCount = 0;
     this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
+    this.projectiles = [];
+    window.removeEventListener('click', this.reset)
   }
 
   randomPosition() {
