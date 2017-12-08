@@ -13,6 +13,7 @@ class Game {
     this.bullets = [];
     this.goals = [];
     this.score = 0;
+    this.stuckCount = 0;
     this.ctx = ctx;
     this.DIM_X = window.innerWidth;
     this.DIM_Y = window.innerHeight;
@@ -42,7 +43,7 @@ class Game {
       this.DIM_Y = window.innerHeight;
     });
     // this.drawPowerUp(ctx);
-
+    this.checkWin = this.checkWin.bind(this);
     this.initTest();
   }
 
@@ -331,6 +332,17 @@ class Game {
     this.checkCollisionsWithDisc();
     this.checkCollisionsWithBullet();
     this.checkCollisionsWithGoal();
+    this.checkWin();
+  }
+
+  checkWin() {
+    if (this.stuckCount >= 1) {
+      console.log("lost");
+      this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
+      this.ctx.font = '80px "Press Start 2P"';
+      this.ctx.fillStyle = 'white';
+      this.ctx.fillText('GAME OVER', this.DIM_X/2, this.DIM_Y/2);
+    }
   }
 
   allObjects() {

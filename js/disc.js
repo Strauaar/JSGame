@@ -149,6 +149,7 @@ class Disc extends MovingObject{
         this.bounce(otherObject, rel_x, rel_y);
       } else {
         otherObject.stuck = true;
+        this.game.stuckCount++;
         otherObject.vel = [0,0];
       }
     }  else if (otherObject instanceof PowerUp) {
