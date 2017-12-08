@@ -143,8 +143,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _moving_object = __webpack_require__(0);
 
 var _moving_object2 = _interopRequireDefault(_moving_object);
@@ -168,13 +166,14 @@ var Projectile = function (_MovingObject) {
     var _this = _possibleConstructorReturn(this, (Projectile.__proto__ || Object.getPrototypeOf(Projectile)).call(this, options));
 
     _this.stuck = false;
+
     return _this;
   }
 
-  _createClass(Projectile, [{
-    key: 'collideWith',
-    value: function collideWith(otherObject) {}
-  }]);
+  // draw(ctx) {
+  //   ctx.drawImage(this.drawing,100, 100, 100, 100, this.pos[0], this.pos[1], 70, 70);
+  // }
+
 
   return Projectile;
 }(_moving_object2.default);
@@ -230,6 +229,7 @@ var PowerUp = function (_MovingObject) {
       if (toggle === true && this.toggle !== true) {
         this.toggle = toggle;
         this.powerup = PowerUp.addShooter.bind(this);
+        console.log(this.disc);
         document.addEventListener('click', this.powerup);
       } else if (toggle === false) {
         // console.log("disable");
@@ -450,11 +450,11 @@ var Game = function () {
     this.initProjectiles = this.initProjectiles.bind(this);
     this.initGoals();
     // this.initProjectiles();
+    this.initDisc();
+    this.renderFragments();
     this.initPowerUps();
     this.randomPosition = this.randomPosition.bind(this);
     this.findCenter = this.findCenter.bind(this);
-    this.initDisc();
-    this.renderFragments();
     this.draw = this.draw.bind(this);
     this.anim = this.anim.bind(this);
     this.moveObjects = this.moveObjects.bind(this);
@@ -1075,6 +1075,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _moving_object = __webpack_require__(0);
 
 var _moving_object2 = _interopRequireDefault(_moving_object);
@@ -1093,8 +1095,19 @@ var Bullet = function (_MovingObject) {
   function Bullet(options) {
     _classCallCheck(this, Bullet);
 
-    return _possibleConstructorReturn(this, (Bullet.__proto__ || Object.getPrototypeOf(Bullet)).call(this, options));
+    var _this = _possibleConstructorReturn(this, (Bullet.__proto__ || Object.getPrototypeOf(Bullet)).call(this, options));
+
+    _this.drawing = new Image();
+    _this.drawing.src = "assets/images/ball.png";
+    return _this;
   }
+
+  _createClass(Bullet, [{
+    key: "draw",
+    value: function draw(ctx) {
+      ctx.drawImage(this.drawing, this.pos[0], this.pos[1], 50, 50);
+    }
+  }]);
 
   return Bullet;
 }(_moving_object2.default);

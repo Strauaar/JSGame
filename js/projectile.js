@@ -5,11 +5,12 @@ class Projectile extends MovingObject {
     options.radius = 30;
     super(options);
     this.stuck = false;
-  }
-
-  collideWith(otherObject) {
 
   }
+
+  // draw(ctx) {
+  //   ctx.drawImage(this.drawing,100, 100, 100, 100, this.pos[0], this.pos[1], 70, 70);
+  // }
 }
 
 export default Projectile;

@@ -19,11 +19,11 @@ class Game {
     this.initProjectiles = this.initProjectiles.bind(this);
     this.initGoals();
     // this.initProjectiles();
+    this.initDisc();
+    this.renderFragments();
     this.initPowerUps();
     this.randomPosition = this.randomPosition.bind(this);
     this.findCenter = this.findCenter.bind(this);
-    this.initDisc();
-    this.renderFragments();
     this.draw = this.draw.bind(this);
     this.anim = this.anim.bind(this);
     this.moveObjects = this.moveObjects.bind(this);
