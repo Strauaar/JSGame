@@ -41,7 +41,7 @@ class Disc extends MovingObject{
     // this.rel_y = rel_y;
     // this.theta = theta;
 
-    this.setRadialGradient(ctx, "#DC1C29", "#DC1C29");
+    this.setRadialGradient(ctx, "#E81E2B", "#DC1C29");
     this.drawDonut(ctx, -this.rad, -this.rad + Math.PI * 2/3);
     this.setRadialGradient(ctx, "#84BC3D", "#84BC3D");
     this.drawDonut(ctx,-this.rad + Math.PI * 2/3, -this.rad + Math.PI * 4/3)
@@ -57,7 +57,7 @@ class Disc extends MovingObject{
       ctx.closePath();
 
       // add shadow
-      // this.addShadow(ctx);
+      this.addShadow(ctx);
 
       ctx.fill();
   }
