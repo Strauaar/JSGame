@@ -51,7 +51,10 @@ class Game {
   }
 
   initGoals() {
-    this.goals.push(new Goal({pos: [200, 200], game: this, radius: 20}))
+    this.goals.push(new Goal({pos: [130, 130], game: this, radius: 25}))
+    this.goals.push(new Goal({pos: [this.DIM_X - 130, 130], game: this, radius: 25}))
+    this.goals.push(new Goal({pos: [130, this.DIM_Y - 130], game: this, radius: 25}))
+    this.goals.push(new Goal({pos: [this.DIM_X - 130, this.DIM_Y - 130], game: this, radius: 25}))
   }
 
   initTest() {
