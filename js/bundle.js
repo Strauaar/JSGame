@@ -243,8 +243,8 @@ var PowerUp = function (_MovingObject) {
     value: function enablePowerup(toggle) {
 
       var num = Math.floor(Math.random() * 100);
-      var x = void 0;
-      if (x = 2) {
+
+      if (num % 2 === 0) {
         if (toggle === true && this.toggle !== true) {
 
           this.toggle = toggle;

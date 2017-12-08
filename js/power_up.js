@@ -28,8 +28,8 @@ class PowerUp extends MovingObject {
   enablePowerup(toggle) {
 
     let num = Math.floor(Math.random() * 100);
-    let x;
-    if (x = 2) {
+    
+    if (num % 2 === 0) {
       if(toggle === true && this.toggle !== true) {
 
         this.toggle = toggle;
