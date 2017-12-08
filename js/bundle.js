@@ -543,6 +543,7 @@ var Game = function () {
       _this.gameover_count++;
       _this.gameover_count = _this.gameover_count % 4;
     }, 300);
+    this.game_start = true;
   }
 
   _createClass(Game, [{
@@ -610,6 +611,7 @@ var Game = function () {
       this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
       this.projectiles = [];
       this.score = 0;
+      this.game_start = false;
       this.start_time = new Date().getTime();
       this.timer = setInterval(function () {
         var time = new Date().getTime();
@@ -863,7 +865,17 @@ var Game = function () {
       // console.log("rel_x", this.disc.rel_x);
       // console.log("rel_y", this.disc.rel_y);
       // console.log("ang_vel", this.disc.angular_vel);
-
+      if (this.game_start === true) {
+        ctx.fillStyle = "#2c2d23";
+        ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
+        ctx.font = '20px "Press Start 2P"';
+        ctx.fillStyle = 'white';
+        ctx.fillText('Match the color of the ball', this.DIM_X / 2 - 300, this.DIM_Y / 2);
+        ctx.font = '20px "Press Start 2P"';
+        ctx.fillStyle = 'white';
+        ctx.fillText('to the color of the circle.', this.DIM_X / 2 - 300, this.DIM_Y / 2 + 25);
+        window.addEventListener('click', this.reset);
+      }
 
       // this.goals.forEach(goal => {
       //   goal.draw(ctx);

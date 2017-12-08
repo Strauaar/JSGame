@@ -55,7 +55,8 @@ class Game {
     setInterval( ()=> {
        this.gameover_count++;
        this.gameover_count = this.gameover_count % 4;
-    }, 300)
+    }, 300);
+    this.game_start = true;
   }
 
   initDisc() {
@@ -110,6 +111,7 @@ class Game {
     this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
     this.projectiles = [];
     this.score = 0;
+    this.game_start = false;
     this.start_time = new Date().getTime();
     this.timer = setInterval(() => {
       let time = new Date().getTime();
@@ -229,77 +231,75 @@ class Game {
     ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
 
 
-
-
-
-    ctx.fillStyle = "#2c2d23";
-    ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
-    ctx.font = '80px "Press Start 2P"';
-    ctx.fillStyle = 'white';
-    ctx.fillText(20 - this.stuckCount, 70, 100);
-    ctx.font = '20px "Press Start 2P"';
-    ctx.fillStyle = 'white';
-    ctx.fillText(this.milliseconds, this.DIM_X -150, 50);
-    if (this.stuckCount >= 1) {
-      this.lost = true;
-      clearInterval(this.timer);
-      this.survive_time = this.milliseconds;
-      this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
       ctx.fillStyle = "#2c2d23";
       ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
-      if(this.gameover_count === 0) {
-        this.ctx.font = '80px "Press Start 2P"';
-        this.ctx.fillStyle = 'rgba(255,255,255,0.3)';
-        this.ctx.fillText('GAME OVER', this.DIM_X/2 - 380, this.DIM_Y/2);
-        this.ctx.font = '20px "Press Start 2P"';
-        this.ctx.fillStyle = 'rgba(255,255,255,0.3)';
-        this.ctx.fillText('Click to play again', this.DIM_X/2 - 380, this.DIM_Y/2 + 100);
-        this.ctx.font = '20px "Press Start 2P"';
-        this.ctx.fillStyle = 'rgba(255,255,255,0.3)';
-        this.ctx.fillText(`Survival time: ${this.survive_time}`, this.DIM_X/2 - 380, this.DIM_Y/2 + 200);
-      } else if (this.gameover_count === 1) {
-        this.ctx.font = '80px "Press Start 2P"';
-        this.ctx.fillStyle = 'rgba(255,255,255,0.4)';
-        this.ctx.fillText('GAME OVER', this.DIM_X/2 - 380, this.DIM_Y/2);
-        this.ctx.font = '20px "Press Start 2P"';
-        this.ctx.fillStyle = 'rgba(255,255,255,0.4)';
-        this.ctx.fillText('Click to play again', this.DIM_X/2 - 380, this.DIM_Y/2 + 100);
-        this.ctx.font = '20px "Press Start 2P"';
-        this.ctx.fillStyle = 'rgba(255,255,255,0.4)';
-        this.ctx.fillText(`Survival time: ${this.survive_time}`, this.DIM_X/2 - 380, this.DIM_Y/2 + 200);
-      } else if (this.gameover_count === 2) {
-        this.ctx.font = '80px "Press Start 2P"';
-        this.ctx.fillStyle = 'rgba(255,255,255,0.6)';
-        this.ctx.fillText('GAME OVER', this.DIM_X/2 - 380, this.DIM_Y/2);
-        this.ctx.font = '20px "Press Start 2P"';
-        this.ctx.fillStyle = 'rgba(255,255,255,0.5)';
-        this.ctx.fillText('Click to play again', this.DIM_X/2 - 380, this.DIM_Y/2 + 100);
-        this.ctx.font = '20px "Press Start 2P"';
-        this.ctx.fillStyle = 'rgba(255,255,255,0.6)';
-        this.ctx.fillText(`Survival time: ${this.survive_time}`, this.DIM_X/2 - 380, this.DIM_Y/2 + 200);
-      } else if (this.gameover_count === 3) {
-        this.ctx.font = '80px "Press Start 2P"';
-        this.ctx.fillStyle = 'rgba(255,255,255,0.7)';
-        this.ctx.fillText('GAME OVER', this.DIM_X/2 - 380, this.DIM_Y/2);
-        this.ctx.font = '20px "Press Start 2P"';
-        this.ctx.fillStyle = 'rgba(255,255,255,0.7)';
-        this.ctx.fillText('Click to play again', this.DIM_X/2 - 380, this.DIM_Y/2 + 100);
-        this.ctx.font = '20px "Press Start 2P"';
-        this.ctx.fillStyle = 'rgba(255,255,255,0.7)';
-        this.ctx.fillText(`Survival time: ${this.survive_time}`, this.DIM_X/2 - 380, this.DIM_Y/2 + 200);
-      } else if (this.gameover_count === 4) {
-        this.ctx.font = '80px "Press Start 2P"';
-        this.ctx.fillStyle = 'rgba(255,255,255,0.8)';
-        this.ctx.fillText('GAME OVER', this.DIM_X/2 - 380, this.DIM_Y/2);
-        this.ctx.font = '20px "Press Start 2P"';
-        this.ctx.fillStyle = 'rgba(255,255,255,0.8)';
-        this.ctx.fillText('Click to play again', this.DIM_X/2 - 380, this.DIM_Y/2 + 100);
-        this.ctx.font = '20px "Press Start 2P"';
-        this.ctx.fillStyle = 'rgba(255,255,255,0.8)';
-        this.ctx.fillText(`Survival time: ${this.survive_time}`, this.DIM_X/2 - 380, this.DIM_Y/2 + 200);
-      }
+      ctx.font = '80px "Press Start 2P"';
+      ctx.fillStyle = 'white';
+      ctx.fillText(20 - this.stuckCount, 70, 100);
+      ctx.font = '20px "Press Start 2P"';
+      ctx.fillStyle = 'white';
+      ctx.fillText(this.milliseconds, this.DIM_X -150, 50);
+      if (this.stuckCount >= 1) {
+        this.lost = true;
+        clearInterval(this.timer);
+        this.survive_time = this.milliseconds;
+        this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
+        ctx.fillStyle = "#2c2d23";
+        ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
+        if(this.gameover_count === 0) {
+          this.ctx.font = '80px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.3)';
+          this.ctx.fillText('GAME OVER', this.DIM_X/2 - 380, this.DIM_Y/2);
+          this.ctx.font = '20px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.3)';
+          this.ctx.fillText('Click to play again', this.DIM_X/2 - 380, this.DIM_Y/2 + 100);
+          this.ctx.font = '20px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.3)';
+          this.ctx.fillText(`Survival time: ${this.survive_time}`, this.DIM_X/2 - 380, this.DIM_Y/2 + 200);
+        } else if (this.gameover_count === 1) {
+          this.ctx.font = '80px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.4)';
+          this.ctx.fillText('GAME OVER', this.DIM_X/2 - 380, this.DIM_Y/2);
+          this.ctx.font = '20px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.4)';
+          this.ctx.fillText('Click to play again', this.DIM_X/2 - 380, this.DIM_Y/2 + 100);
+          this.ctx.font = '20px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.4)';
+          this.ctx.fillText(`Survival time: ${this.survive_time}`, this.DIM_X/2 - 380, this.DIM_Y/2 + 200);
+        } else if (this.gameover_count === 2) {
+          this.ctx.font = '80px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.6)';
+          this.ctx.fillText('GAME OVER', this.DIM_X/2 - 380, this.DIM_Y/2);
+          this.ctx.font = '20px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.5)';
+          this.ctx.fillText('Click to play again', this.DIM_X/2 - 380, this.DIM_Y/2 + 100);
+          this.ctx.font = '20px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.6)';
+          this.ctx.fillText(`Survival time: ${this.survive_time}`, this.DIM_X/2 - 380, this.DIM_Y/2 + 200);
+        } else if (this.gameover_count === 3) {
+          this.ctx.font = '80px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.7)';
+          this.ctx.fillText('GAME OVER', this.DIM_X/2 - 380, this.DIM_Y/2);
+          this.ctx.font = '20px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.7)';
+          this.ctx.fillText('Click to play again', this.DIM_X/2 - 380, this.DIM_Y/2 + 100);
+          this.ctx.font = '20px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.7)';
+          this.ctx.fillText(`Survival time: ${this.survive_time}`, this.DIM_X/2 - 380, this.DIM_Y/2 + 200);
+        } else if (this.gameover_count === 4) {
+          this.ctx.font = '80px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.8)';
+          this.ctx.fillText('GAME OVER', this.DIM_X/2 - 380, this.DIM_Y/2);
+          this.ctx.font = '20px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.8)';
+          this.ctx.fillText('Click to play again', this.DIM_X/2 - 380, this.DIM_Y/2 + 100);
+          this.ctx.font = '20px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.8)';
+          this.ctx.fillText(`Survival time: ${this.survive_time}`, this.DIM_X/2 - 380, this.DIM_Y/2 + 200);
+        }
       window.addEventListener('click', this.reset);
     }
+
 
     if (this.lost === false) {
       this.allObjects().forEach(obj => {
@@ -363,6 +363,17 @@ class Game {
     // console.log("rel_x", this.disc.rel_x);
     // console.log("rel_y", this.disc.rel_y);
     // console.log("ang_vel", this.disc.angular_vel);
+    if(this.game_start === true) {
+      ctx.fillStyle = "#2c2d23";
+      ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
+      ctx.font = '20px "Press Start 2P"';
+      ctx.fillStyle = 'white';
+      ctx.fillText('Match the color of the ball', this.DIM_X/2- 300, this.DIM_Y/2);
+      ctx.font = '20px "Press Start 2P"';
+      ctx.fillStyle = 'white';
+      ctx.fillText('to the color of the circle.', this.DIM_X/2- 300, this.DIM_Y/2 + 25);
+      window.addEventListener('click', this.reset);
+    }
 
 
     // this.goals.forEach(goal => {
