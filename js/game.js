@@ -9,7 +9,6 @@ class Game {
   constructor(ctx) {
     this.projectiles = [];
     this.powerups = [];
-    // TODO: Implement bullet as powerup
     this.bullets = [];
     this.goals = [];
     this.score = 0;
@@ -21,7 +20,7 @@ class Game {
     this.DIM_Y = window.innerHeight;
     this.initProjectiles = this.initProjectiles.bind(this);
     this.initGoals();
-    this.initProjectiles();
+    // this.initProjectiles();
     this.initDisc();
     this.renderFragments();
     this.initPowerUps();
@@ -44,7 +43,6 @@ class Game {
       this.DIM_X = window.innerWidth;
       this.DIM_Y = window.innerHeight;
     });
-    // this.drawPowerUp(ctx);
     this.checkWin = this.checkWin.bind(this);
     this.reset = this.reset.bind(this);
     this.initTest();
@@ -334,8 +332,8 @@ class Game {
         object_array[i].vel = [0,0];
 
         let new_theta = (this.disc.rad - object_array[i].dTheta) % (Math.PI * 2);
-        let new_rel_x = this.disc.outerRadius * Math.cos(new_theta);
-        let new_rel_y = this.disc.outerRadius * Math.sin(new_theta);
+        let new_rel_x = (this.disc.outerRadius * Math.cos(new_theta)) + (Math.cos(new_theta) * object_array[i].radius) ;
+        let new_rel_y = this.disc.outerRadius * Math.sin(new_theta) + (Math.sin(new_theta) * object_array[i].radius);
 
         let mid_screen_x = this.DIM_X/2;
         let mid_screen_y = this.DIM_Y/2;
@@ -394,7 +392,6 @@ class Game {
     this.checkCollisionsWithDisc();
     this.checkCollisionsWithBullet();
     this.checkCollisionsWithGoal();
-    this.checkWin();
   }
 
   checkWin() {

@@ -165,11 +165,32 @@ class Disc extends MovingObject{
         projectiles[i].stuck = false;
 
         //ADD SPECIFIC CONDITIONALS
-        projectiles[i].pos[0] = this.game.DIM_X/2 + new_rel_x + (new_rel_x/(-1* new_rel_x)) * 50;
-        projectiles[i].pos[1] = this.game.DIM_Y/2 + new_rel_y + (new_rel_y/(-1 * new_rel_y)) * 50;
+        // if (new_rel_x > 0 && new_rel_y > 0) {
+        //   projectiles[i].pos[0] = this.game.DIM_X/2 + new_rel_x + 100;
+        //   projectiles[i].pos[1] = this.game.DIM_Y/2 - new_rel_y - 100;
+        //   projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
+        //   projectiles[i].vel[1] = (new_rel_y/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
+        // } else if (new_rel_x < 0 && new_rel_y > 0) {
+        //   projectiles[i].pos[0] = this.game.DIM_X/2 + new_rel_x - 100;
+        //   projectiles[i].pos[1] = this.game.DIM_Y/2 - new_rel_y - 100;
+        //   projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
+        //   projectiles[i].vel[1] = (new_rel_y/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
+        // } else if (new_rel_x < 0 && new_rel_y < 0) {
+        //   projectiles[i].pos[0] = this.game.DIM_X/2 - new_rel_x - 100;
+        //   projectiles[i].pos[1] = this.game.DIM_Y/2 - new_rel_y + 100;
+        //   projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
+        //   projectiles[i].vel[1] = (new_rel_y/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
+        // } else if (new_rel_x > 0 && new_rel_y < 0) {
+        //   projectiles[i].pos[0] = this.game.DIM_X/2 - new_rel_x + 100;
+        //   projectiles[i].pos[1] = this.game.DIM_Y/2 - new_rel_y - 100;
+        //   projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
+        //   projectiles[i].vel[1] = (new_rel_y/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
+        // }
+
         projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
         projectiles[i].vel[1] = (new_rel_y/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
-        debugger
+
+        // debugger
       }
     }
   }

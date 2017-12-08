@@ -491,7 +491,6 @@ var Game = function () {
 
     this.projectiles = [];
     this.powerups = [];
-    // TODO: Implement bullet as powerup
     this.bullets = [];
     this.goals = [];
     this.score = 0;
@@ -503,7 +502,7 @@ var Game = function () {
     this.DIM_Y = window.innerHeight;
     this.initProjectiles = this.initProjectiles.bind(this);
     this.initGoals();
-    this.initProjectiles();
+    // this.initProjectiles();
     this.initDisc();
     this.renderFragments();
     this.initPowerUps();
@@ -525,7 +524,6 @@ var Game = function () {
       _this.DIM_X = window.innerWidth;
       _this.DIM_Y = window.innerHeight;
     });
-    // this.drawPowerUp(ctx);
     this.checkWin = this.checkWin.bind(this);
     this.reset = this.reset.bind(this);
     this.initTest();
@@ -833,8 +831,8 @@ var Game = function () {
           object_array[i].vel = [0, 0];
 
           var new_theta = (this.disc.rad - object_array[i].dTheta) % (Math.PI * 2);
-          var new_rel_x = this.disc.outerRadius * Math.cos(new_theta);
-          var new_rel_y = this.disc.outerRadius * Math.sin(new_theta);
+          var new_rel_x = this.disc.outerRadius * Math.cos(new_theta) + Math.cos(new_theta) * object_array[i].radius;
+          var new_rel_y = this.disc.outerRadius * Math.sin(new_theta) + Math.sin(new_theta) * object_array[i].radius;
 
           var mid_screen_x = this.DIM_X / 2;
           var mid_screen_y = this.DIM_Y / 2;
@@ -891,7 +889,6 @@ var Game = function () {
       this.checkCollisionsWithDisc();
       this.checkCollisionsWithBullet();
       this.checkCollisionsWithGoal();
-      this.checkWin();
     }
   }, {
     key: 'checkWin',
@@ -1154,11 +1151,32 @@ var Disc = function (_MovingObject) {
           projectiles[i].stuck = false;
 
           //ADD SPECIFIC CONDITIONALS
-          projectiles[i].pos[0] = this.game.DIM_X / 2 + new_rel_x + new_rel_x / (-1 * new_rel_x) * 50;
-          projectiles[i].pos[1] = this.game.DIM_Y / 2 + new_rel_y + new_rel_y / (-1 * new_rel_y) * 50;
+          // if (new_rel_x > 0 && new_rel_y > 0) {
+          //   projectiles[i].pos[0] = this.game.DIM_X/2 + new_rel_x + 100;
+          //   projectiles[i].pos[1] = this.game.DIM_Y/2 - new_rel_y - 100;
+          //   projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
+          //   projectiles[i].vel[1] = (new_rel_y/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
+          // } else if (new_rel_x < 0 && new_rel_y > 0) {
+          //   projectiles[i].pos[0] = this.game.DIM_X/2 + new_rel_x - 100;
+          //   projectiles[i].pos[1] = this.game.DIM_Y/2 - new_rel_y - 100;
+          //   projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
+          //   projectiles[i].vel[1] = (new_rel_y/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
+          // } else if (new_rel_x < 0 && new_rel_y < 0) {
+          //   projectiles[i].pos[0] = this.game.DIM_X/2 - new_rel_x - 100;
+          //   projectiles[i].pos[1] = this.game.DIM_Y/2 - new_rel_y + 100;
+          //   projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
+          //   projectiles[i].vel[1] = (new_rel_y/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
+          // } else if (new_rel_x > 0 && new_rel_y < 0) {
+          //   projectiles[i].pos[0] = this.game.DIM_X/2 - new_rel_x + 100;
+          //   projectiles[i].pos[1] = this.game.DIM_Y/2 - new_rel_y - 100;
+          //   projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
+          //   projectiles[i].vel[1] = (new_rel_y/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
+          // }
+
           projectiles[i].vel[0] = new_rel_x / Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)) * 10;
           projectiles[i].vel[1] = new_rel_y / Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)) * 10;
-          debugger;
+
+          // debugger
         }
       }
     }
