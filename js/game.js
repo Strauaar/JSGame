@@ -238,12 +238,39 @@ class Game {
     for(let i = 0; i < object_array.length; i++) {
       totalRadius = object_array[i].radius + this.disc.outerRadius;
       distance = Util.distance(this.disc.pos[0], this.disc.pos[1], object_array[i].pos[0], object_array[i].pos[1])
-
-      if(distance <= totalRadius) {
+      if(object_array[i] instanceof PowerUp || object_array[i].stuck === false)
+      {
+        if(distance <= totalRadius) {
         this.disc.caluclateCollision(object_array[i]);
         // object_array[i].vel[0] = -1 * object_array[i].vel[0];
         // object_array[i].vel[1] = -1 * object_array[i].vel[1];
-      } else {
+        }
+      } else if (object_array[i].stuck === true) {
+        let contact_point_x = Util.relative_x(object_array[i].pos[0], this.DIM_X);
+        let contact_point_y = Util.relative_y(object_array[i].pos[1], this.DIM_Y);
+        let angle = Math.atan(contact_point_y/contact_point_x);
+        let abs_theta = Util.calculateRad(contact_point_x, contact_point_y, angle);
+        // calculate the difference between the angle of the mouse position to the contact point
+        let theta_diff = Math.abs(abs_theta - this.disc.rad);
+
+        object_array[i].vel = [0,0];
+
+        let new_theta = (abs_theta + theta_diff) % (Math.PI * 2);
+        let new_rel_x = this.disc.outerRadius * Math.cos(new_theta);
+        let new_rel_y = this.disc.outerRadius * Math.sin(new_theta);
+
+        let mid_screen_x = this.DIM_X/2;
+        let mid_screen_y = this.DIM_Y/2;
+
+
+        if (this.disc.angular_vel >= 0) {
+          object_array[i].pos[0] = mid_screen_x + new_rel_x;
+          object_array[i].pos[1] = mid_screen_y - new_rel_y;
+        } else if (this.disc.angular_vel < 0){
+          object_array[i].pos[0] = mid_screen_x - new_rel_x;
+          object_array[i].pos[1] = mid_screen_y + new_rel_y;
+        }
+        debugger
       }
     }
   }

@@ -681,12 +681,38 @@ var Game = function () {
       for (var i = 0; i < object_array.length; i++) {
         totalRadius = object_array[i].radius + this.disc.outerRadius;
         distance = Util.distance(this.disc.pos[0], this.disc.pos[1], object_array[i].pos[0], object_array[i].pos[1]);
+        if (object_array[i] instanceof _power_up2.default || object_array[i].stuck === false) {
+          if (distance <= totalRadius) {
+            this.disc.caluclateCollision(object_array[i]);
+            // object_array[i].vel[0] = -1 * object_array[i].vel[0];
+            // object_array[i].vel[1] = -1 * object_array[i].vel[1];
+          }
+        } else if (object_array[i].stuck === true) {
+          var contact_point_x = Util.relative_x(object_array[i].pos[0], this.DIM_X);
+          var contact_point_y = Util.relative_y(object_array[i].pos[1], this.DIM_Y);
+          var angle = Math.atan(contact_point_y / contact_point_x);
+          var abs_theta = Util.calculateRad(contact_point_x, contact_point_y, angle);
+          // calculate the difference between the angle of the mouse position to the contact point
+          var theta_diff = Math.abs(abs_theta - this.disc.rad);
 
-        if (distance <= totalRadius) {
-          this.disc.caluclateCollision(object_array[i]);
-          // object_array[i].vel[0] = -1 * object_array[i].vel[0];
-          // object_array[i].vel[1] = -1 * object_array[i].vel[1];
-        } else {}
+          object_array[i].vel = [0, 0];
+
+          var new_theta = (abs_theta + theta_diff) % (Math.PI * 2);
+          var new_rel_x = this.disc.outerRadius * Math.cos(new_theta);
+          var new_rel_y = this.disc.outerRadius * Math.sin(new_theta);
+
+          var mid_screen_x = this.DIM_X / 2;
+          var mid_screen_y = this.DIM_Y / 2;
+
+          if (this.disc.angular_vel >= 0) {
+            object_array[i].pos[0] = mid_screen_x + new_rel_x;
+            object_array[i].pos[1] = mid_screen_y - new_rel_y;
+          } else if (this.disc.angular_vel < 0) {
+            object_array[i].pos[0] = mid_screen_x - new_rel_x;
+            object_array[i].pos[1] = mid_screen_y + new_rel_y;
+          }
+          debugger;
+        }
       }
     }
   }, {
@@ -908,123 +934,46 @@ var Disc = function (_MovingObject) {
       var rel_x = Util.relative_x(otherObject.pos[0], this.game.DIM_X);
       var rel_y = Util.relative_y(otherObject.pos[1], this.game.DIM_Y);
       // convert polar coordinates to cartesian coordinates
-      var angular_vel = void 0;
 
       if (otherObject instanceof _projectile2.default) {
-        var contact_point_x = Util.relative_x(otherObject.pos[0], this.game.DIM_X);
-        var contact_point_y = Util.relative_y(otherObject.pos[1], this.game.DIM_Y);
-        var angle = Math.atan(contact_point_y / contact_point_x);
-        var abs_theta = Util.calculateRad(contact_point_x, contact_point_y, angle);
-        // calculate the difference between the angle of the mouse position to the contact point
-        var theta_diff = Math.abs(abs_theta - this.rad);
-
-        // console.log("abs_theta", abs_theta);
-        // console.log("rad", this.rad);
-        // // console.log("rim", rim_coord);
-        // console.log("pos", otherObject.pos);
-        if (otherObject.stuck === false) {
-          // convert pos with respect to this.end_angle
-          //theta + delta Theta mod Math.pi * 2
+        if (otherObject) {
+          otherObject.stuck = true;
           otherObject.vel = [0, 0];
-
-          var new_theta = (abs_theta + theta_diff) % (Math.PI * 2);
-          var new_rel_x = 150 * Math.cos(new_theta);
-          var new_rel_y = 150 * Math.sin(new_theta);
-
-          // debugger
-          var mid_screen_x = this.game.DIM_X / 2;
-          var mid_screen_y = this.game.DIM_Y / 2;
-          if (otherObject.pos[0] > mid_screen_x && otherObject.pos[1] < mid_screen_y) {
-            otherObject.pos[0] = mid_screen_x + new_rel_x;
-            otherObject.pos[1] = mid_screen_y - new_rel_y;
-            console.log("pos", otherObject.pos);
-            console.log("theta diff", theta_diff);
-          } else if (otherObject.pos[0] < mid_screen_x && otherObject.pos[1] < mid_screen_y) {
-            otherObject.pos[0] = mid_screen_x + new_rel_x;
-            otherObject.pos[1] = mid_screen_y - new_rel_y;
-          } else if (otherObject.pos[0] <= mid_screen_x && otherObject.pos[1] > mid_screen_y) {
-            otherObject.pos[0] = mid_screen_x + new_rel_x;
-            otherObject.pos[1] = mid_screen_y - new_rel_y;
-          } else if (otherObject.pos[0] > mid_screen_x && otherObject.pos[1] > mid_screen_y) {
-            otherObject.pos[0] = mid_screen_x + new_rel_x;
-            otherObject.pos[1] = mid_screen_y - new_rel_y;
-          }
-          // convert pos to canvas coor
         } else if (this.angular_vel >= 0) {
           if (isNaN(this.angular_vel) || this.angular_vel === 0) {
             otherObject.vel[0] = -1 * otherObject.vel[0];
             otherObject.vel[1] = -1 * otherObject.vel[1];
+          } else if (rel_x > 0 && rel_y > 0) {
+            otherObject.vel[0] = otherObject.vel[0] - this.angular_vel * 100;
+            otherObject.vel[1] = -1 * this.angular_vel * 100 + otherObject.vel[1];
+          } else if (rel_x < 0 && rel_y > 0) {
+            otherObject.vel[0] = otherObject.vel[0] - this.angular_vel * 100;
+            otherObject.vel[1] = this.angular_vel * 100 + otherObject.vel[1];
+          } else if (rel_x < 0 && rel_y < 0) {
+            otherObject.vel[0] = this.angular_vel * 100 + otherObject.vel[0];
+            otherObject.vel[1] = -1 * (this.angular_vel * 100 + otherObject.vel[1]);
+          } else if (rel_x > 0 && rel_y < 0) {
+            otherObject.vel[0] = this.angular_vel * 100 + otherObject.vel[0];
+            otherObject.vel[1] = -1 * this.angular_vel * 100 + otherObject.vel[1];
           }
-          // else if(rel_x > 0 && rel_y === 0){
-          //   otherObject.vel[0] = -1 * otherObject.vel[0]  ;
-          //   otherObject.vel[1] = (this.angular_vel ) ;
-          // }
-          else if (rel_x > 0 && rel_y > 0) {
-              otherObject.vel[0] = otherObject.vel[0] - this.angular_vel * 100;
-              otherObject.vel[1] = -1 * this.angular_vel * 100 + otherObject.vel[1];
-            }
-            // else if (rel_x === 0 && rel_y > 0) {
-            //   otherObject.vel[0] = -1 * (this.angular_vel );
-            //   otherObject.vel[1] = -1 * otherObject.vel[1] ;
-            // }
-            else if (rel_x < 0 && rel_y > 0) {
-                otherObject.vel[0] = otherObject.vel[0] - this.angular_vel * 100;
-                otherObject.vel[1] = this.angular_vel * 100 + otherObject.vel[1];
-              }
-              // else if (rel_x < 0 && rel_y === 0) {
-              //   otherObject.vel[0] = -1 * otherObject.vel[0] ;
-              //   otherObject.vel[1] = -1 * this.angular_vel ;
-              // }
-              else if (rel_x < 0 && rel_y < 0) {
-                  otherObject.vel[0] = this.angular_vel * 100 + otherObject.vel[0];
-                  otherObject.vel[1] = -1 * (this.angular_vel * 100 + otherObject.vel[1]);
-                }
-                // else if (rel_x === 0 && rel_y < 0) {
-                //   otherObject.vel[0] = this.angular_vel ;
-                //   otherObject.vel[1] = -1 * otherObject.vel[1] ;
-                // }
-                else if (rel_x > 0 && rel_y < 0) {
-                    otherObject.vel[0] = this.angular_vel * 100 + otherObject.vel[0];
-                    otherObject.vel[1] = -1 * this.angular_vel * 100 + otherObject.vel[1];
-                  }
         } else if (this.angular_vel < 0) {
-          angular_vel = Math.abs(this.angular_vel);
+          var angular_vel = Math.abs(this.angular_vel);
           if (isNaN(this.angular_vel) || this.angular_vel === 0) {
             otherObject.vel[0] = -1 * otherObject.vel[0];
             otherObject.vel[1] = -1 * otherObject.vel[1];
+          } else if (rel_x > 0 && rel_y > 0) {
+            otherObject.vel[0] = otherObject.vel[0] + angular_vel * 100;
+            otherObject.vel[1] = angular_vel * 100 + otherObject.vel[1];
+          } else if (rel_x < 0 && rel_y > 0) {
+            otherObject.vel[0] = otherObject.vel[0] + angular_vel * 100;
+            otherObject.vel[1] = -1 * angular_vel * 100 + otherObject.vel[1];
+          } else if (rel_x < 0 && rel_y < 0) {
+            otherObject.vel[0] = -1 * (angular_vel * 100 + otherObject.vel[0]);
+            otherObject.vel[1] = angular_vel * 100 + otherObject.vel[1];
+          } else if (rel_x > 0 && rel_y < 0) {
+            otherObject.vel[0] = -1 * angular_vel * 100 + otherObject.vel[0];
+            otherObject.vel[1] = angular_vel * 100 + otherObject.vel[1];
           }
-          // else if(rel_x > 0 && rel_y === 0){
-          //   otherObject.vel[0] = -1 * otherObject.vel[0]  ;
-          //   otherObject.vel[1] = (this.angular_vel ) ;
-          // }
-          else if (rel_x > 0 && rel_y > 0) {
-              otherObject.vel[0] = otherObject.vel[0] + angular_vel * 100;
-              otherObject.vel[1] = angular_vel * 100 + otherObject.vel[1];
-            }
-            // else if (rel_x === 0 && rel_y > 0) {
-            //   otherObject.vel[0] = -1 * (angular_vel );
-            //   otherObject.vel[1] = -1 * otherObject.vel[1] ;
-            // }
-            else if (rel_x < 0 && rel_y > 0) {
-                otherObject.vel[0] = otherObject.vel[0] + angular_vel * 100;
-                otherObject.vel[1] = -1 * angular_vel * 100 + otherObject.vel[1];
-              }
-              // else if (rel_x < 0 && rel_y === 0) {
-              //   otherObject.vel[0] = -1 * otherObject.vel[0] ;
-              //   otherObject.vel[1] = -1 * angular_vel ;
-              // }
-              else if (rel_x < 0 && rel_y < 0) {
-                  otherObject.vel[0] = -1 * (angular_vel * 100 + otherObject.vel[0]);
-                  otherObject.vel[1] = angular_vel * 100 + otherObject.vel[1];
-                }
-                // else if (rel_x === 0 && rel_y < 0) {
-                //   otherObject.vel[0] = angular_vel ;
-                //   otherObject.vel[1] = -1 * otherObject.vel[1] ;
-                // }
-                else if (rel_x > 0 && rel_y < 0) {
-                    otherObject.vel[0] = -1 * angular_vel * 100 + otherObject.vel[0];
-                    otherObject.vel[1] = angular_vel * 100 + otherObject.vel[1];
-                  }
         }
       } else if (otherObject instanceof _power_up2.default) {
         this.enablePowerup(otherObject);
