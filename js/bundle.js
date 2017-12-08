@@ -527,6 +527,7 @@ var Game = function () {
     });
     // this.drawPowerUp(ctx);
     this.checkWin = this.checkWin.bind(this);
+    this.reset = this.reset.bind(this);
     this.initTest();
     setInterval(function () {
       _this.gameover_count++;
@@ -584,6 +585,13 @@ var Game = function () {
             break;
         }
       }, 10000);
+    }
+  }, {
+    key: 'reset',
+    value: function reset() {
+      this.lost = false;
+      this.stuckCount = 0;
+      this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
     }
   }, {
     key: 'randomPosition',
@@ -710,23 +718,39 @@ var Game = function () {
           this.ctx.font = '80px "Press Start 2P"';
           this.ctx.fillStyle = 'rgba(255,255,255,0.3)';
           this.ctx.fillText('GAME OVER', this.DIM_X / 2 - 380, this.DIM_Y / 2);
+          this.ctx.font = '20px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.3)';
+          this.ctx.fillText('Click to play again', this.DIM_X / 2 - 380, this.DIM_Y / 2 + 100);
         } else if (this.gameover_count === 1) {
           this.ctx.font = '80px "Press Start 2P"';
           this.ctx.fillStyle = 'rgba(255,255,255,0.4)';
           this.ctx.fillText('GAME OVER', this.DIM_X / 2 - 380, this.DIM_Y / 2);
+          this.ctx.font = '20px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.4)';
+          this.ctx.fillText('Click to play again', this.DIM_X / 2 - 380, this.DIM_Y / 2 + 100);
         } else if (this.gameover_count === 2) {
           this.ctx.font = '80px "Press Start 2P"';
           this.ctx.fillStyle = 'rgba(255,255,255,0.6)';
           this.ctx.fillText('GAME OVER', this.DIM_X / 2 - 380, this.DIM_Y / 2);
+          this.ctx.font = '20px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.5)';
+          this.ctx.fillText('Click to play again', this.DIM_X / 2 - 380, this.DIM_Y / 2 + 100);
         } else if (this.gameover_count === 3) {
           this.ctx.font = '80px "Press Start 2P"';
           this.ctx.fillStyle = 'rgba(255,255,255,0.7)';
           this.ctx.fillText('GAME OVER', this.DIM_X / 2 - 380, this.DIM_Y / 2);
+          this.ctx.font = '20px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.7)';
+          this.ctx.fillText('Click to play again', this.DIM_X / 2 - 380, this.DIM_Y / 2 + 100);
         } else if (this.gameover_count === 4) {
           this.ctx.font = '80px "Press Start 2P"';
           this.ctx.fillStyle = 'rgba(255,255,255,0.8)';
           this.ctx.fillText('GAME OVER', this.DIM_X / 2 - 380, this.DIM_Y / 2);
+          this.ctx.font = '20px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.8)';
+          this.ctx.fillText('Click to play again', this.DIM_X / 2 - 380, this.DIM_Y / 2 + 100);
         }
+        window.addEventListener('click', this.reset);
       }
 
       if (this.lost === false) {
