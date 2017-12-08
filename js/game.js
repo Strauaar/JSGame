@@ -311,8 +311,12 @@ class Game {
         distance = Util.distance(this.goals[j].pos[0], this.goals[j].pos[1], object_array[i].pos[0], object_array[i].pos[1])
 
         if(distance <= totalRadius && object_array[i] instanceof Projectile) {
+          if(object_array[i].counted === true) {
 
-          this.score += 1
+          } else if (object_array[i].counted === false){
+            object_array[i].counted = true;
+            this.score += 1
+          }
         }
       }
     }

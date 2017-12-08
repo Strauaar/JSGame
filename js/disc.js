@@ -118,6 +118,8 @@ class Disc extends MovingObject{
         otherObject.vel[1] = ((angular_vel * 100) + otherObject.vel[1]) ;
       }
     }
+    otherObject.vel[0] = otherObject.vel[0] * 1.1;
+    otherObject.vel[1] = otherObject.vel[1] * 1.1;
   }
 
   caluclateCollision(otherObject) {
@@ -130,21 +132,16 @@ class Disc extends MovingObject{
       let contact_point_y = Util.relative_y(otherObject.pos[1], this.game.DIM_Y);
       let angle = Math.atan(contact_point_y/contact_point_x);
       let abs_theta = Util.calculateRad(contact_point_x, contact_point_y, angle);
-      console.log(this.rad);
-      console.log(this.rad + Math.PI*2/3);
-      console.log((this.rad + Math.PI*2/3) % (Math.PI/2));
 
       let red_lower = this.rad - (Math.PI * 2/3);
       let red_upper = this.rad;
       // blue lower same as above
       let blue_upper = this.rad + (Math.PI * 2/3);
 
-      ((abs_theta < Math.PI * 2) && (abs_theta > (Math.PI - (Math.PI * 2/3 - this.rad))) && otherObject.color === 'red')
-
       if(((this.rad > abs_theta) && (abs_theta > (this.rad - Math.PI * 2 /3)) && otherObject.color === 'red') || ((abs_theta < Math.PI * 2) && (abs_theta > (Math.PI - (Math.PI * 2/3 - this.rad))) && otherObject.color === 'red')) {
         console.log("is red ball");
         this.bounce(otherObject, rel_x, rel_y);
-      } else if ( ((this.rad + Math.PI * 2/3) > abs_theta) && (abs_theta > this.rad) && otherObject.color === 'blue') {
+      } else if ( (((this.rad + Math.PI * 2/3) > abs_theta) && (abs_theta > this.rad) && otherObject.color === 'blue') || (abs_theta > 0 && (abs_theta < (this.rad - Math.PI * 3/2)) && otherObject.color =="blue")){
         console.log("is blue");
         this.bounce(otherObject, rel_x, rel_y);
       } else if ( ((this.rad + Math.PI * 4/3) > abs_theta) && otherObject.color === 'green') {

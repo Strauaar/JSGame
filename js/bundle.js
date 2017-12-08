@@ -166,6 +166,7 @@ var Projectile = function (_MovingObject) {
     var _this = _possibleConstructorReturn(this, (Projectile.__proto__ || Object.getPrototypeOf(Projectile)).call(this, options));
 
     _this.stuck = false;
+    _this.counted = false;
 
     return _this;
   }
@@ -786,8 +787,10 @@ var Game = function () {
           distance = Util.distance(this.goals[j].pos[0], this.goals[j].pos[1], object_array[i].pos[0], object_array[i].pos[1]);
 
           if (distance <= totalRadius && object_array[i] instanceof _projectile2.default) {
-
-            this.score += 1;
+            if (object_array[i].counted === true) {} else if (object_array[i].counted === false) {
+              object_array[i].counted = true;
+              this.score += 1;
+            }
           }
         }
       }
@@ -1007,6 +1010,8 @@ var Disc = function (_MovingObject) {
           otherObject.vel[1] = angular_vel * 100 + otherObject.vel[1];
         }
       }
+      otherObject.vel[0] = otherObject.vel[0] * 1.1;
+      otherObject.vel[1] = otherObject.vel[1] * 1.1;
     }
   }, {
     key: 'caluclateCollision',
@@ -1020,21 +1025,16 @@ var Disc = function (_MovingObject) {
         var contact_point_y = Util.relative_y(otherObject.pos[1], this.game.DIM_Y);
         var angle = Math.atan(contact_point_y / contact_point_x);
         var abs_theta = Util.calculateRad(contact_point_x, contact_point_y, angle);
-        console.log(this.rad);
-        console.log(this.rad + Math.PI * 2 / 3);
-        console.log((this.rad + Math.PI * 2 / 3) % (Math.PI / 2));
 
         var red_lower = this.rad - Math.PI * 2 / 3;
         var red_upper = this.rad;
         // blue lower same as above
         var blue_upper = this.rad + Math.PI * 2 / 3;
 
-        abs_theta < Math.PI * 2 && abs_theta > Math.PI - (Math.PI * 2 / 3 - this.rad) && otherObject.color === 'red';
-
         if (this.rad > abs_theta && abs_theta > this.rad - Math.PI * 2 / 3 && otherObject.color === 'red' || abs_theta < Math.PI * 2 && abs_theta > Math.PI - (Math.PI * 2 / 3 - this.rad) && otherObject.color === 'red') {
           console.log("is red ball");
           this.bounce(otherObject, rel_x, rel_y);
-        } else if (this.rad + Math.PI * 2 / 3 > abs_theta && abs_theta > this.rad && otherObject.color === 'blue') {
+        } else if (this.rad + Math.PI * 2 / 3 > abs_theta && abs_theta > this.rad && otherObject.color === 'blue' || abs_theta > 0 && abs_theta < this.rad - Math.PI * 3 / 2 && otherObject.color == "blue") {
           console.log("is blue");
           this.bounce(otherObject, rel_x, rel_y);
         } else if (this.rad + Math.PI * 4 / 3 > abs_theta && otherObject.color === 'green') {

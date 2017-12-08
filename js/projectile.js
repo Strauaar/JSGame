@@ -5,6 +5,7 @@ class Projectile extends MovingObject {
     options.radius = 30;
     super(options);
     this.stuck = false;
+    this.counted = false;
 
   }
 
