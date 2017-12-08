@@ -787,13 +787,49 @@ var Game = function () {
       }
 
       if (this.power_type === 'burst') {
-        ctx.font = '14px "Press Start 2P"';
-        ctx.fillStyle = 'rgba(255,255,255,0.3)';
-        ctx.fillText('Click to release!', this.DIM_X / 2 - 120, 100);
+        if (this.gameover_count === 0) {
+          ctx.font = '14px "Press Start 2P"';
+          ctx.fillStyle = 'rgba(255,255,255,0.3)';
+          ctx.fillText('Click to release!', this.DIM_X / 2 - 120, 100);
+        } else if (this.gameover_count === 1) {
+          ctx.font = '14px "Press Start 2P"';
+          ctx.fillStyle = 'rgba(255,255,255,0.4)';
+          ctx.fillText('Click to release!', this.DIM_X / 2 - 120, 100);
+        } else if (this.gameover_count === 2) {
+          ctx.font = '14px "Press Start 2P"';
+          ctx.fillStyle = 'rgba(255,255,255,0.6)';
+          ctx.fillText('Click to release!', this.DIM_X / 2 - 120, 100);
+        } else if (this.gameover_count === 3) {
+          ctx.font = '14px "Press Start 2P"';
+          ctx.fillStyle = 'rgba(255,255,255,0.7)';
+          ctx.fillText('Click to release!', this.DIM_X / 2 - 120, 100);
+        } else if (this.gameover_count === 4) {
+          ctx.font = '14px "Press Start 2P"';
+          ctx.fillStyle = 'rgba(255,255,255,0.8)';
+          ctx.fillText('Click to release!', this.DIM_X / 2 - 120, 100);
+        }
       } else if (this.power_type === 'shoot') {
-        ctx.font = '14px "Press Start 2P"';
-        ctx.fillStyle = 'rgba(255,255,255,0.3)';
-        ctx.fillText('Click to shoot!', this.DIM_X / 2 - 120, 100);
+        if (this.gameover_count === 0) {
+          ctx.font = '14px "Press Start 2P"';
+          ctx.fillStyle = 'rgba(255,255,255,0.3)';
+          ctx.fillText('Click to shoot!', this.DIM_X / 2 - 120, 100);
+        } else if (this.gameover_count === 1) {
+          ctx.font = '14px "Press Start 2P"';
+          ctx.fillStyle = 'rgba(255,255,255,0.4)';
+          ctx.fillText('Click to shoot!', this.DIM_X / 2 - 120, 100);
+        } else if (this.gameover_count === 2) {
+          ctx.font = '14px "Press Start 2P"';
+          ctx.fillStyle = 'rgba(255,255,255,0.6)';
+          ctx.fillText('Click to shoot!', this.DIM_X / 2 - 120, 100);
+        } else if (this.gameover_count === 3) {
+          ctx.font = '14px "Press Start 2P"';
+          ctx.fillStyle = 'rgba(255,255,255,0.7)';
+          ctx.fillText('Click to shoot!', this.DIM_X / 2 - 120, 100);
+        } else if (this.gameover_count === 4) {
+          ctx.font = '14px "Press Start 2P"';
+          ctx.fillStyle = 'rgba(255,255,255,0.8)';
+          ctx.fillText('Click to shoot!', this.DIM_X / 2 - 120, 100);
+        }
       }
 
       // console.log("rel_x", this.disc.rel_x);
