@@ -498,6 +498,7 @@ var Game = function () {
     this.stuckCount = 0;
     this.lost = false;
     this.ctx = ctx;
+    this.gameover_count = 0;
     this.DIM_X = window.innerWidth;
     this.DIM_Y = window.innerHeight;
     this.initProjectiles = this.initProjectiles.bind(this);
@@ -527,6 +528,10 @@ var Game = function () {
     // this.drawPowerUp(ctx);
     this.checkWin = this.checkWin.bind(this);
     this.initTest();
+    setInterval(function () {
+      _this.gameover_count++;
+      _this.gameover_count = _this.gameover_count % 4;
+    }, 300);
   }
 
   _createClass(Game, [{
@@ -689,6 +694,7 @@ var Game = function () {
       // console.log("x_vel", this.projectiles[0].vel[0]);
       // console.log("y_vel", this.projectiles[0].vel[1]);
       // console.log(this.disc.angular_vel);
+
       ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
       ctx.fillStyle = "#2c2d23";
       ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
@@ -700,9 +706,27 @@ var Game = function () {
         this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
         ctx.fillStyle = "#2c2d23";
         ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
-        this.ctx.font = '80px "Press Start 2P"';
-        this.ctx.fillStyle = 'white';
-        this.ctx.fillText('GAME OVER', this.DIM_X / 2 - 380, this.DIM_Y / 2);
+        if (this.gameover_count === 0) {
+          this.ctx.font = '80px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.3)';
+          this.ctx.fillText('GAME OVER', this.DIM_X / 2 - 380, this.DIM_Y / 2);
+        } else if (this.gameover_count === 1) {
+          this.ctx.font = '80px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.4)';
+          this.ctx.fillText('GAME OVER', this.DIM_X / 2 - 380, this.DIM_Y / 2);
+        } else if (this.gameover_count === 2) {
+          this.ctx.font = '80px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.6)';
+          this.ctx.fillText('GAME OVER', this.DIM_X / 2 - 380, this.DIM_Y / 2);
+        } else if (this.gameover_count === 3) {
+          this.ctx.font = '80px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.7)';
+          this.ctx.fillText('GAME OVER', this.DIM_X / 2 - 380, this.DIM_Y / 2);
+        } else if (this.gameover_count === 4) {
+          this.ctx.font = '80px "Press Start 2P"';
+          this.ctx.fillStyle = 'rgba(255,255,255,0.8)';
+          this.ctx.fillText('GAME OVER', this.DIM_X / 2 - 380, this.DIM_Y / 2);
+        }
       }
 
       if (this.lost === false) {
