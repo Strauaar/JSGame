@@ -331,8 +331,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 document.addEventListener('DOMContentLoaded', function () {
   var canvas = document.getElementById('game-canvas');
-  canvas.width = 800;
-  canvas.height = 800;
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
   var ctx = canvas.getContext('2d');
   var gameView = new _game_view2.default(ctx);
   gameView.start(ctx);
@@ -438,8 +438,8 @@ var Game = function () {
     this.goals = [];
     this.score = 0;
     this.ctx = ctx;
-    this.DIM_X = 800;
-    this.DIM_Y = 800;
+    this.DIM_X = window.innerWidth;
+    this.DIM_Y = window.innerHeight;
     this.initProjectiles = this.initProjectiles.bind(this);
     this.initGoals();
     // this.initProjectiles();
@@ -623,7 +623,8 @@ var Game = function () {
       ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
       ctx.fillStyle = "#2c2d23";
       ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
-      ctx.font = "30px Arial";
+      ctx.font = "50px Helvetica";
+      ctx.fillStyle = 'white';
       ctx.fillText(this.score, 10, 50);
       this.allObjects().forEach(function (obj) {
         obj.draw(ctx);
@@ -847,7 +848,7 @@ var Disc = function (_MovingObject) {
     var _this = _possibleConstructorReturn(this, (Disc.__proto__ || Object.getPrototypeOf(Disc)).call(this, options));
 
     _this.outerRadius = 150;
-    _this.innerRadius = 100;
+    _this.innerRadius = 60;
     _this.fragments = [];
     _this.theta = 0;
     _this.angular_vel = 0;
@@ -888,11 +889,11 @@ var Disc = function (_MovingObject) {
       // this.rel_y = rel_y;
       // this.theta = theta;
 
-      this.setRadialGradient(ctx, "#DC1C29", "#B74536");
+      this.setRadialGradient(ctx, "#DC1C29", "#DC1C29");
       this.drawDonut(ctx, -this.rad, -this.rad + Math.PI * 2 / 3);
-      this.setRadialGradient(ctx, "#84BC3D", "#5B8829");
+      this.setRadialGradient(ctx, "#84BC3D", "#84BC3D");
       this.drawDonut(ctx, -this.rad + Math.PI * 2 / 3, -this.rad + Math.PI * 4 / 3);
-      this.setRadialGradient(ctx, "#27A1D4", "#2182AD");
+      this.setRadialGradient(ctx, "#27A1D4", "#27A1D4");
       this.drawDonut(ctx, -this.rad + Math.PI * 4 / 3, -this.rad + Math.PI * 2);
     }
   }, {

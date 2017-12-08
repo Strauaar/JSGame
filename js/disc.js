@@ -7,7 +7,7 @@ class Disc extends MovingObject{
   constructor(options){
     super(options);
     this.outerRadius = 150;
-    this.innerRadius = 100;
+    this.innerRadius = 60;
     this.fragments = [];
     this.theta = 0;
     this.angular_vel = 0;
@@ -41,11 +41,11 @@ class Disc extends MovingObject{
     // this.rel_y = rel_y;
     // this.theta = theta;
 
-    this.setRadialGradient(ctx, "#DC1C29", "#B74536");
+    this.setRadialGradient(ctx, "#DC1C29", "#DC1C29");
     this.drawDonut(ctx, -this.rad, -this.rad + Math.PI * 2/3);
-    this.setRadialGradient(ctx, "#84BC3D", "#5B8829");
+    this.setRadialGradient(ctx, "#84BC3D", "#84BC3D");
     this.drawDonut(ctx,-this.rad + Math.PI * 2/3, -this.rad + Math.PI * 4/3)
-    this.setRadialGradient(ctx, "#27A1D4", "#2182AD");
+    this.setRadialGradient(ctx, "#27A1D4", "#27A1D4");
     this.drawDonut(ctx, -this.rad + Math.PI * 4/3, -this.rad + Math.PI * 2)
   }
 

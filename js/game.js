@@ -14,8 +14,8 @@ class Game {
     this.goals = [];
     this.score = 0;
     this.ctx = ctx;
-    this.DIM_X = 800;
-    this.DIM_Y = 800;
+    this.DIM_X = window.innerWidth;
+    this.DIM_Y = window.innerHeight;
     this.initProjectiles = this.initProjectiles.bind(this);
     this.initGoals();
     // this.initProjectiles();
@@ -184,8 +184,9 @@ class Game {
     ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
     ctx.fillStyle = "#2c2d23";
     ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
-    ctx.font = "30px Arial";
-    ctx.fillText(this.score,10,50);
+    ctx.font = "50px Helvetica";
+    ctx.fillStyle = 'white';
+    ctx.fillText(this.score, 10, 50);
     this.allObjects().forEach(obj => {
       obj.draw(ctx);
     });
