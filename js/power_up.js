@@ -28,11 +28,15 @@ class PowerUp extends MovingObject {
   enablePowerup(toggle) {
 
     let num = Math.floor(Math.random() * 100);
-    if (num % 2 == 0) {
+    let x;
+    if (x = 2) {
       if(toggle === true && this.toggle !== true) {
+
         this.toggle = toggle;
         this.powerup = PowerUp.burst.bind(this);
         document.addEventListener('click', this.powerup);
+        debugger
+
       } else if (toggle === false) {
         this.toggle = false;
         document.removeEventListener('click', this.powerup);
@@ -72,6 +76,7 @@ PowerUp.addShooter = function(e){
 }
 
 PowerUp.burst = function() {
+  debugger
   this.disc.burst();
 }
 

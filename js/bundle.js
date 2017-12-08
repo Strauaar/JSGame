@@ -243,11 +243,14 @@ var PowerUp = function (_MovingObject) {
     value: function enablePowerup(toggle) {
 
       var num = Math.floor(Math.random() * 100);
-      if (num % 2 == 0) {
+      var x = void 0;
+      if (x = 2) {
         if (toggle === true && this.toggle !== true) {
+
           this.toggle = toggle;
           this.powerup = PowerUp.burst.bind(this);
           document.addEventListener('click', this.powerup);
+          debugger;
         } else if (toggle === false) {
           this.toggle = false;
           document.removeEventListener('click', this.powerup);
@@ -289,6 +292,7 @@ PowerUp.addShooter = function (e) {
 };
 
 PowerUp.burst = function () {
+  debugger;
   this.disc.burst();
 };
 
@@ -772,7 +776,6 @@ var Game = function () {
 
           object_array[i].pos[0] = mid_screen_x + new_rel_x;
           object_array[i].pos[1] = mid_screen_y - new_rel_y;
-          debugger;
         }
       }
     }
@@ -1072,6 +1075,7 @@ var Disc = function (_MovingObject) {
   }, {
     key: 'enablePowerup',
     value: function enablePowerup(powerup) {
+      debugger;
       powerup.enablePowerup(true);
       setTimeout(function () {
         powerup.enablePowerup(false);
@@ -1082,6 +1086,25 @@ var Disc = function (_MovingObject) {
     value: function shoot(x, y) {
       var vel_vectors = this.game.findCenter([x, y]);
       this.game.shootBullet({ pos: [this.game.DIM_X / 2, this.game.DIM_Y / 2], vel: [vel_vectors[0] * -10, vel_vectors[1] * -10], color: 'black', radius: 2 });
+    }
+  }, {
+    key: 'burst',
+    value: function burst() {
+      var projectiles = this.game.allObjects().filter(function (obj) {
+        return obj instanceof _projectile2.default;
+      });
+      for (var i = 0; i < projectiles.length; i++) {
+        // debugger
+        if (projectiles[i].stuck === true) {
+          var new_theta = (this.rad - projectiles[i].dTheta) % (Math.PI * 2);
+          var new_rel_x = Math.cos(new_theta);
+          var new_rel_y = Math.sin(new_theta);
+          projectiles[i].stuck = false;
+          projectiles[i].vel[0] = new_rel_x / Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)) * 10;
+          projectiles[i].vel[1] = new_rel_y / Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)) * 10;
+          debugger;
+        }
+      }
     }
   }]);
 

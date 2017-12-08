@@ -279,7 +279,7 @@ class Game {
 
         object_array[i].pos[0] = mid_screen_x + new_rel_x;
         object_array[i].pos[1] = mid_screen_y - new_rel_y;
-        debugger
+
       }
     }
   }

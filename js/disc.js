@@ -158,6 +158,7 @@ class Disc extends MovingObject{
   }
 
   enablePowerup(powerup) {
+    debugger
     powerup.enablePowerup(true);
     setTimeout(() => {
       powerup.enablePowerup(false);
@@ -167,6 +168,22 @@ class Disc extends MovingObject{
   shoot(x, y) {
     let vel_vectors = this.game.findCenter([x,y]);
     this.game.shootBullet({pos:[(this.game.DIM_X / 2), (this.game.DIM_Y / 2)], vel: [vel_vectors[0] * -10, vel_vectors[1] * -10] , color: 'black', radius: 2})
+  }
+
+  burst() {
+    let projectiles = this.game.allObjects().filter(obj => obj instanceof Projectile)
+    for(let i = 0; i < projectiles.length; i++) {
+      // debugger
+      if(projectiles[i].stuck === true) {
+        let new_theta = (this.rad - projectiles[i].dTheta) % (Math.PI * 2);
+        let new_rel_x = Math.cos(new_theta);
+        let new_rel_y = Math.sin(new_theta);
+        projectiles[i].stuck = false;
+        projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
+        projectiles[i].vel[1] = (new_rel_y/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
+        debugger
+      }
+    }
   }
 
 }
