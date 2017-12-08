@@ -897,7 +897,7 @@ var Disc = function (_MovingObject) {
     _this.setRadialGradient = _this.setRadialGradient.bind(_this);
     _this.caluclateCollision = _this.caluclateCollision.bind(_this);
     _this.enablePowerup = _this.enablePowerup.bind(_this);
-
+    _this.bounce = _this.bounce.bind(_this);
     return _this;
   }
 
@@ -969,6 +969,46 @@ var Disc = function (_MovingObject) {
       ctx.fillStyle = grd;
     }
   }, {
+    key: 'bounce',
+    value: function bounce(otherObject, rel_x, rel_y) {
+      if (this.angular_vel >= 0) {
+        if (isNaN(this.angular_vel) || this.angular_vel === 0) {
+          otherObject.vel[0] = -1 * otherObject.vel[0];
+          otherObject.vel[1] = -1 * otherObject.vel[1];
+        } else if (rel_x > 0 && rel_y > 0) {
+          otherObject.vel[0] = otherObject.vel[0] - this.angular_vel * 100;
+          otherObject.vel[1] = -1 * this.angular_vel * 100 + otherObject.vel[1];
+        } else if (rel_x < 0 && rel_y > 0) {
+          otherObject.vel[0] = otherObject.vel[0] - this.angular_vel * 100;
+          otherObject.vel[1] = this.angular_vel * 100 + otherObject.vel[1];
+        } else if (rel_x < 0 && rel_y < 0) {
+          otherObject.vel[0] = this.angular_vel * 100 + otherObject.vel[0];
+          otherObject.vel[1] = -1 * (this.angular_vel * 100 + otherObject.vel[1]);
+        } else if (rel_x > 0 && rel_y < 0) {
+          otherObject.vel[0] = this.angular_vel * 100 + otherObject.vel[0];
+          otherObject.vel[1] = -1 * this.angular_vel * 100 + otherObject.vel[1];
+        }
+      } else if (this.angular_vel < 0) {
+        var angular_vel = Math.abs(this.angular_vel);
+        if (isNaN(this.angular_vel) || this.angular_vel === 0) {
+          otherObject.vel[0] = -1 * otherObject.vel[0];
+          otherObject.vel[1] = -1 * otherObject.vel[1];
+        } else if (rel_x > 0 && rel_y > 0) {
+          otherObject.vel[0] = otherObject.vel[0] + angular_vel * 100;
+          otherObject.vel[1] = angular_vel * 100 + otherObject.vel[1];
+        } else if (rel_x < 0 && rel_y > 0) {
+          otherObject.vel[0] = otherObject.vel[0] + angular_vel * 100;
+          otherObject.vel[1] = -1 * angular_vel * 100 + otherObject.vel[1];
+        } else if (rel_x < 0 && rel_y < 0) {
+          otherObject.vel[0] = -1 * (angular_vel * 100 + otherObject.vel[0]);
+          otherObject.vel[1] = angular_vel * 100 + otherObject.vel[1];
+        } else if (rel_x > 0 && rel_y < 0) {
+          otherObject.vel[0] = -1 * angular_vel * 100 + otherObject.vel[0];
+          otherObject.vel[1] = angular_vel * 100 + otherObject.vel[1];
+        }
+      }
+    }
+  }, {
     key: 'caluclateCollision',
     value: function caluclateCollision(otherObject) {
       var rel_x = Util.relative_x(otherObject.pos[0], this.game.DIM_X);
@@ -976,44 +1016,31 @@ var Disc = function (_MovingObject) {
       // convert polar coordinates to cartesian coordinates
 
       if (otherObject instanceof _projectile2.default) {
-        if (otherObject) {
+        var contact_point_x = Util.relative_x(otherObject.pos[0], this.game.DIM_X);
+        var contact_point_y = Util.relative_y(otherObject.pos[1], this.game.DIM_Y);
+        var angle = Math.atan(contact_point_y / contact_point_x);
+        var abs_theta = Util.calculateRad(contact_point_x, contact_point_y, angle);
+        console.log(this.rad);
+        console.log(this.rad + Math.PI * 2 / 3);
+        console.log((this.rad + Math.PI * 2 / 3) % (Math.PI / 2));
+
+        var red_lower = this.rad - Math.PI * 2 / 3;
+        var red_upper = this.rad;
+        // blue lower same as above
+        var blue_upper = this.rad + Math.PI * 2 / 3;
+
+        if (this.rad > abs_theta && abs_theta > this.rad - Math.PI * 2 / 3 && otherObject.color === 'red') {
+          console.log("is red ball");
+          this.bounce(otherObject, rel_x, rel_y);
+        } else if (this.rad + Math.PI * 2 / 3 > abs_theta && abs_theta > this.rad && otherObject.color === 'blue') {
+          console.log("is blue");
+          this.bounce(otherObject, rel_x, rel_y);
+        } else if (this.rad + Math.PI * 4 / 3 > abs_theta && abs_theta > this.rad + Math.PI * 2 / 3 && otherObject.color === 'green') {
+          console.log("green");
+          this.bounce(otherObject, rel_x, rel_y);
+        } else {
           otherObject.stuck = true;
           otherObject.vel = [0, 0];
-        } else if (this.angular_vel >= 0) {
-          if (isNaN(this.angular_vel) || this.angular_vel === 0) {
-            otherObject.vel[0] = -1 * otherObject.vel[0];
-            otherObject.vel[1] = -1 * otherObject.vel[1];
-          } else if (rel_x > 0 && rel_y > 0) {
-            otherObject.vel[0] = otherObject.vel[0] - this.angular_vel * 100;
-            otherObject.vel[1] = -1 * this.angular_vel * 100 + otherObject.vel[1];
-          } else if (rel_x < 0 && rel_y > 0) {
-            otherObject.vel[0] = otherObject.vel[0] - this.angular_vel * 100;
-            otherObject.vel[1] = this.angular_vel * 100 + otherObject.vel[1];
-          } else if (rel_x < 0 && rel_y < 0) {
-            otherObject.vel[0] = this.angular_vel * 100 + otherObject.vel[0];
-            otherObject.vel[1] = -1 * (this.angular_vel * 100 + otherObject.vel[1]);
-          } else if (rel_x > 0 && rel_y < 0) {
-            otherObject.vel[0] = this.angular_vel * 100 + otherObject.vel[0];
-            otherObject.vel[1] = -1 * this.angular_vel * 100 + otherObject.vel[1];
-          }
-        } else if (this.angular_vel < 0) {
-          var angular_vel = Math.abs(this.angular_vel);
-          if (isNaN(this.angular_vel) || this.angular_vel === 0) {
-            otherObject.vel[0] = -1 * otherObject.vel[0];
-            otherObject.vel[1] = -1 * otherObject.vel[1];
-          } else if (rel_x > 0 && rel_y > 0) {
-            otherObject.vel[0] = otherObject.vel[0] + angular_vel * 100;
-            otherObject.vel[1] = angular_vel * 100 + otherObject.vel[1];
-          } else if (rel_x < 0 && rel_y > 0) {
-            otherObject.vel[0] = otherObject.vel[0] + angular_vel * 100;
-            otherObject.vel[1] = -1 * angular_vel * 100 + otherObject.vel[1];
-          } else if (rel_x < 0 && rel_y < 0) {
-            otherObject.vel[0] = -1 * (angular_vel * 100 + otherObject.vel[0]);
-            otherObject.vel[1] = angular_vel * 100 + otherObject.vel[1];
-          } else if (rel_x > 0 && rel_y < 0) {
-            otherObject.vel[0] = -1 * angular_vel * 100 + otherObject.vel[0];
-            otherObject.vel[1] = angular_vel * 100 + otherObject.vel[1];
-          }
         }
       } else if (otherObject instanceof _power_up2.default) {
         this.enablePowerup(otherObject);
@@ -1031,7 +1058,6 @@ var Disc = function (_MovingObject) {
   }, {
     key: 'shoot',
     value: function shoot(x, y) {
-      console.log("hi");
       var vel_vectors = this.game.findCenter([x, y]);
       this.game.shootBullet({ pos: [this.game.DIM_X / 2, this.game.DIM_Y / 2], vel: [vel_vectors[0] * -10, vel_vectors[1] * -10], color: 'black', radius: 2 });
     }
