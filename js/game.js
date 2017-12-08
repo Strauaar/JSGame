@@ -37,6 +37,8 @@ class Game {
     this.shootBullet = this.shootBullet.bind(this);
     this.removePowerup = this.removePowerup.bind(this);
     this.removeObject = this.removeObject.bind(this);
+    // this.drawPowerUp(ctx);
+
     this.initTest();
   }
 
@@ -177,6 +179,8 @@ class Game {
     document.addEventListener('mousestop', registerStaticPosition);
   }
 
+
+
   draw(ctx) {
     // console.log("x_vel", this.projectiles[0].vel[0]);
     // console.log("y_vel", this.projectiles[0].vel[1]);
@@ -184,9 +188,11 @@ class Game {
     ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
     ctx.fillStyle = "#2c2d23";
     ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
-    ctx.font = "50px Helvetica";
+    ctx.font = '80px "Press Start 2P"';
     ctx.fillStyle = 'white';
-    ctx.fillText(this.score, 10, 50);
+    ctx.fillText(this.score, 70, 100);
+
+
     this.allObjects().forEach(obj => {
       obj.draw(ctx);
     });

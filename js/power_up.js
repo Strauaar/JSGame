@@ -7,6 +7,8 @@ class PowerUp extends MovingObject {
     super(options);
     this.disc = options.disc;
     this.toggle = false;
+    this.drawing = new Image();
+    this.drawing.src = "assets/images/frame-1.png";
   }
 
   enablePowerup(toggle) {
@@ -20,6 +22,11 @@ class PowerUp extends MovingObject {
       document.removeEventListener('click', this.powerup);
     }
   }
+
+  draw(ctx) {
+       ctx.drawImage(this.drawing, this.pos[0],this.pos[1], 50,50);
+    }
+
 }
 
 PowerUp.addShooter = function(e){

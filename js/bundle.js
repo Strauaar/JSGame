@@ -219,6 +219,8 @@ var PowerUp = function (_MovingObject) {
 
     _this.disc = options.disc;
     _this.toggle = false;
+    _this.drawing = new Image();
+    _this.drawing.src = "assets/images/frame-1.png";
     return _this;
   }
 
@@ -234,6 +236,11 @@ var PowerUp = function (_MovingObject) {
         this.toggle = false;
         document.removeEventListener('click', this.powerup);
       }
+    }
+  }, {
+    key: 'draw',
+    value: function draw(ctx) {
+      ctx.drawImage(this.drawing, this.pos[0], this.pos[1], 50, 50);
     }
   }]);
 
@@ -460,6 +467,8 @@ var Game = function () {
     this.shootBullet = this.shootBullet.bind(this);
     this.removePowerup = this.removePowerup.bind(this);
     this.removeObject = this.removeObject.bind(this);
+    // this.drawPowerUp(ctx);
+
     this.initTest();
   }
 
@@ -623,9 +632,10 @@ var Game = function () {
       ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
       ctx.fillStyle = "#2c2d23";
       ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
-      ctx.font = "50px Helvetica";
+      ctx.font = '80px "Press Start 2P"';
       ctx.fillStyle = 'white';
-      ctx.fillText(this.score, 10, 50);
+      ctx.fillText(this.score, 70, 100);
+
       this.allObjects().forEach(function (obj) {
         obj.draw(ctx);
       });
