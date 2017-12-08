@@ -94,17 +94,11 @@ class Disc extends MovingObject{
       // calculate the difference between the angle of the mouse position to the contact point
       let theta_diff = Math.abs(abs_theta - this.rad);
 
-      // console.log("abs_theta", abs_theta);
-      // console.log("rad", this.rad);
-      // // console.log("rim", rim_coord);
-      // console.log("pos", otherObject.pos);
       if(otherObject.stuck === false) {
         // convert pos with respect to this.end_angle
-        //theta + delta Theta mod Math.pi * 2
         otherObject.vel = [0,0];
 
-        let new_theta = (abs_theta)
-          // + theta_diff) % (Math.PI * 2);
+        let new_theta = (abs_theta + theta_diff) % (Math.PI * 2);
         let new_rel_x = 150 * Math.cos(new_theta);
         let new_rel_y = 150 * Math.sin(new_theta);
 
@@ -131,36 +125,16 @@ class Disc extends MovingObject{
         if (isNaN(this.angular_vel) || this.angular_vel === 0){
           otherObject.vel[0] = -1 * otherObject.vel[0];
           otherObject.vel[1] = -1 * otherObject.vel[1];
-        }
-        // else if(rel_x > 0 && rel_y === 0){
-        //   otherObject.vel[0] = -1 * otherObject.vel[0]  ;
-        //   otherObject.vel[1] = (this.angular_vel ) ;
-        // }
-        else if (rel_x > 0 && rel_y > 0) {
+        } else if (rel_x > 0 && rel_y > 0) {
           otherObject.vel[0] =  otherObject.vel[0] - (this.angular_vel * 100);
           otherObject.vel[1] = (( -1 * this.angular_vel * 100) + otherObject.vel[1]) ;
-        }
-        // else if (rel_x === 0 && rel_y > 0) {
-        //   otherObject.vel[0] = -1 * (this.angular_vel );
-        //   otherObject.vel[1] = -1 * otherObject.vel[1] ;
-        // }
-        else if (rel_x < 0 && rel_y > 0) {
+        } else if (rel_x < 0 && rel_y > 0) {
           otherObject.vel[0] = otherObject.vel[0] - (this.angular_vel * 100) ;
           otherObject.vel[1] = (this.angular_vel * 100) + (otherObject.vel[1]) ;
-        }
-        // else if (rel_x < 0 && rel_y === 0) {
-        //   otherObject.vel[0] = -1 * otherObject.vel[0] ;
-        //   otherObject.vel[1] = -1 * this.angular_vel ;
-        // }
-        else if (rel_x < 0 && rel_y < 0) {
+        } else if (rel_x < 0 && rel_y < 0) {
           otherObject.vel[0] = ((this.angular_vel * 100) + otherObject.vel[0]) ;
           otherObject.vel[1] = -1 * ((this.angular_vel * 100) + otherObject.vel[1]) ;
-        }
-        // else if (rel_x === 0 && rel_y < 0) {
-        //   otherObject.vel[0] = this.angular_vel ;
-        //   otherObject.vel[1] = -1 * otherObject.vel[1] ;
-        // }
-        else if (rel_x > 0 && rel_y < 0) {
+        } else if (rel_x > 0 && rel_y < 0) {
           otherObject.vel[0] = ((this.angular_vel * 100) + otherObject.vel[0]) ;
           otherObject.vel[1] = ((-1 * this.angular_vel * 100) + otherObject.vel[1]) ;
         }
@@ -169,36 +143,16 @@ class Disc extends MovingObject{
         if (isNaN(this.angular_vel) || this.angular_vel === 0){
           otherObject.vel[0] = -1 * otherObject.vel[0];
           otherObject.vel[1] = -1 * otherObject.vel[1];
-        }
-        // else if(rel_x > 0 && rel_y === 0){
-        //   otherObject.vel[0] = -1 * otherObject.vel[0]  ;
-        //   otherObject.vel[1] = (this.angular_vel ) ;
-        // }
-        else if (rel_x > 0 && rel_y > 0) {
+        } else if (rel_x > 0 && rel_y > 0) {
           otherObject.vel[0] =  otherObject.vel[0] + (angular_vel * 100);
           otherObject.vel[1] = ((angular_vel * 100) + otherObject.vel[1]) ;
-        }
-        // else if (rel_x === 0 && rel_y > 0) {
-        //   otherObject.vel[0] = -1 * (angular_vel );
-        //   otherObject.vel[1] = -1 * otherObject.vel[1] ;
-        // }
-        else if (rel_x < 0 && rel_y > 0) {
+        } else if (rel_x < 0 && rel_y > 0) {
           otherObject.vel[0] = otherObject.vel[0] + (angular_vel * 100) ;
           otherObject.vel[1] = (-1 * angular_vel * 100) + (otherObject.vel[1]) ;
-        }
-        // else if (rel_x < 0 && rel_y === 0) {
-        //   otherObject.vel[0] = -1 * otherObject.vel[0] ;
-        //   otherObject.vel[1] = -1 * angular_vel ;
-        // }
-        else if (rel_x < 0 && rel_y < 0) {
+        } else if (rel_x < 0 && rel_y < 0) {
           otherObject.vel[0] = -1 * ((angular_vel * 100) + otherObject.vel[0]) ;
           otherObject.vel[1] = ((angular_vel * 100) + otherObject.vel[1]) ;
-        }
-        // else if (rel_x === 0 && rel_y < 0) {
-        //   otherObject.vel[0] = angular_vel ;
-        //   otherObject.vel[1] = -1 * otherObject.vel[1] ;
-        // }
-        else if (rel_x > 0 && rel_y < 0) {
+        } else if (rel_x > 0 && rel_y < 0) {
           otherObject.vel[0] = (( -1 * angular_vel * 100) + otherObject.vel[0]) ;
           otherObject.vel[1] = ((angular_vel * 100) + otherObject.vel[1]) ;
         }

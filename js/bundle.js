@@ -927,8 +927,7 @@ var Disc = function (_MovingObject) {
           //theta + delta Theta mod Math.pi * 2
           otherObject.vel = [0, 0];
 
-          var new_theta = abs_theta;
-          // + theta_diff) % (Math.PI * 2);
+          var new_theta = (abs_theta + theta_diff) % (Math.PI * 2);
           var new_rel_x = 150 * Math.cos(new_theta);
           var new_rel_y = 150 * Math.sin(new_theta);
 
