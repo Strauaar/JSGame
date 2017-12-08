@@ -603,12 +603,19 @@ var Game = function () {
   }, {
     key: 'reset',
     value: function reset() {
+      var _this4 = this;
+
       this.lost = false;
       this.stuckCount = 0;
       this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
       this.projectiles = [];
       this.score = 0;
       this.start_time = new Date().getTime();
+      this.timer = setInterval(function () {
+        var time = new Date().getTime();
+        var distance = time - _this4.start_time;
+        _this4.milliseconds = distance / 1000;
+      }, 3);
       window.removeEventListener('click', this.reset);
     }
   }, {
@@ -666,7 +673,7 @@ var Game = function () {
   }, {
     key: 'renderFragments',
     value: function renderFragments() {
-      var _this4 = this;
+      var _this5 = this;
 
       var timeout = void 0;
       var angular_vel = void 0;
@@ -674,19 +681,19 @@ var Game = function () {
       var registerMovement = function registerMovement(e) {
         clearTimeout(timeout);
 
-        _this4.disc.rel_x = Util.relative_x(e.clientX, _this4.DIM_X);
-        _this4.disc.rel_y = Util.relative_y(e.clientY, _this4.DIM_Y);
-        _this4.disc.theta = Math.atan(_this4.disc.rel_y / _this4.disc.rel_x);
-        if (_this4.disc.start_time === 1) {
-          _this4.disc.start_time = Date.now();
-          _this4.disc.start_angle = Util.calculateRad(_this4.disc.rel_x, _this4.disc.rel_y, _this4.disc.theta);
+        _this5.disc.rel_x = Util.relative_x(e.clientX, _this5.DIM_X);
+        _this5.disc.rel_y = Util.relative_y(e.clientY, _this5.DIM_Y);
+        _this5.disc.theta = Math.atan(_this5.disc.rel_y / _this5.disc.rel_x);
+        if (_this5.disc.start_time === 1) {
+          _this5.disc.start_time = Date.now();
+          _this5.disc.start_angle = Util.calculateRad(_this5.disc.rel_x, _this5.disc.rel_y, _this5.disc.theta);
         }
-        _this4.disc.end_angle = Util.calculateRad(_this4.disc.rel_x, _this4.disc.rel_y, _this4.disc.theta);
-        _this4.disc.dTheta = _this4.disc.end_angle - _this4.disc.start_angle;
+        _this5.disc.end_angle = Util.calculateRad(_this5.disc.rel_x, _this5.disc.rel_y, _this5.disc.theta);
+        _this5.disc.dTheta = _this5.disc.end_angle - _this5.disc.start_angle;
         // angular_vel =
-        _this4.disc.end_time = Date.now();
+        _this5.disc.end_time = Date.now();
 
-        _this4.disc.angular_vel = Util.calculateAngVelocity(_this4.disc.start_angle, _this4.disc.end_angle, _this4.disc.start_time, _this4.disc.end_time);
+        _this5.disc.angular_vel = Util.calculateAngVelocity(_this5.disc.start_angle, _this5.disc.end_angle, _this5.disc.start_time, _this5.disc.end_time);
         timeout = setTimeout(function () {
           var event = new CustomEvent("mousestop", {
             detail: {
@@ -702,12 +709,12 @@ var Game = function () {
 
       var registerStaticPosition = function registerStaticPosition(e) {
         // console.log("stopped");
-        _this4.disc.angular_vel = 0;
-        _this4.disc.rel_x = Util.relative_x(e.detail.clientX, _this4.DIM_X);
-        _this4.disc.rel_y = Util.relative_y(e.detail.clientY, _this4.DIM_Y);
+        _this5.disc.angular_vel = 0;
+        _this5.disc.rel_x = Util.relative_x(e.detail.clientX, _this5.DIM_X);
+        _this5.disc.rel_y = Util.relative_y(e.detail.clientY, _this5.DIM_Y);
         // this.disc.theta = Math.atan(this.disc.rel_y/this.disc.rel_x);
         // this.disc.end_time = Date.now();
-        _this4.disc.start_time = 1;
+        _this5.disc.start_time = 1;
         // this.disc.dTheta = Math.PI/2;
       };
 
@@ -735,7 +742,8 @@ var Game = function () {
       ctx.fillText(this.milliseconds, this.DIM_X - 150, 50);
       if (this.stuckCount >= 1) {
         this.lost = true;
-        this.survive_time = 0;
+        clearInterval(this.timer);
+        this.survive_time = this.milliseconds;
         this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
         ctx.fillStyle = "#2c2d23";
         ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
@@ -748,7 +756,7 @@ var Game = function () {
           this.ctx.fillText('Click to play again', this.DIM_X / 2 - 380, this.DIM_Y / 2 + 100);
           this.ctx.font = '20px "Press Start 2P"';
           this.ctx.fillStyle = 'rgba(255,255,255,0.3)';
-          this.ctx.fillText(this.survive_time, this.DIM_X / 2 - 380, this.DIM_Y / 2 + 200);
+          this.ctx.fillText('Survival time: ' + this.survive_time, this.DIM_X / 2 - 380, this.DIM_Y / 2 + 200);
         } else if (this.gameover_count === 1) {
           this.ctx.font = '80px "Press Start 2P"';
           this.ctx.fillStyle = 'rgba(255,255,255,0.4)';
@@ -757,8 +765,8 @@ var Game = function () {
           this.ctx.fillStyle = 'rgba(255,255,255,0.4)';
           this.ctx.fillText('Click to play again', this.DIM_X / 2 - 380, this.DIM_Y / 2 + 100);
           this.ctx.font = '20px "Press Start 2P"';
-          this.ctx.fillStyle = 'rgba(255,255,255,0.3)';
-          this.ctx.fillText(this.survive_time, this.DIM_X / 2 - 380, this.DIM_Y / 2 + 200);
+          this.ctx.fillStyle = 'rgba(255,255,255,0.4)';
+          this.ctx.fillText('Survival time: ' + this.survive_time, this.DIM_X / 2 - 380, this.DIM_Y / 2 + 200);
         } else if (this.gameover_count === 2) {
           this.ctx.font = '80px "Press Start 2P"';
           this.ctx.fillStyle = 'rgba(255,255,255,0.6)';
@@ -767,8 +775,8 @@ var Game = function () {
           this.ctx.fillStyle = 'rgba(255,255,255,0.5)';
           this.ctx.fillText('Click to play again', this.DIM_X / 2 - 380, this.DIM_Y / 2 + 100);
           this.ctx.font = '20px "Press Start 2P"';
-          this.ctx.fillStyle = 'rgba(255,255,255,0.3)';
-          this.ctx.fillText(this.survive_time, this.DIM_X / 2 - 380, this.DIM_Y / 2 + 200);
+          this.ctx.fillStyle = 'rgba(255,255,255,0.6)';
+          this.ctx.fillText('Survival time: ' + this.survive_time, this.DIM_X / 2 - 380, this.DIM_Y / 2 + 200);
         } else if (this.gameover_count === 3) {
           this.ctx.font = '80px "Press Start 2P"';
           this.ctx.fillStyle = 'rgba(255,255,255,0.7)';
@@ -777,8 +785,8 @@ var Game = function () {
           this.ctx.fillStyle = 'rgba(255,255,255,0.7)';
           this.ctx.fillText('Click to play again', this.DIM_X / 2 - 380, this.DIM_Y / 2 + 100);
           this.ctx.font = '20px "Press Start 2P"';
-          this.ctx.fillStyle = 'rgba(255,255,255,0.3)';
-          this.ctx.fillText(this.survive_time, this.DIM_X / 2 - 380, this.DIM_Y / 2 + 200);
+          this.ctx.fillStyle = 'rgba(255,255,255,0.7)';
+          this.ctx.fillText('Survival time: ' + this.survive_time, this.DIM_X / 2 - 380, this.DIM_Y / 2 + 200);
         } else if (this.gameover_count === 4) {
           this.ctx.font = '80px "Press Start 2P"';
           this.ctx.fillStyle = 'rgba(255,255,255,0.8)';
@@ -787,8 +795,8 @@ var Game = function () {
           this.ctx.fillStyle = 'rgba(255,255,255,0.8)';
           this.ctx.fillText('Click to play again', this.DIM_X / 2 - 380, this.DIM_Y / 2 + 100);
           this.ctx.font = '20px "Press Start 2P"';
-          this.ctx.fillStyle = 'rgba(255,255,255,0.3)';
-          this.ctx.fillText(this.survive_time, this.DIM_X / 2 - 380, this.DIM_Y / 2 + 200);
+          this.ctx.fillStyle = 'rgba(255,255,255,0.8)';
+          this.ctx.fillText('Survival time: ' + this.survive_time, this.DIM_X / 2 - 380, this.DIM_Y / 2 + 200);
         }
         window.addEventListener('click', this.reset);
       }
@@ -864,12 +872,12 @@ var Game = function () {
   }, {
     key: 'anim',
     value: function anim(ctx) {
-      var _this5 = this;
+      var _this6 = this;
 
       return function () {
-        _this5.step();
-        _this5.draw(ctx);
-        requestAnimationFrame(_this5.anim(ctx));
+        _this6.step();
+        _this6.draw(ctx);
+        requestAnimationFrame(_this6.anim(ctx));
       };
     }
   }, {
