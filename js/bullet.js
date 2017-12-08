@@ -4,11 +4,11 @@ class Bullet extends MovingObject {
   constructor(options) {
     super(options)
     this.drawing = new Image();
-    this.drawing.src = "assets/images/fire.png";
+    this.drawing.src = "assets/images/ball.png";
   }
 
   draw(ctx) {
-    ctx.drawImage(this.drawing, this.pos[0],this.pos[1], 20,50);
+    ctx.drawImage(this.drawing,100, 100, 80, 80, this.pos[0], this.pos[1], 50, 50);
   }
 }
 
