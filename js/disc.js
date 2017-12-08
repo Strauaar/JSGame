@@ -40,7 +40,8 @@ class Disc extends MovingObject{
     // this.rel_x = rel_x;
     // this.rel_y = rel_y;
     // this.theta = theta;
-
+    this.pos[0] = this.game.DIM_X / 2;
+    this.pos[1] = this.game.DIM_Y / 2;
     this.setRadialGradient(ctx, "#E81E2B", "#DC1C29");
     this.drawDonut(ctx, -this.rad, -this.rad + Math.PI * 2/3);
     this.setRadialGradient(ctx, "#84BC3D", "#84BC3D");

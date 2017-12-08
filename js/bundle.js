@@ -361,6 +361,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 document.addEventListener('DOMContentLoaded', function () {
   var canvas = document.getElementById('game-canvas');
+  window.addEventListener('resize', function () {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   var ctx = canvas.getContext('2d');
@@ -459,6 +463,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Game = function () {
   function Game(ctx) {
+    var _this = this;
+
     _classCallCheck(this, Game);
 
     this.projectiles = [];
@@ -490,6 +496,10 @@ var Game = function () {
     this.shootBullet = this.shootBullet.bind(this);
     this.removePowerup = this.removePowerup.bind(this);
     this.removeObject = this.removeObject.bind(this);
+    window.addEventListener('resize', function () {
+      _this.DIM_X = window.innerWidth;
+      _this.DIM_Y = window.innerHeight;
+    });
     // this.drawPowerUp(ctx);
 
     this.initTest();
@@ -516,18 +526,18 @@ var Game = function () {
   }, {
     key: 'initProjectiles',
     value: function initProjectiles() {
-      var _this = this;
+      var _this2 = this;
 
       var position = void 0;
       setInterval(function () {
-        position = _this.randomPosition();
-        _this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: position, vel: _this.findCenter(position), radius: 20, game: _this }));
+        position = _this2.randomPosition();
+        _this2.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: position, vel: _this2.findCenter(position), radius: 20, game: _this2 }));
       }, 1000);
     }
   }, {
     key: 'initPowerUps',
     value: function initPowerUps() {
-      var _this2 = this;
+      var _this3 = this;
 
       var position = void 0;
       var random_number = void 0;
@@ -537,8 +547,8 @@ var Game = function () {
         random_number = Math.floor(Math.random() * 3);
         switch (random_number) {
           default:
-            position = _this2.randomPosition();
-            _this2.powerups.push(new _power_up2.default({ pos: position, vel: _this2.findCenter(position), game: _this2, disc: _this2.disc }));
+            position = _this3.randomPosition();
+            _this3.powerups.push(new _power_up2.default({ pos: position, vel: _this3.findCenter(position), game: _this3, disc: _this3.disc }));
             break;
         }
       }, 10000);
@@ -598,7 +608,7 @@ var Game = function () {
   }, {
     key: 'renderFragments',
     value: function renderFragments() {
-      var _this3 = this;
+      var _this4 = this;
 
       var timeout = void 0;
       var angular_vel = void 0;
@@ -606,19 +616,19 @@ var Game = function () {
       var registerMovement = function registerMovement(e) {
         clearTimeout(timeout);
 
-        _this3.disc.rel_x = Util.relative_x(e.clientX, _this3.DIM_X);
-        _this3.disc.rel_y = Util.relative_y(e.clientY, _this3.DIM_Y);
-        _this3.disc.theta = Math.atan(_this3.disc.rel_y / _this3.disc.rel_x);
-        if (_this3.disc.start_time === 1) {
-          _this3.disc.start_time = Date.now();
-          _this3.disc.start_angle = Util.calculateRad(_this3.disc.rel_x, _this3.disc.rel_y, _this3.disc.theta);
+        _this4.disc.rel_x = Util.relative_x(e.clientX, _this4.DIM_X);
+        _this4.disc.rel_y = Util.relative_y(e.clientY, _this4.DIM_Y);
+        _this4.disc.theta = Math.atan(_this4.disc.rel_y / _this4.disc.rel_x);
+        if (_this4.disc.start_time === 1) {
+          _this4.disc.start_time = Date.now();
+          _this4.disc.start_angle = Util.calculateRad(_this4.disc.rel_x, _this4.disc.rel_y, _this4.disc.theta);
         }
-        _this3.disc.end_angle = Util.calculateRad(_this3.disc.rel_x, _this3.disc.rel_y, _this3.disc.theta);
-        _this3.disc.dTheta = _this3.disc.end_angle - _this3.disc.start_angle;
+        _this4.disc.end_angle = Util.calculateRad(_this4.disc.rel_x, _this4.disc.rel_y, _this4.disc.theta);
+        _this4.disc.dTheta = _this4.disc.end_angle - _this4.disc.start_angle;
         // angular_vel =
-        _this3.disc.end_time = Date.now();
+        _this4.disc.end_time = Date.now();
 
-        _this3.disc.angular_vel = Util.calculateAngVelocity(_this3.disc.start_angle, _this3.disc.end_angle, _this3.disc.start_time, _this3.disc.end_time);
+        _this4.disc.angular_vel = Util.calculateAngVelocity(_this4.disc.start_angle, _this4.disc.end_angle, _this4.disc.start_time, _this4.disc.end_time);
         timeout = setTimeout(function () {
           var event = new CustomEvent("mousestop", {
             detail: {
@@ -634,12 +644,12 @@ var Game = function () {
 
       var registerStaticPosition = function registerStaticPosition(e) {
         // console.log("stopped");
-        _this3.disc.angular_vel = 0;
-        _this3.disc.rel_x = Util.relative_x(e.detail.clientX, _this3.DIM_X);
-        _this3.disc.rel_y = Util.relative_y(e.detail.clientY, _this3.DIM_Y);
+        _this4.disc.angular_vel = 0;
+        _this4.disc.rel_x = Util.relative_x(e.detail.clientX, _this4.DIM_X);
+        _this4.disc.rel_y = Util.relative_y(e.detail.clientY, _this4.DIM_Y);
         // this.disc.theta = Math.atan(this.disc.rel_y/this.disc.rel_x);
         // this.disc.end_time = Date.now();
-        _this3.disc.start_time = 1;
+        _this4.disc.start_time = 1;
         // this.disc.dTheta = Math.PI/2;
       };
 
@@ -680,12 +690,12 @@ var Game = function () {
   }, {
     key: 'anim',
     value: function anim(ctx) {
-      var _this4 = this;
+      var _this5 = this;
 
       return function () {
-        _this4.step();
-        _this4.draw(ctx);
-        requestAnimationFrame(_this4.anim(ctx));
+        _this5.step();
+        _this5.draw(ctx);
+        requestAnimationFrame(_this5.anim(ctx));
       };
     }
   }, {
@@ -921,7 +931,8 @@ var Disc = function (_MovingObject) {
       // this.rel_x = rel_x;
       // this.rel_y = rel_y;
       // this.theta = theta;
-
+      this.pos[0] = this.game.DIM_X / 2;
+      this.pos[1] = this.game.DIM_Y / 2;
       this.setRadialGradient(ctx, "#E81E2B", "#DC1C29");
       this.drawDonut(ctx, -this.rad, -this.rad + Math.PI * 2 / 3);
       this.setRadialGradient(ctx, "#84BC3D", "#84BC3D");

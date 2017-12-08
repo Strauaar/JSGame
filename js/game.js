@@ -37,6 +37,10 @@ class Game {
     this.shootBullet = this.shootBullet.bind(this);
     this.removePowerup = this.removePowerup.bind(this);
     this.removeObject = this.removeObject.bind(this);
+    window.addEventListener('resize', () => {
+      this.DIM_X = window.innerWidth;
+      this.DIM_Y = window.innerHeight;
+    });
     // this.drawPowerUp(ctx);
 
     this.initTest();
