@@ -139,13 +139,15 @@ class Disc extends MovingObject{
       // blue lower same as above
       let blue_upper = this.rad + (Math.PI * 2/3);
 
-      if((this.rad > abs_theta) && (abs_theta > (this.rad - Math.PI * 2 /3)) && otherObject.color === 'red') {
+      ((abs_theta < Math.PI * 2) && (abs_theta > (Math.PI - (Math.PI * 2/3 - this.rad))) && otherObject.color === 'red')
+
+      if(((this.rad > abs_theta) && (abs_theta > (this.rad - Math.PI * 2 /3)) && otherObject.color === 'red') || ((abs_theta < Math.PI * 2) && (abs_theta > (Math.PI - (Math.PI * 2/3 - this.rad))) && otherObject.color === 'red')) {
         console.log("is red ball");
         this.bounce(otherObject, rel_x, rel_y);
       } else if ( ((this.rad + Math.PI * 2/3) > abs_theta) && (abs_theta > this.rad) && otherObject.color === 'blue') {
         console.log("is blue");
         this.bounce(otherObject, rel_x, rel_y);
-      } else if ( ((this.rad + Math.PI * 4/3) > abs_theta) && (abs_theta > this.rad + Math.PI * 2/3) && otherObject.color === 'green') {
+      } else if ( ((this.rad + Math.PI * 4/3) > abs_theta) && otherObject.color === 'green') {
         console.log("green");
         this.bounce(otherObject, rel_x, rel_y);
       } else {
