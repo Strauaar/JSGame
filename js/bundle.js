@@ -496,6 +496,7 @@ var Game = function () {
     this.goals = [];
     this.score = 0;
     this.stuckCount = 0;
+    this.lost = false;
     this.ctx = ctx;
     this.DIM_X = window.innerWidth;
     this.DIM_Y = window.innerHeight;
@@ -694,20 +695,32 @@ var Game = function () {
       ctx.font = '80px "Press Start 2P"';
       ctx.fillStyle = 'white';
       ctx.fillText(this.score, 70, 100);
+      if (this.stuckCount >= 1) {
+        this.lost = true;
+        this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
+        ctx.fillStyle = "#2c2d23";
+        ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
+        this.ctx.font = '80px "Press Start 2P"';
+        this.ctx.fillStyle = 'white';
+        this.ctx.fillText('GAME OVER', this.DIM_X / 2 - 380, this.DIM_Y / 2);
+      }
 
-      this.allObjects().forEach(function (obj) {
-        obj.draw(ctx);
-      });
-      this.bullets.forEach(function (bullet) {
-        bullet.draw(ctx);
-      });
-      this.goals.forEach(function (goal) {
-        goal.draw(ctx);
-      });
+      if (this.lost === false) {
+        this.allObjects().forEach(function (obj) {
+          obj.draw(ctx);
+        });
+        this.bullets.forEach(function (bullet) {
+          bullet.draw(ctx);
+        });
+        this.goals.forEach(function (goal) {
+          goal.draw(ctx);
+        });
+        this.disc.draw(this.ctx, this.disc.rel_x, this.disc.rel_y, this.disc.theta);
+      }
       // console.log("rel_x", this.disc.rel_x);
       // console.log("rel_y", this.disc.rel_y);
       // console.log("ang_vel", this.disc.angular_vel);
-      this.disc.draw(this.ctx, this.disc.rel_x, this.disc.rel_y, this.disc.theta);
+
 
       // this.goals.forEach(goal => {
       //   goal.draw(ctx);
@@ -831,15 +844,7 @@ var Game = function () {
     }
   }, {
     key: 'checkWin',
-    value: function checkWin() {
-      if (this.stuckCount >= 1) {
-        console.log("lost");
-        this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
-        this.ctx.font = '80px "Press Start 2P"';
-        this.ctx.fillStyle = 'white';
-        this.ctx.fillText('GAME OVER', this.DIM_X / 2, this.DIM_Y / 2);
-      }
-    }
+    value: function checkWin() {}
   }, {
     key: 'allObjects',
     value: function allObjects() {
