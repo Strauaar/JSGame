@@ -502,7 +502,7 @@ var Game = function () {
     this.DIM_Y = window.innerHeight;
     this.initProjectiles = this.initProjectiles.bind(this);
     this.initGoals();
-    // this.initProjectiles();
+    this.initProjectiles();
     this.initDisc();
     this.renderFragments();
     this.initPowerUps();
@@ -520,6 +520,12 @@ var Game = function () {
     this.shootBullet = this.shootBullet.bind(this);
     this.removePowerup = this.removePowerup.bind(this);
     this.removeObject = this.removeObject.bind(this);
+    this.start_time = new Date().getTime();
+    this.timer = setInterval(function () {
+      var time = new Date().getTime();
+      var distance = time - _this.start_time;
+      _this.milliseconds = distance / 1000;
+    }, 3);
     window.addEventListener('resize', function () {
       _this.DIM_X = window.innerWidth;
       _this.DIM_Y = window.innerHeight;
@@ -592,6 +598,7 @@ var Game = function () {
       this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
       this.projectiles = [];
       this.score = 0;
+      this.start_time = new Date().getTime();
       window.removeEventListener('click', this.reset);
     }
   }, {
@@ -710,6 +717,9 @@ var Game = function () {
       ctx.font = '80px "Press Start 2P"';
       ctx.fillStyle = 'white';
       ctx.fillText(20 - this.stuckCount, 70, 100);
+      ctx.font = '20px "Press Start 2P"';
+      ctx.fillStyle = 'white';
+      ctx.fillText(this.milliseconds, this.DIM_X - 150, 50);
       if (this.stuckCount >= 20) {
         this.lost = true;
         this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
