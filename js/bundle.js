@@ -243,7 +243,6 @@ var PowerUp = function (_MovingObject) {
       if (toggle === true && this.toggle !== true) {
         this.toggle = toggle;
         this.powerup = PowerUp.addShooter.bind(this);
-        console.log(this.disc);
         document.addEventListener('click', this.powerup);
       } else if (toggle === false) {
         // console.log("disable");
@@ -1026,8 +1025,9 @@ var Disc = function (_MovingObject) {
   }, {
     key: 'shoot',
     value: function shoot(x, y) {
+      console.log("hi");
       var vel_vectors = this.game.findCenter([x, y]);
-      this.game.shootBullet({ pos: [this.game.DIM_X / 2, this.game.DIM_Y / 2], vel: vel_vectors, color: 'black', radius: 2 });
+      this.game.shootBullet({ pos: [this.game.DIM_X / 2 - 35, this.game.DIM_Y / 2 - 35], vel: [vel_vectors[0] * -1, vel_vectors[1] * -1], color: 'black', radius: 2 });
     }
   }]);
 

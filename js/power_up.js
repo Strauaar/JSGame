@@ -29,7 +29,6 @@ class PowerUp extends MovingObject {
     if(toggle === true && this.toggle !== true) {
       this.toggle = toggle;
       this.powerup = PowerUp.addShooter.bind(this);
-      console.log(this.disc);
       document.addEventListener('click', this.powerup);
     } else if(toggle === false) {
       // console.log("disable");
@@ -56,7 +55,7 @@ class PowerUp extends MovingObject {
 }
 
 PowerUp.addShooter = function(e){
-  this.disc.shoot(e.clientX, e.clientY);
+  this.disc.shoot(e.clientX, e.clientY)
 }
 
 export default PowerUp;
