@@ -113,11 +113,7 @@ class Game {
     this.score = 0;
     this.game_start = false;
     this.start_time = new Date().getTime();
-    this.timer = setInterval(() => {
-      let time = new Date().getTime();
-      let distance = time - this.start_time;
-      this.milliseconds = (distance)/1000;
-    }, 3);
+    // this.timer();
     window.removeEventListener('click', this.reset)
   }
 
@@ -239,7 +235,7 @@ class Game {
       ctx.font = '20px "Press Start 2P"';
       ctx.fillStyle = 'white';
       ctx.fillText(this.milliseconds, this.DIM_X -150, 50);
-      if (this.stuckCount >= 1) {
+      if (this.stuckCount >= 20) {
         this.lost = true;
         clearInterval(this.timer);
         this.survive_time = this.milliseconds;
