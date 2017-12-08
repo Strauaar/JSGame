@@ -274,14 +274,8 @@ class Game {
         let mid_screen_x = this.DIM_X/2;
         let mid_screen_y = this.DIM_Y/2;
 
-
-        if (this.disc.angular_vel >= 0) {
-          object_array[i].pos[0] = mid_screen_x + new_rel_x;
-          object_array[i].pos[1] = mid_screen_y - new_rel_y;
-        } else if (this.disc.angular_vel < 0){
-          object_array[i].pos[0] = mid_screen_x - new_rel_x;
-          object_array[i].pos[1] = mid_screen_y + new_rel_y;
-        }
+        object_array[i].pos[0] = mid_screen_x + new_rel_x;
+        object_array[i].pos[1] = mid_screen_y - new_rel_y;
         debugger
       }
     }
