@@ -260,13 +260,14 @@ class Game {
         let contact_point_x = Util.relative_x(object_array[i].pos[0], this.DIM_X);
         let contact_point_y = Util.relative_y(object_array[i].pos[1], this.DIM_Y);
         let angle = Math.atan(contact_point_y/contact_point_x);
+
         let abs_theta = Util.calculateRad(contact_point_x, contact_point_y, angle);
         // calculate the difference between the angle of the mouse position to the contact point
-        let theta_diff = Math.abs(abs_theta - this.disc.rad);
-
+        let theta_diff = Math.abs(this.disc.rad - abs_theta);
+        object_array[i].dTheta = object_array[i].dTheta || theta_diff;
         object_array[i].vel = [0,0];
 
-        let new_theta = (abs_theta + theta_diff) % (Math.PI * 2);
+        let new_theta = (this.disc.rad - object_array[i].dTheta) % (Math.PI * 2);
         let new_rel_x = this.disc.outerRadius * Math.cos(new_theta);
         let new_rel_y = this.disc.outerRadius * Math.sin(new_theta);
 

@@ -735,13 +735,14 @@ var Game = function () {
           var contact_point_x = Util.relative_x(object_array[i].pos[0], this.DIM_X);
           var contact_point_y = Util.relative_y(object_array[i].pos[1], this.DIM_Y);
           var angle = Math.atan(contact_point_y / contact_point_x);
+
           var abs_theta = Util.calculateRad(contact_point_x, contact_point_y, angle);
           // calculate the difference between the angle of the mouse position to the contact point
-          var theta_diff = Math.abs(abs_theta - this.disc.rad);
-
+          var theta_diff = Math.abs(this.disc.rad - abs_theta);
+          object_array[i].dTheta = object_array[i].dTheta || theta_diff;
           object_array[i].vel = [0, 0];
 
-          var new_theta = (abs_theta + theta_diff) % (Math.PI * 2);
+          var new_theta = (this.disc.rad - object_array[i].dTheta) % (Math.PI * 2);
           var new_rel_x = this.disc.outerRadius * Math.cos(new_theta);
           var new_rel_y = this.disc.outerRadius * Math.sin(new_theta);
 
