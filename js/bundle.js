@@ -500,7 +500,7 @@ var Game = function () {
     this.DIM_Y = window.innerHeight;
     this.initProjectiles = this.initProjectiles.bind(this);
     this.initGoals();
-    // this.initProjectiles();
+    this.initProjectiles();
     this.initDisc();
     this.renderFragments();
     this.initPowerUps();
@@ -1097,9 +1097,11 @@ var Disc = function (_MovingObject) {
         // debugger
         if (projectiles[i].stuck === true) {
           var new_theta = (this.rad - projectiles[i].dTheta) % (Math.PI * 2);
-          var new_rel_x = Math.cos(new_theta);
-          var new_rel_y = Math.sin(new_theta);
+          var new_rel_x = this.outerRadius * Math.cos(new_theta);
+          var new_rel_y = this.outerRadius * Math.sin(new_theta);
           projectiles[i].stuck = false;
+          projectiles[i].pos[0] = this.game.DIM_X / 2 + new_rel_x + new_rel_x / (-1 * new_rel_x) * 20;
+          projectiles[i].pos[1] = this.game.DIM_Y / 2 + new_rel_y + new_rel_y / (-1 * new_rel_y) * 20;
           projectiles[i].vel[0] = new_rel_x / Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)) * 10;
           projectiles[i].vel[1] = new_rel_y / Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)) * 10;
           debugger;
