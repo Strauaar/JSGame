@@ -9,10 +9,6 @@ class GameView {
 
   start(ctx) {
     requestAnimationFrame(this.game.anim(ctx))
-    // setInterval( () => {
-    //   this.game.step();
-    //   this.game.draw(ctx);
-    // }, 60);
   }
 }
 

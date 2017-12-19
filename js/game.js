@@ -19,7 +19,7 @@ class Game {
     this.DIM_X = window.innerWidth;
     this.DIM_Y = window.innerHeight;
     this.initProjectiles = this.initProjectiles.bind(this);
-    this.initGoals();
+    // this.initGoals();
     this.initProjectiles();
     this.initDisc();
     this.renderFragments();

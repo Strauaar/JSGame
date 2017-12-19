@@ -434,10 +434,6 @@ var GameView = function () {
     key: 'start',
     value: function start(ctx) {
       requestAnimationFrame(this.game.anim(ctx));
-      // setInterval( () => {
-      //   this.game.step();
-      //   this.game.draw(ctx);
-      // }, 60);
     }
   }]);
 
@@ -507,7 +503,7 @@ var Game = function () {
     this.DIM_X = window.innerWidth;
     this.DIM_Y = window.innerHeight;
     this.initProjectiles = this.initProjectiles.bind(this);
-    this.initGoals();
+    // this.initGoals();
     this.initProjectiles();
     this.initDisc();
     this.renderFragments();
@@ -1077,8 +1073,8 @@ var Disc = function (_MovingObject) {
 
     var _this = _possibleConstructorReturn(this, (Disc.__proto__ || Object.getPrototypeOf(Disc)).call(this, options));
 
-    _this.outerRadius = 150;
-    _this.innerRadius = 60;
+    _this.outerRadius = 160;
+    _this.innerRadius = 40;
     _this.fragments = [];
     _this.theta = 0;
     _this.angular_vel = 0;
@@ -1202,19 +1198,21 @@ var Disc = function (_MovingObject) {
         // blue lower same as above
         var blue_upper = this.rad + Math.PI * 2 / 3;
 
-        if (this.rad > abs_theta && abs_theta > this.rad - Math.PI * 2 / 3 && otherObject.color === 'red' || abs_theta < Math.PI * 2 && abs_theta > Math.PI - (Math.PI * 2 / 3 - this.rad) && otherObject.color === 'red') {
-          console.log("is red ball");
+        if (true) {
           this.bounce(otherObject, rel_x, rel_y);
+        } else if (this.rad > abs_theta && abs_theta > this.rad - Math.PI * 2 / 3 && otherObject.color === 'red' || abs_theta < Math.PI * 2 && abs_theta > Math.PI - (Math.PI * 2 / 3 - this.rad) && otherObject.color === 'red') {
+          console.log("is red ball");
+          // this.bounce(otherObject, rel_x, rel_y);
         } else if (this.rad + Math.PI * 2 / 3 > abs_theta && abs_theta > this.rad && otherObject.color === 'blue' || abs_theta > 0 && abs_theta < this.rad - Math.PI * 3 / 2 && otherObject.color == "blue") {
           console.log("is blue");
-          this.bounce(otherObject, rel_x, rel_y);
+          // this.bounce(otherObject, rel_x, rel_y);
         } else if (this.rad + Math.PI * 4 / 3 > abs_theta && otherObject.color === 'green') {
           console.log("green");
-          this.bounce(otherObject, rel_x, rel_y);
+          // this.bounce(otherObject, rel_x, rel_y);
         } else if (otherObject.stuck === false) {
-          otherObject.stuck = true;
-          this.game.stuckCount++;
-          otherObject.vel = [0, 0];
+          // otherObject.stuck = true;
+          // this.game.stuckCount++;
+          // otherObject.vel = [0,0];
         }
       } else if (otherObject instanceof _power_up2.default) {
         this.enablePowerup(otherObject);
@@ -1224,7 +1222,7 @@ var Disc = function (_MovingObject) {
   }, {
     key: 'enablePowerup',
     value: function enablePowerup(powerup) {
-      debugger;
+
       powerup.enablePowerup(true);
       setTimeout(function () {
         powerup.enablePowerup(false);

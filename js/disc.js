@@ -6,8 +6,8 @@ import * as Util from './util';
 class Disc extends MovingObject{
   constructor(options){
     super(options);
-    this.outerRadius = 150;
-    this.innerRadius = 60;
+    this.outerRadius = 160;
+    this.innerRadius = 40;
     this.fragments = [];
     this.theta = 0;
     this.angular_vel = 0;
@@ -121,19 +121,21 @@ class Disc extends MovingObject{
       // blue lower same as above
       let blue_upper = this.rad + (Math.PI * 2/3);
 
-      if(((this.rad > abs_theta) && (abs_theta > (this.rad - Math.PI * 2 /3)) && otherObject.color === 'red') || ((abs_theta < Math.PI * 2) && (abs_theta > (Math.PI - (Math.PI * 2/3 - this.rad))) && otherObject.color === 'red')) {
-        console.log("is red ball");
+      if (true) {
         this.bounce(otherObject, rel_x, rel_y);
+      } else if(((this.rad > abs_theta) && (abs_theta > (this.rad - Math.PI * 2 /3)) && otherObject.color === 'red') || ((abs_theta < Math.PI * 2) && (abs_theta > (Math.PI - (Math.PI * 2/3 - this.rad))) && otherObject.color === 'red')) {
+        console.log("is red ball");
+        // this.bounce(otherObject, rel_x, rel_y);
       } else if ( (((this.rad + Math.PI * 2/3) > abs_theta) && (abs_theta > this.rad) && otherObject.color === 'blue') || (abs_theta > 0 && (abs_theta < (this.rad - Math.PI * 3/2)) && otherObject.color =="blue")){
         console.log("is blue");
-        this.bounce(otherObject, rel_x, rel_y);
+        // this.bounce(otherObject, rel_x, rel_y);
       } else if ( ((this.rad + Math.PI * 4/3) > abs_theta) && otherObject.color === 'green') {
         console.log("green");
-        this.bounce(otherObject, rel_x, rel_y);
+        // this.bounce(otherObject, rel_x, rel_y);
       } else if (otherObject.stuck === false){
-        otherObject.stuck = true;
-        this.game.stuckCount++;
-        otherObject.vel = [0,0];
+        // otherObject.stuck = true;
+        // this.game.stuckCount++;
+        // otherObject.vel = [0,0];
       }
     }  else if (otherObject instanceof PowerUp) {
       this.enablePowerup(otherObject);
@@ -142,7 +144,7 @@ class Disc extends MovingObject{
   }
 
   enablePowerup(powerup) {
-    debugger
+    
     powerup.enablePowerup(true);
     setTimeout(() => {
       powerup.enablePowerup(false);
