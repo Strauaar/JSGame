@@ -36,7 +36,23 @@ export const distance = (x1, y1, x2, y2) => {
   return Math.sqrt(Math.pow((x2-x1), 2) + Math.pow((y2-y1), 2));
 };
 
-export const calculateRad = (rel_x, rel_y, theta) => {
+export const calculateRad = (rel_x, rel_y) => {
+  if (rel_y === 0) {
+    if (rel_x >= 0) {
+      return 0
+    } else {
+      return Math.PI
+    }
+  }
+  if (rel_x === 0) {
+    if (rel_y >= 0) {
+      return Math.PI /2
+    } else {
+      return (Math.PI * 3/2)
+    }
+  }
+  let theta = Math.atan(rel_y/rel_x);
+
   let rad;
   if(rel_x < 0 && rel_y < 0) {
     rad = Math.PI + theta
@@ -53,7 +69,7 @@ export const calculateRad = (rel_x, rel_y, theta) => {
 export const calculateAngVelocity = (start_angle, end_angle, start_time, end_time) => {
   let dTheta = end_angle - start_angle;
   let dTime = end_time - start_time;
-  let omega = dTheta/dTime;
-  // debugger
+  //multiply since time is in milliseconds
+  let omega = (dTheta/dTime) * 1000;
   return omega;
 }

@@ -11,7 +11,6 @@ class Disc extends MovingObject{
     this.fragments = [];
     this.theta = 0;
     this.angular_vel = 0;
-    // this.renderFragments();
     this.draw = this.draw.bind(this);
     this.drawDonut = this.drawDonut.bind(this);
     this.move = this.move.bind(this);
@@ -22,7 +21,7 @@ class Disc extends MovingObject{
   }
 
   draw(ctx, rel_x = 10, rel_y = 10, theta = Math.PI/4) {
-    this.rad = Util.calculateRad(rel_x, rel_y, theta);
+    this.rad = Util.calculateRad(rel_x, rel_y);
     this.pos[0] = this.game.DIM_X / 2;
     this.pos[1] = this.game.DIM_Y / 2;
     this.setRadialGradient(ctx, "#E81E2B", "#DC1C29");
@@ -70,17 +69,17 @@ class Disc extends MovingObject{
         otherObject.vel[0] = -1 * otherObject.vel[0];
         otherObject.vel[1] = -1 * otherObject.vel[1];
       } else if (rel_x > 0 && rel_y > 0) {
-        otherObject.vel[0] =  otherObject.vel[0] - (this.angular_vel * 100);
-        otherObject.vel[1] = (( -1 * this.angular_vel * 100) + otherObject.vel[1]) ;
+        otherObject.vel[0] =  otherObject.vel[0] - (this.angular_vel);
+        otherObject.vel[1] = (( -1 * this.angular_vel) + otherObject.vel[1]) ;
       } else if (rel_x < 0 && rel_y > 0) {
-        otherObject.vel[0] = otherObject.vel[0] - (this.angular_vel * 100) ;
-        otherObject.vel[1] = (this.angular_vel * 100) + (otherObject.vel[1]) ;
+        otherObject.vel[0] = otherObject.vel[0] - (this.angular_vel) ;
+        otherObject.vel[1] = (this.angular_vel) + (otherObject.vel[1]) ;
       } else if (rel_x < 0 && rel_y < 0) {
-        otherObject.vel[0] = ((this.angular_vel * 100) + otherObject.vel[0]) ;
-        otherObject.vel[1] = -1 * ((this.angular_vel * 100) + otherObject.vel[1]) ;
+        otherObject.vel[0] = ((this.angular_vel) + otherObject.vel[0]) ;
+        otherObject.vel[1] = -1 * ((this.angular_vel) + otherObject.vel[1]) ;
       } else if (rel_x > 0 && rel_y < 0) {
-        otherObject.vel[0] = ((this.angular_vel * 100) + otherObject.vel[0]) ;
-        otherObject.vel[1] = ((-1 * this.angular_vel * 100) + otherObject.vel[1]) ;
+        otherObject.vel[0] = ((this.angular_vel) + otherObject.vel[0]) ;
+        otherObject.vel[1] = ((-1 * this.angular_vel) + otherObject.vel[1]) ;
       }
     } else if (this.angular_vel < 0){
       let angular_vel = Math.abs(this.angular_vel);
@@ -113,8 +112,7 @@ class Disc extends MovingObject{
     if (otherObject instanceof Projectile) {
       let contact_point_x = Util.relative_x(otherObject.pos[0], this.game.DIM_X);
       let contact_point_y = Util.relative_y(otherObject.pos[1], this.game.DIM_Y);
-      let angle = Math.atan(contact_point_y/contact_point_x);
-      let abs_theta = Util.calculateRad(contact_point_x, contact_point_y, angle);
+      let abs_theta = Util.calculateRad(contact_point_x, contact_point_y);
 
       let red_lower = this.rad - (Math.PI * 2/3);
       let red_upper = this.rad;
@@ -144,7 +142,6 @@ class Disc extends MovingObject{
   }
 
   enablePowerup(powerup) {
-    
     powerup.enablePowerup(true);
     setTimeout(() => {
       powerup.enablePowerup(false);
@@ -159,7 +156,6 @@ class Disc extends MovingObject{
   burst() {
     let projectiles = this.game.allObjects().filter(obj => obj instanceof Projectile)
     for(let i = 0; i < projectiles.length; i++) {
-      // debugger
       if(projectiles[i].stuck === true) {
         let new_theta = (this.rad - projectiles[i].dTheta) % (Math.PI * 2);
         let new_rel_x = this.outerRadius * Math.cos(new_theta);
@@ -191,8 +187,6 @@ class Disc extends MovingObject{
 
         projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
         projectiles[i].vel[1] = (new_rel_y/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
-
-        // debugger
       }
     }
   }

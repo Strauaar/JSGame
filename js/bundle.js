@@ -104,6 +104,7 @@ var MovingObject = function () {
   }, {
     key: "move",
     value: function move() {
+      //maybe -50 /+50 will work
       // if(this.pos[0] < 0 || this.pos[0] > this.game.DIM_X) {
       //   let index = this.game.projectiles.indexOf(this);
       //   this.game.projectiles.splice(index, 1);
@@ -170,11 +171,6 @@ var Projectile = function (_MovingObject) {
 
     return _this;
   }
-
-  // draw(ctx) {
-  //   ctx.drawImage(this.drawing,100, 100, 100, 100, this.pos[0], this.pos[1], 70, 70);
-  // }
-
 
   return Projectile;
 }(_moving_object2.default);
@@ -251,7 +247,6 @@ var PowerUp = function (_MovingObject) {
           this.toggle = toggle;
           this.powerup = PowerUp.burst.bind(this);
           document.addEventListener('click', this.powerup);
-          debugger;
         } else if (toggle === false) {
           this.game.power_type = null;
           this.toggle = false;
@@ -264,13 +259,11 @@ var PowerUp = function (_MovingObject) {
           this.powerup = PowerUp.addShooter.bind(this);
           document.addEventListener('click', this.powerup);
         } else if (toggle === false) {
-          // console.log("disable");
           this.game.power_type = null;
           this.toggle = false;
           document.removeEventListener('click', this.powerup);
         }
       }
-      debugger;
     }
   }, {
     key: 'draw',
@@ -298,7 +291,6 @@ PowerUp.addShooter = function (e) {
 };
 
 PowerUp.burst = function () {
-  debugger;
   this.disc.burst();
 };
 
@@ -352,7 +344,23 @@ var distance = exports.distance = function distance(x1, y1, x2, y2) {
   return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 };
 
-var calculateRad = exports.calculateRad = function calculateRad(rel_x, rel_y, theta) {
+var calculateRad = exports.calculateRad = function calculateRad(rel_x, rel_y) {
+  if (rel_y === 0) {
+    if (rel_x >= 0) {
+      return 0;
+    } else {
+      return Math.PI;
+    }
+  }
+  if (rel_x === 0) {
+    if (rel_y >= 0) {
+      return Math.PI / 2;
+    } else {
+      return Math.PI * 3 / 2;
+    }
+  }
+  var theta = Math.atan(rel_y / rel_x);
+
   var rad = void 0;
   if (rel_x < 0 && rel_y < 0) {
     rad = Math.PI + theta;
@@ -369,8 +377,8 @@ var calculateRad = exports.calculateRad = function calculateRad(rel_x, rel_y, th
 var calculateAngVelocity = exports.calculateAngVelocity = function calculateAngVelocity(start_angle, end_angle, start_time, end_time) {
   var dTheta = end_angle - start_angle;
   var dTime = end_time - start_time;
-  var omega = dTheta / dTime;
-  // debugger
+  //multiply since time is in milliseconds
+  var omega = dTheta / dTime * 1000;
   return omega;
 };
 
@@ -504,7 +512,7 @@ var Game = function () {
     this.DIM_Y = window.innerHeight;
     this.initProjectiles = this.initProjectiles.bind(this);
     // this.initGoals();
-    this.initProjectiles();
+    // this.initProjectiles();
     this.initDisc();
     this.renderFragments();
     this.initPowerUps();
@@ -513,7 +521,6 @@ var Game = function () {
     this.draw = this.draw.bind(this);
     this.anim = this.anim.bind(this);
     this.moveObjects = this.moveObjects.bind(this);
-    this.wrap = this.wrap.bind(this);
     this.checkCollisionsWithDisc = this.checkCollisionsWithDisc.bind(this);
     this.checkCollisionsWithBullet = this.checkCollisionsWithBullet.bind(this);
     this.checkCollisionsWithGoal = this.checkCollisionsWithGoal.bind(this);
@@ -532,9 +539,7 @@ var Game = function () {
       _this.DIM_X = window.innerWidth;
       _this.DIM_Y = window.innerHeight;
     });
-    this.checkWin = this.checkWin.bind(this);
     this.reset = this.reset.bind(this);
-    this.initTest();
     setInterval(function () {
       _this.gameover_count++;
       _this.gameover_count = _this.gameover_count % 4;
@@ -559,9 +564,9 @@ var Game = function () {
     key: 'initTest',
     value: function initTest() {
       this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: [800, 0], vel: this.findCenter([800, 0]), radius: 20, game: this }));
-      // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,0], vel: this.findCenter([0,0]), radius: 20, game: this}));
-      // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,800], vel: this.findCenter([0,800]), radius: 20, game: this}));
-      // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,800], vel: this.findCenter([800,800]), radius: 20, game: this}));
+      this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: [0, 0], vel: this.findCenter([0, 0]), radius: 20, game: this }));
+      this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: [0, 800], vel: this.findCenter([0, 800]), radius: 20, game: this }));
+      this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: [800, 800], vel: this.findCenter([800, 800]), radius: 20, game: this }));
     }
   }, {
     key: 'initProjectiles',
@@ -604,10 +609,10 @@ var Game = function () {
       this.stuckCount = 0;
       this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
       this.projectiles = [];
+      this.initTest();
       this.score = 0;
       this.game_start = false;
       this.start_time = new Date().getTime();
-      // this.timer();
       window.removeEventListener('click', this.reset);
     }
   }, {
@@ -678,14 +683,24 @@ var Game = function () {
         _this4.disc.theta = Math.atan(_this4.disc.rel_y / _this4.disc.rel_x);
         if (_this4.disc.start_time === 1) {
           _this4.disc.start_time = Date.now();
-          _this4.disc.start_angle = Util.calculateRad(_this4.disc.rel_x, _this4.disc.rel_y, _this4.disc.theta);
+          _this4.disc.start_angle = Util.calculateRad(_this4.disc.rel_x, _this4.disc.rel_y);
         }
-        _this4.disc.end_angle = Util.calculateRad(_this4.disc.rel_x, _this4.disc.rel_y, _this4.disc.theta);
+        _this4.disc.end_angle = Util.calculateRad(_this4.disc.rel_x, _this4.disc.rel_y);
         _this4.disc.dTheta = _this4.disc.end_angle - _this4.disc.start_angle;
-        // angular_vel =
         _this4.disc.end_time = Date.now();
+        // console.log("theta", this.disc.theta);
+        // console.log("rel_x", this.disc.rel_x);4
+        //going counter-clockwise
+        if (_this4.disc.angular_vel > 0) {
+          if (_this4.disc.theta < 0.08 && _this4.disc.theta > -0.08 && _this4.disc.rel_x > 0) {
+            console.log("crossing the border");
+            var diff = _this4.disc.end_angle + (Math.PI * 2 - _this4.disc.start_angle);
+            console.log("diff", diff);
+          }
+        }
 
         _this4.disc.angular_vel = Util.calculateAngVelocity(_this4.disc.start_angle, _this4.disc.end_angle, _this4.disc.start_time, _this4.disc.end_time);
+        // console.log("vel", this.disc.angular_vel);
         timeout = setTimeout(function () {
           var event = new CustomEvent("mousestop", {
             detail: {
@@ -696,32 +711,21 @@ var Game = function () {
             cancelable: true
           });
           e.target.dispatchEvent(event);
-        }, 50);
+        }, 30);
       };
 
       var registerStaticPosition = function registerStaticPosition(e) {
-        // console.log("stopped");
         _this4.disc.angular_vel = 0;
         _this4.disc.rel_x = Util.relative_x(e.detail.clientX, _this4.DIM_X);
         _this4.disc.rel_y = Util.relative_y(e.detail.clientY, _this4.DIM_Y);
-        // this.disc.theta = Math.atan(this.disc.rel_y/this.disc.rel_x);
-        // this.disc.end_time = Date.now();
         _this4.disc.start_time = 1;
-        // this.disc.dTheta = Math.PI/2;
       };
-
       document.addEventListener('mousemove', registerMovement);
       document.addEventListener('mousestop', registerStaticPosition);
     }
   }, {
     key: 'draw',
     value: function draw(ctx) {
-      // console.log("x_vel", this.projectiles[0].vel[0]);
-      // console.log("y_vel", this.projectiles[0].vel[1]);
-      // console.log(this.disc.angular_vel);
-
-      // debugger
-
       ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
 
       ctx.fillStyle = "#2c2d23";
@@ -885,11 +889,6 @@ var Game = function () {
   }, {
     key: 'moveObjects',
     value: function moveObjects() {
-      // this.allObjects().forEach(object => {
-      //   object.move();
-      // });
-      // console.log(this.disc.dTheta);
-
       this.allObjects().forEach(function (obj) {
         obj.move();
       });
@@ -897,9 +896,6 @@ var Game = function () {
         bullet.move();
       });
     }
-  }, {
-    key: 'wrap',
-    value: function wrap() {}
   }, {
     key: 'checkCollisionsWithDisc',
     value: function checkCollisionsWithDisc() {
@@ -948,14 +944,11 @@ var Game = function () {
         for (var i = 0; i < object_array.length; i++) {
           totalRadius = object_array[i].radius + this.bullets[j].radius;
           distance = Util.distance(this.bullets[j].pos[0], this.bullets[j].pos[1], object_array[i].pos[0], object_array[i].pos[1]);
-          debugger;
-
           if (distance <= totalRadius) {
             this.removeObject(object_array[i]);
           }
         }
       }
-      // debugger
     }
   }, {
     key: 'checkCollisionsWithGoal',
@@ -980,15 +973,11 @@ var Game = function () {
   }, {
     key: 'step',
     value: function step() {
-      // console.log(this.disc.rad);
       this.moveObjects();
       this.checkCollisionsWithDisc();
       this.checkCollisionsWithBullet();
       this.checkCollisionsWithGoal();
     }
-  }, {
-    key: 'checkWin',
-    value: function checkWin() {}
   }, {
     key: 'allObjects',
     value: function allObjects() {
@@ -1078,7 +1067,6 @@ var Disc = function (_MovingObject) {
     _this.fragments = [];
     _this.theta = 0;
     _this.angular_vel = 0;
-    // this.renderFragments();
     _this.draw = _this.draw.bind(_this);
     _this.drawDonut = _this.drawDonut.bind(_this);
     _this.move = _this.move.bind(_this);
@@ -1096,7 +1084,7 @@ var Disc = function (_MovingObject) {
       var rel_y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
       var theta = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : Math.PI / 4;
 
-      this.rad = Util.calculateRad(rel_x, rel_y, theta);
+      this.rad = Util.calculateRad(rel_x, rel_y);
       this.pos[0] = this.game.DIM_X / 2;
       this.pos[1] = this.game.DIM_Y / 2;
       this.setRadialGradient(ctx, "#E81E2B", "#DC1C29");
@@ -1146,17 +1134,17 @@ var Disc = function (_MovingObject) {
           otherObject.vel[0] = -1 * otherObject.vel[0];
           otherObject.vel[1] = -1 * otherObject.vel[1];
         } else if (rel_x > 0 && rel_y > 0) {
-          otherObject.vel[0] = otherObject.vel[0] - this.angular_vel * 100;
-          otherObject.vel[1] = -1 * this.angular_vel * 100 + otherObject.vel[1];
+          otherObject.vel[0] = otherObject.vel[0] - this.angular_vel;
+          otherObject.vel[1] = -1 * this.angular_vel + otherObject.vel[1];
         } else if (rel_x < 0 && rel_y > 0) {
-          otherObject.vel[0] = otherObject.vel[0] - this.angular_vel * 100;
-          otherObject.vel[1] = this.angular_vel * 100 + otherObject.vel[1];
+          otherObject.vel[0] = otherObject.vel[0] - this.angular_vel;
+          otherObject.vel[1] = this.angular_vel + otherObject.vel[1];
         } else if (rel_x < 0 && rel_y < 0) {
-          otherObject.vel[0] = this.angular_vel * 100 + otherObject.vel[0];
-          otherObject.vel[1] = -1 * (this.angular_vel * 100 + otherObject.vel[1]);
+          otherObject.vel[0] = this.angular_vel + otherObject.vel[0];
+          otherObject.vel[1] = -1 * (this.angular_vel + otherObject.vel[1]);
         } else if (rel_x > 0 && rel_y < 0) {
-          otherObject.vel[0] = this.angular_vel * 100 + otherObject.vel[0];
-          otherObject.vel[1] = -1 * this.angular_vel * 100 + otherObject.vel[1];
+          otherObject.vel[0] = this.angular_vel + otherObject.vel[0];
+          otherObject.vel[1] = -1 * this.angular_vel + otherObject.vel[1];
         }
       } else if (this.angular_vel < 0) {
         var angular_vel = Math.abs(this.angular_vel);
@@ -1190,8 +1178,7 @@ var Disc = function (_MovingObject) {
       if (otherObject instanceof _projectile2.default) {
         var contact_point_x = Util.relative_x(otherObject.pos[0], this.game.DIM_X);
         var contact_point_y = Util.relative_y(otherObject.pos[1], this.game.DIM_Y);
-        var angle = Math.atan(contact_point_y / contact_point_x);
-        var abs_theta = Util.calculateRad(contact_point_x, contact_point_y, angle);
+        var abs_theta = Util.calculateRad(contact_point_x, contact_point_y);
 
         var red_lower = this.rad - Math.PI * 2 / 3;
         var red_upper = this.rad;
@@ -1222,7 +1209,6 @@ var Disc = function (_MovingObject) {
   }, {
     key: 'enablePowerup',
     value: function enablePowerup(powerup) {
-
       powerup.enablePowerup(true);
       setTimeout(function () {
         powerup.enablePowerup(false);
@@ -1241,7 +1227,6 @@ var Disc = function (_MovingObject) {
         return obj instanceof _projectile2.default;
       });
       for (var i = 0; i < projectiles.length; i++) {
-        // debugger
         if (projectiles[i].stuck === true) {
           var new_theta = (this.rad - projectiles[i].dTheta) % (Math.PI * 2);
           var new_rel_x = this.outerRadius * Math.cos(new_theta);
@@ -1273,8 +1258,6 @@ var Disc = function (_MovingObject) {
 
           projectiles[i].vel[0] = new_rel_x / Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)) * 10;
           projectiles[i].vel[1] = new_rel_y / Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)) * 10;
-
-          // debugger
         }
       }
     }

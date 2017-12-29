@@ -26,6 +26,7 @@ class MovingObject {
   }
 
   move() {
+    //maybe -50 /+50 will work
     // if(this.pos[0] < 0 || this.pos[0] > this.game.DIM_X) {
     //   let index = this.game.projectiles.indexOf(this);
     //   this.game.projectiles.splice(index, 1);

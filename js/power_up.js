@@ -36,8 +36,6 @@ class PowerUp extends MovingObject {
         this.toggle = toggle;
         this.powerup = PowerUp.burst.bind(this);
         document.addEventListener('click', this.powerup);
-        debugger
-
       } else if (toggle === false) {
         this.game.power_type = null;
         this.toggle = false;
@@ -50,13 +48,11 @@ class PowerUp extends MovingObject {
         this.powerup = PowerUp.addShooter.bind(this);
         document.addEventListener('click', this.powerup);
       } else if(toggle === false) {
-        // console.log("disable");
         this.game.power_type = null;
         this.toggle = false;
         document.removeEventListener('click', this.powerup);
       }
     }
-    debugger
   }
 
   draw(ctx) {
@@ -82,7 +78,6 @@ PowerUp.addShooter = function(e){
 }
 
 PowerUp.burst = function() {
-  debugger
   this.disc.burst();
 }
 

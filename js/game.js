@@ -20,7 +20,7 @@ class Game {
     this.DIM_Y = window.innerHeight;
     this.initProjectiles = this.initProjectiles.bind(this);
     // this.initGoals();
-    this.initProjectiles();
+    // this.initProjectiles();
     this.initDisc();
     this.renderFragments();
     this.initPowerUps();
@@ -29,7 +29,6 @@ class Game {
     this.draw = this.draw.bind(this);
     this.anim = this.anim.bind(this);
     this.moveObjects = this.moveObjects.bind(this);
-    this.wrap = this.wrap.bind(this);
     this.checkCollisionsWithDisc = this.checkCollisionsWithDisc.bind(this);
     this.checkCollisionsWithBullet = this.checkCollisionsWithBullet.bind(this);
     this.checkCollisionsWithGoal =
@@ -49,9 +48,7 @@ class Game {
       this.DIM_X = window.innerWidth;
       this.DIM_Y = window.innerHeight;
     });
-    this.checkWin = this.checkWin.bind(this);
     this.reset = this.reset.bind(this);
-    this.initTest();
     setInterval( ()=> {
        this.gameover_count++;
        this.gameover_count = this.gameover_count % 4;
@@ -72,9 +69,10 @@ class Game {
 
   initTest() {
     this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,0], vel: this.findCenter([800,0]), radius: 20, game: this}));
-    // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,0], vel: this.findCenter([0,0]), radius: 20, game: this}));
-    // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,800], vel: this.findCenter([0,800]), radius: 20, game: this}));
-    // this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,800], vel: this.findCenter([800,800]), radius: 20, game: this}));
+    this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,0], vel: this.findCenter([0,0]), radius: 20, game: this}));
+    this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,800], vel: this.findCenter([0,800]), radius: 20, game: this}));
+    this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,800], vel: this.findCenter([800,800]), radius: 20, game: this}));
+
   }
 
   initProjectiles() {
@@ -110,10 +108,10 @@ class Game {
     this.stuckCount = 0;
     this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
     this.projectiles = [];
+    this.initTest();
     this.score = 0;
     this.game_start = false;
     this.start_time = new Date().getTime();
-    // this.timer();
     window.removeEventListener('click', this.reset)
   }
 
@@ -168,6 +166,7 @@ class Game {
   }
 
   renderFragments() {
+    // TODO: change to keyboard controls
     let timeout;
     let angular_vel;
     this.disc.start_time = 1;
@@ -179,14 +178,24 @@ class Game {
       this.disc.theta = Math.atan(this.disc.rel_y/this.disc.rel_x);
       if(this.disc.start_time === 1){
           this.disc.start_time = Date.now();
-          this.disc.start_angle = Util.calculateRad(this.disc.rel_x, this.disc.rel_y, this.disc.theta);
+          this.disc.start_angle = Util.calculateRad(this.disc.rel_x, this.disc.rel_y);
       }
-      this.disc.end_angle = Util.calculateRad(this.disc.rel_x, this.disc.rel_y, this.disc.theta);
+      this.disc.end_angle = Util.calculateRad(this.disc.rel_x, this.disc.rel_y);
       this.disc.dTheta = this.disc.end_angle - this.disc.start_angle;
-      // angular_vel =
       this.disc.end_time = Date.now();
+      // console.log("theta", this.disc.theta);
+      // console.log("rel_x", this.disc.rel_x);4
+        //going counter-clockwise
+      if (this.disc.angular_vel > 0) {
+        if ( (this.disc.theta < 0.08 && this.disc.theta > -0.08)  && this.disc.rel_x > 0) {
+          console.log("crossing the border");
+          let diff = (this.disc.end_angle) + ((Math.PI * 2) - this.disc.start_angle)
+          console.log("diff", diff);
+        }
+      }
 
       this.disc.angular_vel = Util.calculateAngVelocity(this.disc.start_angle, this.disc.end_angle, this.disc.start_time, this.disc.end_time);
+      // console.log("vel", this.disc.angular_vel);
       timeout = setTimeout(function () {
           var event = new CustomEvent("mousestop", {
               detail: {
@@ -197,20 +206,15 @@ class Game {
               cancelable: true
           });
           e.target.dispatchEvent(event);
-      }, 50);
+      }, 30);
     };
 
     const registerStaticPosition = (e) => {
-      // console.log("stopped");
       this.disc.angular_vel = 0;
       this.disc.rel_x = Util.relative_x(e.detail.clientX, this.DIM_X);
       this.disc.rel_y = Util.relative_y(e.detail.clientY, this.DIM_Y);
-      // this.disc.theta = Math.atan(this.disc.rel_y/this.disc.rel_x);
-      // this.disc.end_time = Date.now();
       this.disc.start_time = 1;
-      // this.disc.dTheta = Math.PI/2;
     };
-
     document.addEventListener('mousemove', registerMovement);
     document.addEventListener('mousestop', registerStaticPosition);
   }
@@ -218,12 +222,6 @@ class Game {
 
 
   draw(ctx) {
-    // console.log("x_vel", this.projectiles[0].vel[0]);
-    // console.log("y_vel", this.projectiles[0].vel[1]);
-    // console.log(this.disc.angular_vel);
-
-      // debugger
-
     ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
 
 
@@ -386,21 +384,12 @@ class Game {
   }
 
   moveObjects() {
-    // this.allObjects().forEach(object => {
-    //   object.move();
-    // });
-    // console.log(this.disc.dTheta);
-
     this.allObjects().forEach(obj => {
       obj.move();
     });
     this.bullets.forEach(bullet => {
       bullet.move();
     });
-  }
-
-  wrap() {
-
   }
 
   checkCollisionsWithDisc() {
@@ -450,16 +439,12 @@ class Game {
       for(let i = 0; i < object_array.length; i++) {
         totalRadius = object_array[i].radius + this.bullets[j].radius;
         distance = Util.distance(this.bullets[j].pos[0], this.bullets[j].pos[1], object_array[i].pos[0], object_array[i].pos[1])
-        debugger
-
           if(distance <= totalRadius) {
             this.removeObject(object_array[i]);
           }
 
       }
     }
-    // debugger
-
   }
 
   checkCollisionsWithGoal() {
@@ -484,15 +469,10 @@ class Game {
   }
 
   step() {
-    // console.log(this.disc.rad);
     this.moveObjects();
     this.checkCollisionsWithDisc();
     this.checkCollisionsWithBullet();
     this.checkCollisionsWithGoal();
-  }
-
-  checkWin() {
-
   }
 
   allObjects() {
