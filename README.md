@@ -12,8 +12,6 @@ JSGame is a fun and colorful game comprised of four parts:
   + If the color of the ball is the same as the side of the disc that it collides with, it will bounce off.
   + If not, the ball will stick to the outside of the disc.
   + Projectiles cannot bounce off parts of the disc that are covered in projectiles.
-+ Goals
-  + Goals will be placed around the canvas and the objective is to get the projectiles to go towards and pass the goals.
 + Power-ups
   + Such power-ups will be implemented:
     + The user can release all the stuck projectiles on the disc in directions normal to the the face of the disc.
@@ -46,8 +44,3 @@ The main components will be divided in a way as seen above in the overview secti
 <strong>Day 3</strong>: Finish power-up implementation and ensure playability. Start styling.
 
 <strong>Day 4</strong>: Finish styling and implement title splash page and tutorials.
-
-## Bonuses Features
-+ Add sound effects
-+ Add game save option
-+ Allow user to adjust parameters of the game
