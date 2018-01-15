@@ -26,26 +26,12 @@ class MovingObject {
   }
 
   move() {
-    //maybe -50 /+50 will work
-    // if(this.pos[0] < 0 || this.pos[0] > this.game.DIM_X) {
-    //   let index = this.game.projectiles.indexOf(this);
-    //   this.game.projectiles.splice(index, 1);
-    // }
-    // if(this.pos[1] < 0 || this.pos[1] > this.game.DIM_Y) {
-    //   let index = this.game.projectiles.indexOf(this);
-    //   this.game.projectiles.splice(index, 1);
-    // }
     this.pos[0] += this.vel[0];
     this.pos[1] += this.vel[1];
   }
 
   didCollideWith(otherObejct) {
-    // let totalRadius = this.radius + otherObejct.radius;
-    // if (distance formula <= totalRadius){
-    // return true;
-    // } else {
-        // return false;
-    // }
+  
   }
 
 
