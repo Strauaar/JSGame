@@ -33,15 +33,11 @@ class Disc extends MovingObject{
   }
 
   drawDonut(ctx, startRadian, endRadian){
-
       ctx.beginPath();
           ctx.arc(this.pos[0],  this.pos[1], this.outerRadius, startRadian, endRadian, false);
           ctx.arc(this.pos[0],  this.pos[1], this.innerRadius, endRadian, startRadian, true);
       ctx.closePath();
-
-
       this.addShadow(ctx);
-
       ctx.fill();
   }
 
