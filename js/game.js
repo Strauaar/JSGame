@@ -183,8 +183,7 @@ class Game {
       this.disc.end_angle = Util.calculateRad(this.disc.rel_x, this.disc.rel_y);
       this.disc.dTheta = this.disc.end_angle - this.disc.start_angle;
       this.disc.end_time = Date.now();
-      // console.log("theta", this.disc.theta);
-      // console.log("rel_x", this.disc.rel_x);4
+  
         //going counter-clockwise
       if (this.disc.angular_vel > 0) {
         if ( (this.disc.theta < 0.08 && this.disc.theta > -0.08)  && this.disc.rel_x > 0) {
@@ -195,7 +194,7 @@ class Game {
       }
 
       this.disc.angular_vel = Util.calculateAngVelocity(this.disc.start_angle, this.disc.end_angle, this.disc.start_time, this.disc.end_time);
-      // console.log("vel", this.disc.angular_vel);
+
       timeout = setTimeout(function () {
           var event = new CustomEvent("mousestop", {
               detail: {
