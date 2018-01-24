@@ -58,27 +58,27 @@ class Game {
     this.disc = new Disc({pos: [this.DIM_X / 2, this.DIM_Y / 2], game: this});
   }
 
-  initGoals() {
-    this.goals.push(new Goal({pos: [130, 130], game: this, radius: 25}))
-    this.goals.push(new Goal({pos: [this.DIM_X - 130, 130], game: this, radius: 25}))
-    this.goals.push(new Goal({pos: [130, this.DIM_Y - 130], game: this, radius: 25}))
-    this.goals.push(new Goal({pos: [this.DIM_X - 130, this.DIM_Y - 130], game: this, radius: 25}))
-  }
+  // initGoals() {
+  //   this.goals.push(new Goal({pos: [130, 130], game: this, radius: 25}))
+  //   this.goals.push(new Goal({pos: [this.DIM_X - 130, 130], game: this, radius: 25}))
+  //   this.goals.push(new Goal({pos: [130, this.DIM_Y - 130], game: this, radius: 25}))
+  //   this.goals.push(new Goal({pos: [this.DIM_X - 130, this.DIM_Y - 130], game: this, radius: 25}))
+  // }
 
-  initTest() {
-    this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,0], vel: this.findCenter([800,0]), radius: 20, game: this}));
-    this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,0], vel: this.findCenter([0,0]), radius: 20, game: this}));
-    this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,800], vel: this.findCenter([0,800]), radius: 20, game: this}));
-    this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,800], vel: this.findCenter([800,800]), radius: 20, game: this}));
-
-  }
+  // initTest() {
+  //   this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,0], vel: this.findCenter([800,0]), radius: 20, game: this}));
+  //   this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,0], vel: this.findCenter([0,0]), radius: 20, game: this}));
+  //   this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,800], vel: this.findCenter([0,800]), radius: 20, game: this}));
+  //   this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,800], vel: this.findCenter([800,800]), radius: 20, game: this}));
+  //
+  // }
 
   initProjectiles() {
     let position;
     setInterval( () => {
       position = this.randomPosition();
       this.projectiles.push(new Projectile({color: Util.randomColor(), pos: position, vel: this.findCenter(position), radius: 20, game: this}));
-    }, 1000)
+    }, 2000)
   }
 
   initPowerUps() {
