@@ -6,7 +6,6 @@ class Projectile extends MovingObject {
     super(options);
     this.stuck = false;
     this.counted = false;
-
   }
 }
 

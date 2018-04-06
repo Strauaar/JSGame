@@ -10,7 +10,6 @@ class Disc extends MovingObject{
     this.innerRadius = 40;
     this.fragments = [];
     this.theta = 0;
-    this.angular_vel = 0;
     this.draw = this.draw.bind(this);
     this.drawDonut = this.drawDonut.bind(this);
     this.move = this.move.bind(this);
@@ -74,7 +73,7 @@ class Disc extends MovingObject{
       let contact_point_y = Util.relative_y(otherObject.pos[1], this.game.DIM_Y);
       //projectile position in terms of rad
       let abs_theta = Util.calculateRad(contact_point_x, contact_point_y);
-      //if this.rad === 0; 0 < blue < pi*2/3, pi*2/3 < green < pi*4/3, pi*4/3 < red < pi*2
+
       //if 0 <= this.rad < pi*2/3; this.rad < blue < (pi2/3 + this.rad),
                             //    (pi2/3 + this.rad) < green < (pi4/3 + this.rad) (()()((())))
                             //    (pi4/3 + this.rad) < red < 2pi AND 0 < red < this.rad
@@ -90,23 +89,23 @@ class Disc extends MovingObject{
             (otherObject.color === 'green' && ((this.rad + (Math.PI * 2/3)) <= abs_theta && abs_theta <= (this.rad + (Math.PI * 4/3)))) ||
             (otherObject.color === 'red' && ( ((this.rad + (Math.PI * 4/3)) <= abs_theta && abs_theta <= (Math.PI * 2)) || (0 <= abs_theta && abs_theta <= this.rad) ))        
           ){
+            this.bounce(otherObject);
+          } else {
             otherObject.stuck = true;
             this.game.stuckCount++;
             otherObject.vel = [0,0];
-        } else {
-          this.bounce(otherObject);
-        }
+          }
       } else if ((Math.PI * 2/3) <= this.rad && this.rad < (Math.PI * 4/3)) {
         if (
           (otherObject.color === 'blue' && (this.rad <= abs_theta && abs_theta <= (this.rad + (Math.PI * 2/3)))) || 
           (otherObject.color === 'green' && (((this.rad + (Math.PI * 2/3)) <= abs_theta && abs_theta <= (Math.PI * 2)) || (0 <= abs_theta && abs_theta <= (this.rad - (Math.PI * 2/3))))) ||
           (otherObject.color === 'red' && ((this.rad - (Math.PI * 2/3)) <= abs_theta && abs_theta <= this.rad))        
         ){
+          this.bounce(otherObject);
+        } else {
           otherObject.stuck = true;
           this.game.stuckCount++;
           otherObject.vel = [0,0];
-        } else {
-          this.bounce(otherObject);
         }
       } else if ((Math.PI * 4/3) <= this.rad && this.rad < (Math.PI * 2)) {
         if (
@@ -114,11 +113,11 @@ class Disc extends MovingObject{
           (otherObject.color === 'green' && ((this.rad - (Math.PI * 4/3)) <= abs_theta && abs_theta <= (this.rad - (Math.PI * 2/3)))) || 
           (otherObject.color === 'red' && ((this.rad - (Math.PI * 2/3)) <= abs_theta && abs_theta <= this.rad))        
         ){
+          this.bounce(otherObject);
+        } else {
           otherObject.stuck = true;
           this.game.stuckCount++;
           otherObject.vel = [0,0];
-        } else {
-          this.bounce(otherObject);
         }
       }
     } else if (otherObject instanceof PowerUp) {
@@ -147,30 +146,6 @@ class Disc extends MovingObject{
         let new_rel_x = this.outerRadius * Math.cos(new_theta);
         let new_rel_y = this.outerRadius * Math.sin(new_theta);
         projectiles[i].stuck = false;
-
-        //ADD SPECIFIC CONDITIONALS
-        // if (new_rel_x > 0 && new_rel_y > 0) {
-        //   projectiles[i].pos[0] = this.game.DIM_X/2 + new_rel_x + 100;
-        //   projectiles[i].pos[1] = this.game.DIM_Y/2 - new_rel_y - 100;
-        //   projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
-        //   projectiles[i].vel[1] = (new_rel_y/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
-        // } else if (new_rel_x < 0 && new_rel_y > 0) {
-        //   projectiles[i].pos[0] = this.game.DIM_X/2 + new_rel_x - 100;
-        //   projectiles[i].pos[1] = this.game.DIM_Y/2 - new_rel_y - 100;
-        //   projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
-        //   projectiles[i].vel[1] = (new_rel_y/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
-        // } else if (new_rel_x < 0 && new_rel_y < 0) {
-        //   projectiles[i].pos[0] = this.game.DIM_X/2 - new_rel_x - 100;
-        //   projectiles[i].pos[1] = this.game.DIM_Y/2 - new_rel_y + 100;
-        //   projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
-        //   projectiles[i].vel[1] = (new_rel_y/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
-        // } else if (new_rel_x > 0 && new_rel_y < 0) {
-        //   projectiles[i].pos[0] = this.game.DIM_X/2 - new_rel_x + 100;
-        //   projectiles[i].pos[1] = this.game.DIM_Y/2 - new_rel_y - 100;
-        //   projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
-        //   projectiles[i].vel[1] = (new_rel_y/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
-        // }
-
         projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
         projectiles[i].vel[1] = (new_rel_y/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
       }

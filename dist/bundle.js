@@ -180,7 +180,6 @@ var Disc = function (_MovingObject) {
     _this.innerRadius = 40;
     _this.fragments = [];
     _this.theta = 0;
-    _this.angular_vel = 0;
     _this.draw = _this.draw.bind(_this);
     _this.drawDonut = _this.drawDonut.bind(_this);
     _this.move = _this.move.bind(_this);
@@ -255,7 +254,7 @@ var Disc = function (_MovingObject) {
         var contact_point_y = Util.relative_y(otherObject.pos[1], this.game.DIM_Y);
         //projectile position in terms of rad
         var abs_theta = Util.calculateRad(contact_point_x, contact_point_y);
-        //if this.rad === 0; 0 < blue < pi*2/3, pi*2/3 < green < pi*4/3, pi*4/3 < red < pi*2
+
         //if 0 <= this.rad < pi*2/3; this.rad < blue < (pi2/3 + this.rad),
         //    (pi2/3 + this.rad) < green < (pi4/3 + this.rad) (()()((())))
         //    (pi4/3 + this.rad) < red < 2pi AND 0 < red < this.rad
@@ -267,27 +266,27 @@ var Disc = function (_MovingObject) {
         //      (this.rad - pi2/3) < red < this.rad
         if (0 <= this.rad && this.rad < Math.PI * 2 / 3) {
           if (otherObject.color === 'blue' && this.rad <= abs_theta && abs_theta <= this.rad + Math.PI * 2 / 3 || otherObject.color === 'green' && this.rad + Math.PI * 2 / 3 <= abs_theta && abs_theta <= this.rad + Math.PI * 4 / 3 || otherObject.color === 'red' && (this.rad + Math.PI * 4 / 3 <= abs_theta && abs_theta <= Math.PI * 2 || 0 <= abs_theta && abs_theta <= this.rad)) {
+            this.bounce(otherObject);
+          } else {
             otherObject.stuck = true;
             this.game.stuckCount++;
             otherObject.vel = [0, 0];
-          } else {
-            this.bounce(otherObject);
           }
         } else if (Math.PI * 2 / 3 <= this.rad && this.rad < Math.PI * 4 / 3) {
           if (otherObject.color === 'blue' && this.rad <= abs_theta && abs_theta <= this.rad + Math.PI * 2 / 3 || otherObject.color === 'green' && (this.rad + Math.PI * 2 / 3 <= abs_theta && abs_theta <= Math.PI * 2 || 0 <= abs_theta && abs_theta <= this.rad - Math.PI * 2 / 3) || otherObject.color === 'red' && this.rad - Math.PI * 2 / 3 <= abs_theta && abs_theta <= this.rad) {
+            this.bounce(otherObject);
+          } else {
             otherObject.stuck = true;
             this.game.stuckCount++;
             otherObject.vel = [0, 0];
-          } else {
-            this.bounce(otherObject);
           }
         } else if (Math.PI * 4 / 3 <= this.rad && this.rad < Math.PI * 2) {
           if (otherObject.color === 'blue' && (this.rad <= abs_theta && abs_theta <= Math.PI * 2 || 0 <= abs_theta && abs_theta <= this.rad - Math.PI * 4 / 3) || otherObject.color === 'green' && this.rad - Math.PI * 4 / 3 <= abs_theta && abs_theta <= this.rad - Math.PI * 2 / 3 || otherObject.color === 'red' && this.rad - Math.PI * 2 / 3 <= abs_theta && abs_theta <= this.rad) {
+            this.bounce(otherObject);
+          } else {
             otherObject.stuck = true;
             this.game.stuckCount++;
             otherObject.vel = [0, 0];
-          } else {
-            this.bounce(otherObject);
           }
         }
       } else if (otherObject instanceof _power_up2.default) {
@@ -321,30 +320,6 @@ var Disc = function (_MovingObject) {
           var new_rel_x = this.outerRadius * Math.cos(new_theta);
           var new_rel_y = this.outerRadius * Math.sin(new_theta);
           projectiles[i].stuck = false;
-
-          //ADD SPECIFIC CONDITIONALS
-          // if (new_rel_x > 0 && new_rel_y > 0) {
-          //   projectiles[i].pos[0] = this.game.DIM_X/2 + new_rel_x + 100;
-          //   projectiles[i].pos[1] = this.game.DIM_Y/2 - new_rel_y - 100;
-          //   projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
-          //   projectiles[i].vel[1] = (new_rel_y/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
-          // } else if (new_rel_x < 0 && new_rel_y > 0) {
-          //   projectiles[i].pos[0] = this.game.DIM_X/2 + new_rel_x - 100;
-          //   projectiles[i].pos[1] = this.game.DIM_Y/2 - new_rel_y - 100;
-          //   projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
-          //   projectiles[i].vel[1] = (new_rel_y/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
-          // } else if (new_rel_x < 0 && new_rel_y < 0) {
-          //   projectiles[i].pos[0] = this.game.DIM_X/2 - new_rel_x - 100;
-          //   projectiles[i].pos[1] = this.game.DIM_Y/2 - new_rel_y + 100;
-          //   projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
-          //   projectiles[i].vel[1] = (new_rel_y/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
-          // } else if (new_rel_x > 0 && new_rel_y < 0) {
-          //   projectiles[i].pos[0] = this.game.DIM_X/2 - new_rel_x + 100;
-          //   projectiles[i].pos[1] = this.game.DIM_Y/2 - new_rel_y - 100;
-          //   projectiles[i].vel[0] = (new_rel_x/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
-          //   projectiles[i].vel[1] = (new_rel_y/(Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)))) * 10;
-          // }
-
           projectiles[i].vel[0] = new_rel_x / Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)) * 10;
           projectiles[i].vel[1] = new_rel_y / Math.sqrt(Math.pow(new_rel_x, 2) + Math.pow(new_rel_y, 2)) * 10;
         }
@@ -416,6 +391,7 @@ var Game = function () {
     this.lost = false;
     this.ctx = ctx;
     this.gameover_count = 0;
+    this.difficulty = 2000;
     this.DIM_X = window.innerWidth;
     this.DIM_Y = window.innerHeight;
     this.initProjectiles = this.initProjectiles.bind(this);
@@ -434,12 +410,6 @@ var Game = function () {
     this.shootBullet = this.shootBullet.bind(this);
     this.removePowerup = this.removePowerup.bind(this);
     this.removeObject = this.removeObject.bind(this);
-    this.start_time = new Date().getTime();
-    this.timer = setInterval(function () {
-      var time = new Date().getTime();
-      var distance = time - _this.start_time;
-      _this.milliseconds = distance / 1000;
-    }, 3);
     window.addEventListener('resize', function () {
       _this.DIM_X = window.innerWidth;
       _this.DIM_Y = window.innerHeight;
@@ -467,14 +437,14 @@ var Game = function () {
     }
   }, {
     key: 'initProjectiles',
-    value: function initProjectiles() {
+    value: function initProjectiles(difficulty) {
       var _this2 = this;
 
       var position = void 0;
-      setInterval(function () {
+      this.projectileInterval = setInterval(function () {
         position = _this2.randomPosition();
         _this2.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: position, vel: _this2.findCenter(position), radius: 20, game: _this2 }));
-      }, 2000);
+      }, difficulty);
     }
   }, {
     key: 'initPowerUps',
@@ -502,14 +472,24 @@ var Game = function () {
   }, {
     key: 'reset',
     value: function reset() {
+      var _this4 = this;
+
       this.lost = false;
       this.stuckCount = 0;
       this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
-      this.projectiles = [];
-      this.initTest();
+      var position = this.randomPosition();
+      this.projectiles = [new _projectile2.default({ color: Util.randomColor(), pos: position, vel: this.findCenter(position), radius: 20, game: this })];
+      this.difficulty = 2000;
+      // this.initTest();
+      this.initProjectiles(this.difficulty);
       this.score = 0;
       this.game_start = false;
       this.start_time = new Date().getTime();
+      this.timer = setInterval(function () {
+        var time = new Date().getTime();
+        var distance = time - _this4.start_time;
+        _this4.milliseconds = distance / 1000;
+      }, 3);
       window.removeEventListener('click', this.reset);
     }
   }, {
@@ -567,23 +547,23 @@ var Game = function () {
   }, {
     key: 'renderFragments',
     value: function renderFragments() {
-      var _this4 = this;
+      var _this5 = this;
 
       var timeout = void 0;
       this.disc.start_time = 1;
       var registerMovement = function registerMovement(e) {
         clearTimeout(timeout);
 
-        _this4.disc.rel_x = Util.relative_x(e.clientX, _this4.DIM_X);
-        _this4.disc.rel_y = Util.relative_y(e.clientY, _this4.DIM_Y);
-        _this4.disc.theta = Math.atan(_this4.disc.rel_y / _this4.disc.rel_x);
-        if (_this4.disc.start_time === 1) {
-          _this4.disc.start_time = Date.now();
-          _this4.disc.start_angle = Util.calculateRad(_this4.disc.rel_x, _this4.disc.rel_y);
+        _this5.disc.rel_x = Util.relative_x(e.clientX, _this5.DIM_X);
+        _this5.disc.rel_y = Util.relative_y(e.clientY, _this5.DIM_Y);
+        _this5.disc.theta = Math.atan(_this5.disc.rel_y / _this5.disc.rel_x);
+        if (_this5.disc.start_time === 1) {
+          _this5.disc.start_time = Date.now();
+          _this5.disc.start_angle = Util.calculateRad(_this5.disc.rel_x, _this5.disc.rel_y);
         }
-        _this4.disc.end_angle = Util.calculateRad(_this4.disc.rel_x, _this4.disc.rel_y);
-        _this4.disc.dTheta = _this4.disc.end_angle - _this4.disc.start_angle;
-        _this4.disc.end_time = Date.now();
+        _this5.disc.end_angle = Util.calculateRad(_this5.disc.rel_x, _this5.disc.rel_y);
+        _this5.disc.dTheta = _this5.disc.end_angle - _this5.disc.start_angle;
+        _this5.disc.end_time = Date.now();
 
         timeout = setTimeout(function () {
           var event = new CustomEvent("mousestop", {
@@ -599,9 +579,9 @@ var Game = function () {
       };
 
       var registerStaticPosition = function registerStaticPosition(e) {
-        _this4.disc.rel_x = Util.relative_x(e.detail.clientX, _this4.DIM_X);
-        _this4.disc.rel_y = Util.relative_y(e.detail.clientY, _this4.DIM_Y);
-        _this4.disc.start_time = 1;
+        _this5.disc.rel_x = Util.relative_x(e.detail.clientX, _this5.DIM_X);
+        _this5.disc.rel_y = Util.relative_y(e.detail.clientY, _this5.DIM_Y);
+        _this5.disc.start_time = 1;
       };
       document.addEventListener('mousemove', registerMovement);
       document.addEventListener('mousestop', registerStaticPosition);
@@ -750,12 +730,12 @@ var Game = function () {
   }, {
     key: 'anim',
     value: function anim(ctx) {
-      var _this5 = this;
+      var _this6 = this;
 
       return function () {
-        _this5.step();
-        _this5.draw(ctx);
-        requestAnimationFrame(_this5.anim(ctx));
+        _this6.step();
+        _this6.draw(ctx);
+        requestAnimationFrame(_this6.anim(ctx));
       };
     }
   }, {
@@ -1132,7 +1112,6 @@ var Projectile = function (_MovingObject) {
 
     _this.stuck = false;
     _this.counted = false;
-
     return _this;
   }
 

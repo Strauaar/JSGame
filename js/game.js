@@ -15,6 +15,7 @@ class Game {
     this.lost = false;
     this.ctx = ctx;
     this.gameover_count = 0;
+    this.difficulty = 2000;
     this.DIM_X = window.innerWidth;
     this.DIM_Y = window.innerHeight;
     this.initProjectiles = this.initProjectiles.bind(this);
@@ -33,12 +34,6 @@ class Game {
     this.shootBullet = this.shootBullet.bind(this);
     this.removePowerup = this.removePowerup.bind(this);
     this.removeObject = this.removeObject.bind(this);
-    this.start_time = new Date().getTime();
-    this.timer = setInterval(() => {
-      let time = new Date().getTime();
-      let distance = time - this.start_time;
-      this.milliseconds = (distance)/1000;
-    }, 3);
     window.addEventListener('resize', () => {
       this.DIM_X = window.innerWidth;
       this.DIM_Y = window.innerHeight;
@@ -60,15 +55,14 @@ class Game {
     this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,0], vel: this.findCenter([0,0]), radius: 20, game: this}));
     this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,800], vel: this.findCenter([0,800]), radius: 20, game: this}));
     this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,800], vel: this.findCenter([800,800]), radius: 20, game: this}));
-  
   }
 
-  initProjectiles() {
+  initProjectiles(difficulty) {
     let position;
-    setInterval( () => {
+    this.projectileInterval = setInterval( () => {
       position = this.randomPosition();
       this.projectiles.push(new Projectile({color: Util.randomColor(), pos: position, vel: this.findCenter(position), radius: 20, game: this}));
-    }, 2000)
+    }, difficulty)
   }
 
   initPowerUps() {
@@ -95,11 +89,19 @@ class Game {
     this.lost = false;
     this.stuckCount = 0;
     this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
-    this.projectiles = [];
-    this.initTest();
+    let position = this.randomPosition();
+    this.projectiles = [new Projectile({color: Util.randomColor(), pos: position, vel: this.findCenter(position), radius: 20, game: this})];
+    this.difficulty = 2000;
+    // this.initTest();
+    this.initProjectiles(this.difficulty);
     this.score = 0;
     this.game_start = false;
     this.start_time = new Date().getTime();
+    this.timer = setInterval(() => {
+      let time = new Date().getTime();
+      let distance = time - this.start_time;
+      this.milliseconds = (distance)/1000;
+    }, 3);
     window.removeEventListener('click', this.reset)
   }
 
