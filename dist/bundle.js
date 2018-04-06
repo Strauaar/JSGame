@@ -239,45 +239,9 @@ var Disc = function (_MovingObject) {
     }
   }, {
     key: 'bounce',
-    value: function bounce(otherObject, rel_x, rel_y) {
-      if (this.angular_vel >= 0) {
-        if (isNaN(this.angular_vel) || this.angular_vel === 0) {
-          otherObject.vel[0] = -1 * otherObject.vel[0];
-          otherObject.vel[1] = -1 * otherObject.vel[1];
-        } else if (rel_x > 0 && rel_y > 0) {
-          otherObject.vel[0] = otherObject.vel[0] - this.angular_vel;
-          otherObject.vel[1] = -1 * this.angular_vel + otherObject.vel[1];
-        } else if (rel_x < 0 && rel_y > 0) {
-          otherObject.vel[0] = otherObject.vel[0] - this.angular_vel;
-          otherObject.vel[1] = this.angular_vel + otherObject.vel[1];
-        } else if (rel_x < 0 && rel_y < 0) {
-          otherObject.vel[0] = this.angular_vel + otherObject.vel[0];
-          otherObject.vel[1] = -1 * (this.angular_vel + otherObject.vel[1]);
-        } else if (rel_x > 0 && rel_y < 0) {
-          otherObject.vel[0] = this.angular_vel + otherObject.vel[0];
-          otherObject.vel[1] = -1 * this.angular_vel + otherObject.vel[1];
-        }
-      } else if (this.angular_vel < 0) {
-        var angular_vel = Math.abs(this.angular_vel);
-        if (isNaN(this.angular_vel) || this.angular_vel === 0) {
-          otherObject.vel[0] = -1 * otherObject.vel[0];
-          otherObject.vel[1] = -1 * otherObject.vel[1];
-        } else if (rel_x > 0 && rel_y > 0) {
-          otherObject.vel[0] = otherObject.vel[0] + angular_vel * 100;
-          otherObject.vel[1] = angular_vel * 100 + otherObject.vel[1];
-        } else if (rel_x < 0 && rel_y > 0) {
-          otherObject.vel[0] = otherObject.vel[0] + angular_vel * 100;
-          otherObject.vel[1] = -1 * angular_vel * 100 + otherObject.vel[1];
-        } else if (rel_x < 0 && rel_y < 0) {
-          otherObject.vel[0] = -1 * (angular_vel * 100 + otherObject.vel[0]);
-          otherObject.vel[1] = angular_vel * 100 + otherObject.vel[1];
-        } else if (rel_x > 0 && rel_y < 0) {
-          otherObject.vel[0] = -1 * angular_vel * 100 + otherObject.vel[0];
-          otherObject.vel[1] = angular_vel * 100 + otherObject.vel[1];
-        }
-      }
-      otherObject.vel[0] = otherObject.vel[0] * 1.1;
-      otherObject.vel[1] = otherObject.vel[1] * 1.1;
+    value: function bounce(otherObject) {
+      otherObject.vel[0] = -1 * otherObject.vel[0];
+      otherObject.vel[1] = -1 * otherObject.vel[1];
     }
   }, {
     key: 'caluclateCollision',
@@ -289,16 +253,27 @@ var Disc = function (_MovingObject) {
       if (otherObject instanceof _projectile2.default) {
         var contact_point_x = Util.relative_x(otherObject.pos[0], this.game.DIM_X);
         var contact_point_y = Util.relative_y(otherObject.pos[1], this.game.DIM_Y);
+        //projectile position in terms of rad
         var abs_theta = Util.calculateRad(contact_point_x, contact_point_y);
-
-        var red_lower = this.rad - Math.PI * 2 / 3;
-        var red_upper = this.rad;
-        // blue lower same as above
-        var blue_upper = this.rad + Math.PI * 2 / 3;
-
-        if (true) {
-          this.bounce(otherObject, rel_x, rel_y);
-        } else {}
+        //if this.rad === 0; 0 < blue < pi*2/3, pi*2/3 < green < pi*4/3, pi*4/3 < red < pi*2
+        //if 0 <= this.rad < pi*2/3; this.rad < blue < (pi2/3 + this.rad),
+        //    (pi2/3 + this.rad) < green < (pi4/3 + this.rad) (()()((())))
+        //    (pi4/3 + this.rad) < red < 2pi AND 0 < red < this.rad
+        //if pi2/3 <= this.rad < pi4/3; this.rad < blue < (pi2/3 + this.rad),
+        //       (pi2/3 + this.rad) < green < 2pi AND 0 < green < (this.rad - pi2/3)
+        //       (this.rad - pi2/3) < red < this.rad
+        //if pi4/3 <= this.rad < 2pi; this.rad < blue < 2pi AND 0 < blue < (this.rad - pi4/3),
+        //      (this.rad - pi4/3) < green < (this.rad - pi2/3),
+        //      (this.rad - pi2/3) < red < this.rad
+        if (0 <= this.rad && this.rad < Math.PI * 2 / 3) {
+          if (otherObject.color === 'blue' && this.rad <= abs_theta && abs_theta <= this.rad + Math.PI * 2 / 3 || otherObject.color === 'green' && this.rad + Math.PI * 2 / 3 <= abs_theta && abs_theta <= this.rad + Math.PI * 4 / 3 || otherObject.color === 'red' && (this.rad + Math.PI * 4 / 3 <= abs_theta && abs_theta <= Math.PI * 2 || 0 <= abs_theta && abs_theta <= this.rad)) {
+            otherObject.stuck = true;
+            this.game.stuckCount++;
+            otherObject.vel = [0, 0];
+          } else {
+            this.bounce(otherObject);
+          }
+        } else if (Math.PI * 2 / 3 <= this.rad && this.rad < Math.PI * 4 / 3) {} else if (Math.PI * 4 / 3 <= this.rad && this.rad < Math.PI * 2) {}
       } else if (otherObject instanceof _power_up2.default) {
         this.enablePowerup(otherObject);
         this.game.removePowerup(otherObject);
@@ -388,10 +363,6 @@ var _disc = __webpack_require__(/*! ./disc */ "./js/disc.js");
 
 var _disc2 = _interopRequireDefault(_disc);
 
-var _goal = __webpack_require__(/*! ./goal */ "./js/goal.js");
-
-var _goal2 = _interopRequireDefault(_goal);
-
 var _projectile = __webpack_require__(/*! ./projectile */ "./js/projectile.js");
 
 var _projectile2 = _interopRequireDefault(_projectile);
@@ -442,7 +413,6 @@ var Game = function () {
     this.moveObjects = this.moveObjects.bind(this);
     this.checkCollisionsWithDisc = this.checkCollisionsWithDisc.bind(this);
     this.checkCollisionsWithBullet = this.checkCollisionsWithBullet.bind(this);
-    this.checkCollisionsWithGoal = this.checkCollisionsWithGoal.bind(this);
     this.step = this.step.bind(this);
     this.allObjects = this.allObjects.bind(this);
     this.shootBullet = this.shootBullet.bind(this);
@@ -471,22 +441,14 @@ var Game = function () {
     value: function initDisc() {
       this.disc = new _disc2.default({ pos: [this.DIM_X / 2, this.DIM_Y / 2], game: this });
     }
-
-    // initGoals() {
-    //   this.goals.push(new Goal({pos: [130, 130], game: this, radius: 25}))
-    //   this.goals.push(new Goal({pos: [this.DIM_X - 130, 130], game: this, radius: 25}))
-    //   this.goals.push(new Goal({pos: [130, this.DIM_Y - 130], game: this, radius: 25}))
-    //   this.goals.push(new Goal({pos: [this.DIM_X - 130, this.DIM_Y - 130], game: this, radius: 25}))
-    // }
-
-    // initTest() {
-    //   this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,0], vel: this.findCenter([800,0]), radius: 20, game: this}));
-    //   this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,0], vel: this.findCenter([0,0]), radius: 20, game: this}));
-    //   this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,800], vel: this.findCenter([0,800]), radius: 20, game: this}));
-    //   this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,800], vel: this.findCenter([800,800]), radius: 20, game: this}));
-    //
-    // }
-
+  }, {
+    key: 'initTest',
+    value: function initTest() {
+      this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: [800, 0], vel: this.findCenter([800, 0]), radius: 20, game: this }));
+      this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: [0, 0], vel: this.findCenter([0, 0]), radius: 20, game: this }));
+      this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: [0, 800], vel: this.findCenter([0, 800]), radius: 20, game: this }));
+      this.projectiles.push(new _projectile2.default({ color: Util.randomColor(), pos: [800, 800], vel: this.findCenter([800, 800]), radius: 20, game: this }));
+    }
   }, {
     key: 'initProjectiles',
     value: function initProjectiles() {
@@ -591,9 +553,7 @@ var Game = function () {
     value: function renderFragments() {
       var _this4 = this;
 
-      // TODO: change to keyboard controls
       var timeout = void 0;
-      var angular_vel = void 0;
       this.disc.start_time = 1;
       var registerMovement = function registerMovement(e) {
         clearTimeout(timeout);
@@ -609,17 +569,6 @@ var Game = function () {
         _this4.disc.dTheta = _this4.disc.end_angle - _this4.disc.start_angle;
         _this4.disc.end_time = Date.now();
 
-        //going counter-clockwise
-        if (_this4.disc.angular_vel > 0) {
-          if (_this4.disc.theta < 0.08 && _this4.disc.theta > -0.08 && _this4.disc.rel_x > 0) {
-            console.log("crossing the border");
-            var diff = _this4.disc.end_angle + (Math.PI * 2 - _this4.disc.start_angle);
-            console.log("diff", diff);
-          }
-        }
-
-        _this4.disc.angular_vel = Util.calculateAngVelocity(_this4.disc.start_angle, _this4.disc.end_angle, _this4.disc.start_time, _this4.disc.end_time);
-
         timeout = setTimeout(function () {
           var event = new CustomEvent("mousestop", {
             detail: {
@@ -634,7 +583,6 @@ var Game = function () {
       };
 
       var registerStaticPosition = function registerStaticPosition(e) {
-        _this4.disc.angular_vel = 0;
         _this4.disc.rel_x = Util.relative_x(e.detail.clientX, _this4.DIM_X);
         _this4.disc.rel_y = Util.relative_y(e.detail.clientY, _this4.DIM_Y);
         _this4.disc.start_time = 1;
@@ -646,7 +594,6 @@ var Game = function () {
     key: 'draw',
     value: function draw(ctx) {
       ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
-
       ctx.fillStyle = "#2c2d23";
       ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
       ctx.font = '80px "Press Start 2P"';
@@ -723,9 +670,6 @@ var Game = function () {
         this.bullets.forEach(function (bullet) {
           bullet.draw(ctx);
         });
-        this.goals.forEach(function (goal) {
-          goal.draw(ctx);
-        });
         this.disc.draw(this.ctx, this.disc.rel_x, this.disc.rel_y, this.disc.theta);
       }
 
@@ -786,10 +730,6 @@ var Game = function () {
         ctx.fillText('to the color of the circle.', this.DIM_X / 2 - 300, this.DIM_Y / 2 + 25);
         window.addEventListener('click', this.reset);
       }
-
-      // this.goals.forEach(goal => {
-      //   goal.draw(ctx);
-      // })
     }
   }, {
     key: 'anim',
@@ -824,8 +764,6 @@ var Game = function () {
         if (object_array[i] instanceof _power_up2.default || object_array[i].stuck === false) {
           if (distance <= totalRadius) {
             this.disc.caluclateCollision(object_array[i]);
-            // object_array[i].vel[0] = -1 * object_array[i].vel[0];
-            // object_array[i].vel[1] = -1 * object_array[i].vel[1];
           }
         } else if (object_array[i].stuck === true) {
           var contact_point_x = Util.relative_x(object_array[i].pos[0], this.DIM_X);
@@ -867,32 +805,11 @@ var Game = function () {
       }
     }
   }, {
-    key: 'checkCollisionsWithGoal',
-    value: function checkCollisionsWithGoal() {
-      var totalRadius = void 0;
-      var object_array = this.allObjects();
-      var distance = void 0;
-      for (var j = 0; j < this.goals.length; j++) {
-        for (var i = 0; i < object_array.length; i++) {
-          totalRadius = object_array[i].radius + this.goals[j].radius;
-          distance = Util.distance(this.goals[j].pos[0], this.goals[j].pos[1], object_array[i].pos[0], object_array[i].pos[1]);
-
-          if (distance <= totalRadius && object_array[i] instanceof _projectile2.default) {
-            if (object_array[i].counted === true) {} else if (object_array[i].counted === false) {
-              object_array[i].counted = true;
-              this.score += 1;
-            }
-          }
-        }
-      }
-    }
-  }, {
     key: 'step',
     value: function step() {
       this.moveObjects();
       this.checkCollisionsWithDisc();
       this.checkCollisionsWithBullet();
-      this.checkCollisionsWithGoal();
     }
   }, {
     key: 'allObjects',
@@ -980,63 +897,6 @@ exports.default = GameView;
 
 /***/ }),
 
-/***/ "./js/goal.js":
-/*!********************!*\
-  !*** ./js/goal.js ***!
-  \********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _moving_object = __webpack_require__(/*! ./moving_object */ "./js/moving_object.js");
-
-var _moving_object2 = _interopRequireDefault(_moving_object);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Goal = function (_MovingObject) {
-  _inherits(Goal, _MovingObject);
-
-  function Goal(options) {
-    _classCallCheck(this, Goal);
-
-    options.color = 'grey';
-    options.vel = [0, 0];
-    options.color = 'green';
-    return _possibleConstructorReturn(this, (Goal.__proto__ || Object.getPrototypeOf(Goal)).call(this, options));
-  }
-
-  _createClass(Goal, [{
-    key: 'draw',
-    value: function draw(ctx) {
-      ctx.fillStyle = this.color || 'red';
-      ctx.beginPath();
-      ctx.arc(this.pos[0], this.pos[1], this.radius, 2 * Math.PI, false);
-      ctx.fill();
-    }
-  }]);
-
-  return Goal;
-}(_moving_object2.default);
-
-exports.default = Goal;
-
-/***/ }),
-
 /***/ "./js/moving_object.js":
 /*!*****************************!*\
   !*** ./js/moving_object.js ***!
@@ -1072,7 +932,6 @@ var MovingObject = function () {
   _createClass(MovingObject, [{
     key: "draw",
     value: function draw(ctx) {
-      // console.log(this);
       ctx.fillStyle = this.color;
       ctx.beginPath();
       ctx.arc(this.pos[0], this.pos[1], this.radius, 0, 2 * Math.PI, false);
@@ -1190,7 +1049,6 @@ var PowerUp = function (_MovingObject) {
   }, {
     key: 'draw',
     value: function draw(ctx) {
-
       if (this.count === 0) {
         ctx.drawImage(this.drawing, this.pos[0], this.pos[1], 50, 50);
       } else if (this.count === 1) {

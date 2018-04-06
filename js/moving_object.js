@@ -11,7 +11,6 @@ class MovingObject {
   }
 
   draw(ctx) {
-    // console.log(this);
     ctx.fillStyle = this.color;
     ctx.beginPath();
     ctx.arc(

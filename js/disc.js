@@ -59,45 +59,9 @@ class Disc extends MovingObject{
       ctx.fillStyle = grd;
   }
 
-  bounce(otherObject, rel_x, rel_y){
-    if(this.angular_vel >= 0) {
-      if (isNaN(this.angular_vel) || this.angular_vel === 0){
-        otherObject.vel[0] = -1 * otherObject.vel[0];
-        otherObject.vel[1] = -1 * otherObject.vel[1];
-      } else if (rel_x > 0 && rel_y > 0) {
-        otherObject.vel[0] =  otherObject.vel[0] - (this.angular_vel);
-        otherObject.vel[1] = (( -1 * this.angular_vel) + otherObject.vel[1]) ;
-      } else if (rel_x < 0 && rel_y > 0) {
-        otherObject.vel[0] = otherObject.vel[0] - (this.angular_vel) ;
-        otherObject.vel[1] = (this.angular_vel) + (otherObject.vel[1]) ;
-      } else if (rel_x < 0 && rel_y < 0) {
-        otherObject.vel[0] = ((this.angular_vel) + otherObject.vel[0]) ;
-        otherObject.vel[1] = -1 * ((this.angular_vel) + otherObject.vel[1]) ;
-      } else if (rel_x > 0 && rel_y < 0) {
-        otherObject.vel[0] = ((this.angular_vel) + otherObject.vel[0]) ;
-        otherObject.vel[1] = ((-1 * this.angular_vel) + otherObject.vel[1]) ;
-      }
-    } else if (this.angular_vel < 0){
-      let angular_vel = Math.abs(this.angular_vel);
-      if (isNaN(this.angular_vel) || this.angular_vel === 0){
-        otherObject.vel[0] = -1 * otherObject.vel[0];
-        otherObject.vel[1] = -1 * otherObject.vel[1];
-      } else if (rel_x > 0 && rel_y > 0) {
-        otherObject.vel[0] =  otherObject.vel[0] + (angular_vel * 100);
-        otherObject.vel[1] = ((angular_vel * 100) + otherObject.vel[1]) ;
-      } else if (rel_x < 0 && rel_y > 0) {
-        otherObject.vel[0] = otherObject.vel[0] + (angular_vel * 100) ;
-        otherObject.vel[1] = (-1 * angular_vel * 100) + (otherObject.vel[1]) ;
-      } else if (rel_x < 0 && rel_y < 0) {
-        otherObject.vel[0] = -1 * ((angular_vel * 100) + otherObject.vel[0]) ;
-        otherObject.vel[1] = ((angular_vel * 100) + otherObject.vel[1]) ;
-      } else if (rel_x > 0 && rel_y < 0) {
-        otherObject.vel[0] = (( -1 * angular_vel * 100) + otherObject.vel[0]) ;
-        otherObject.vel[1] = ((angular_vel * 100) + otherObject.vel[1]) ;
-      }
-    }
-    otherObject.vel[0] = otherObject.vel[0] * 1.1;
-    otherObject.vel[1] = otherObject.vel[1] * 1.1;
+  bounce(otherObject){
+    otherObject.vel[0] = -1 * otherObject.vel[0];
+    otherObject.vel[1] = -1 * otherObject.vel[1];
   }
 
   caluclateCollision(otherObject) {
@@ -108,32 +72,39 @@ class Disc extends MovingObject{
     if (otherObject instanceof Projectile) {
       let contact_point_x = Util.relative_x(otherObject.pos[0], this.game.DIM_X);
       let contact_point_y = Util.relative_y(otherObject.pos[1], this.game.DIM_Y);
+      //projectile position in terms of rad
       let abs_theta = Util.calculateRad(contact_point_x, contact_point_y);
+      //if this.rad === 0; 0 < blue < pi*2/3, pi*2/3 < green < pi*4/3, pi*4/3 < red < pi*2
+      //if 0 <= this.rad < pi*2/3; this.rad < blue < (pi2/3 + this.rad),
+                            //    (pi2/3 + this.rad) < green < (pi4/3 + this.rad) (()()((())))
+                            //    (pi4/3 + this.rad) < red < 2pi AND 0 < red < this.rad
+      //if pi2/3 <= this.rad < pi4/3; this.rad < blue < (pi2/3 + this.rad),
+                            //       (pi2/3 + this.rad) < green < 2pi AND 0 < green < (this.rad - pi2/3)
+                            //       (this.rad - pi2/3) < red < this.rad
+      //if pi4/3 <= this.rad < 2pi; this.rad < blue < 2pi AND 0 < blue < (this.rad - pi4/3),
+                            //      (this.rad - pi4/3) < green < (this.rad - pi2/3),
+                            //      (this.rad - pi2/3) < red < this.rad
+      if (0 <= this.rad && this.rad < (Math.PI * 2/3)) {
+        if (
+            (otherObject.color === 'blue' && (this.rad <= abs_theta && abs_theta <= (this.rad + (Math.PI * 2/3)))) || 
+            (otherObject.color === 'green' && ((this.rad + (Math.PI * 2/3)) <= abs_theta && abs_theta <= (this.rad + (Math.PI * 4/3)))) ||
+            (otherObject.color === 'red' && ( ((this.rad + (Math.PI * 4/3)) <= abs_theta && abs_theta <= (Math.PI * 2)) || (0 <= abs_theta && abs_theta <= this.rad) ))        
+          ){
+            otherObject.stuck = true;
+            this.game.stuckCount++;
+            otherObject.vel = [0,0];
+        } else {
+          this.bounce(otherObject);
+        }
+      } else if ((Math.PI * 2/3) <= this.rad && this.rad < (Math.PI * 4/3)) {
+        
+      } else if ((Math.PI * 4/3) <= this.rad && this.rad < (Math.PI * 2)) {
 
-      let red_lower = this.rad - (Math.PI * 2/3);
-      let red_upper = this.rad;
-      // blue lower same as above
-      let blue_upper = this.rad + (Math.PI * 2/3);
-
-      if (true) {
-        this.bounce(otherObject, rel_x, rel_y);
-      } else if(((this.rad > abs_theta) && (abs_theta > (this.rad - Math.PI * 2 /3)) && otherObject.color === 'red') || ((abs_theta < Math.PI * 2) && (abs_theta > (Math.PI - (Math.PI * 2/3 - this.rad))) && otherObject.color === 'red')) {
-        console.log("is red ball");
-        // this.bounce(otherObject, rel_x, rel_y);
-      } else if ( (((this.rad + Math.PI * 2/3) > abs_theta) && (abs_theta > this.rad) && otherObject.color === 'blue') || (abs_theta > 0 && (abs_theta < (this.rad - Math.PI * 3/2)) && otherObject.color =="blue")){
-        console.log("is blue");
-        // this.bounce(otherObject, rel_x, rel_y);
-      } else if ( ((this.rad + Math.PI * 4/3) > abs_theta) && otherObject.color === 'green') {
-        console.log("green");
-        // this.bounce(otherObject, rel_x, rel_y);
-      } else if (otherObject.stuck === false){
-        // otherObject.stuck = true;
-        // this.game.stuckCount++;
-        // otherObject.vel = [0,0];
       }
-    }  else if (otherObject instanceof PowerUp) {
-      this.enablePowerup(otherObject);
-      this.game.removePowerup(otherObject);
+
+    } else if (otherObject instanceof PowerUp) {
+        this.enablePowerup(otherObject);
+        this.game.removePowerup(otherObject);
     }
   }
 

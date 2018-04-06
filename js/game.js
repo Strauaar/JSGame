@@ -1,5 +1,4 @@
 import Disc from './disc';
-import Goal from './goal';
 import Projectile from './projectile';
 import PowerUp from './power_up';
 import * as Util from './util';
@@ -29,8 +28,6 @@ class Game {
     this.moveObjects = this.moveObjects.bind(this);
     this.checkCollisionsWithDisc = this.checkCollisionsWithDisc.bind(this);
     this.checkCollisionsWithBullet = this.checkCollisionsWithBullet.bind(this);
-    this.checkCollisionsWithGoal =
-    this.checkCollisionsWithGoal.bind(this);
     this.step = this.step.bind(this);
     this.allObjects = this.allObjects.bind(this);
     this.shootBullet = this.shootBullet.bind(this);
@@ -58,20 +55,13 @@ class Game {
     this.disc = new Disc({pos: [this.DIM_X / 2, this.DIM_Y / 2], game: this});
   }
 
-  // initGoals() {
-  //   this.goals.push(new Goal({pos: [130, 130], game: this, radius: 25}))
-  //   this.goals.push(new Goal({pos: [this.DIM_X - 130, 130], game: this, radius: 25}))
-  //   this.goals.push(new Goal({pos: [130, this.DIM_Y - 130], game: this, radius: 25}))
-  //   this.goals.push(new Goal({pos: [this.DIM_X - 130, this.DIM_Y - 130], game: this, radius: 25}))
-  // }
-
-  // initTest() {
-  //   this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,0], vel: this.findCenter([800,0]), radius: 20, game: this}));
-  //   this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,0], vel: this.findCenter([0,0]), radius: 20, game: this}));
-  //   this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,800], vel: this.findCenter([0,800]), radius: 20, game: this}));
-  //   this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,800], vel: this.findCenter([800,800]), radius: 20, game: this}));
-  //
-  // }
+  initTest() {
+    this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,0], vel: this.findCenter([800,0]), radius: 20, game: this}));
+    this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,0], vel: this.findCenter([0,0]), radius: 20, game: this}));
+    this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [0,800], vel: this.findCenter([0,800]), radius: 20, game: this}));
+    this.projectiles.push(new Projectile({color: Util.randomColor(), pos: [800,800], vel: this.findCenter([800,800]), radius: 20, game: this}));
+  
+  }
 
   initProjectiles() {
     let position;
@@ -164,9 +154,7 @@ class Game {
   }
 
   renderFragments() {
-    // TODO: change to keyboard controls
     let timeout;
-    let angular_vel;
     this.disc.start_time = 1;
     const registerMovement = (e) => {
       clearTimeout(timeout);
@@ -182,17 +170,6 @@ class Game {
       this.disc.dTheta = this.disc.end_angle - this.disc.start_angle;
       this.disc.end_time = Date.now();
 
-        //going counter-clockwise
-      if (this.disc.angular_vel > 0) {
-        if ( (this.disc.theta < 0.08 && this.disc.theta > -0.08)  && this.disc.rel_x > 0) {
-          console.log("crossing the border");
-          let diff = (this.disc.end_angle) + ((Math.PI * 2) - this.disc.start_angle)
-          console.log("diff", diff);
-        }
-      }
-
-      this.disc.angular_vel = Util.calculateAngVelocity(this.disc.start_angle, this.disc.end_angle, this.disc.start_time, this.disc.end_time);
-
       timeout = setTimeout(function () {
           var event = new CustomEvent("mousestop", {
               detail: {
@@ -207,7 +184,6 @@ class Game {
     };
 
     const registerStaticPosition = (e) => {
-      this.disc.angular_vel = 0;
       this.disc.rel_x = Util.relative_x(e.detail.clientX, this.DIM_X);
       this.disc.rel_y = Util.relative_y(e.detail.clientY, this.DIM_Y);
       this.disc.start_time = 1;
@@ -219,9 +195,7 @@ class Game {
 
 
   draw(ctx) {
-    ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
-
-
+      ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
       ctx.fillStyle = "#2c2d23";
       ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
       ctx.font = '80px "Press Start 2P"';
@@ -299,9 +273,6 @@ class Game {
       this.bullets.forEach(bullet => {
         bullet.draw(ctx);
       });
-      this.goals.forEach(goal => {
-        goal.draw(ctx);
-      });
       this.disc.draw(this.ctx, this.disc.rel_x, this.disc.rel_y, this.disc.theta);
     }
 
@@ -363,10 +334,6 @@ class Game {
       window.addEventListener('click', this.reset);
     }
 
-
-    // this.goals.forEach(goal => {
-    //   goal.draw(ctx);
-    // })
   }
 
   anim(ctx) {
@@ -393,12 +360,9 @@ class Game {
     for(let i = 0; i < object_array.length; i++) {
       totalRadius = object_array[i].radius + this.disc.outerRadius;
       distance = Util.distance(this.disc.pos[0], this.disc.pos[1], object_array[i].pos[0], object_array[i].pos[1])
-      if(object_array[i] instanceof PowerUp || object_array[i].stuck === false)
-      {
+      if(object_array[i] instanceof PowerUp || object_array[i].stuck === false) {
         if(distance <= totalRadius) {
-        this.disc.caluclateCollision(object_array[i]);
-        // object_array[i].vel[0] = -1 * object_array[i].vel[0];
-        // object_array[i].vel[1] = -1 * object_array[i].vel[1];
+            this.disc.caluclateCollision(object_array[i]);
         }
       } else if (object_array[i].stuck === true) {
         let contact_point_x = Util.relative_x(object_array[i].pos[0], this.DIM_X);
@@ -420,7 +384,6 @@ class Game {
 
         object_array[i].pos[0] = mid_screen_x + new_rel_x;
         object_array[i].pos[1] = mid_screen_y - new_rel_y;
-
       }
     }
   }
@@ -441,39 +404,16 @@ class Game {
     }
   }
 
-  checkCollisionsWithGoal() {
-    let totalRadius;
-    let object_array = this.allObjects();
-    let distance;
-    for(let j = 0; j < this.goals.length; j++) {
-      for(let i = 0; i < object_array.length; i++) {
-        totalRadius = object_array[i].radius + this.goals[j].radius;
-        distance = Util.distance(this.goals[j].pos[0], this.goals[j].pos[1], object_array[i].pos[0], object_array[i].pos[1])
-
-        if(distance <= totalRadius && object_array[i] instanceof Projectile) {
-          if(object_array[i].counted === true) {
-
-          } else if (object_array[i].counted === false){
-            object_array[i].counted = true;
-            this.score += 1
-          }
-        }
-      }
-    }
-  }
-
   step() {
     this.moveObjects();
     this.checkCollisionsWithDisc();
     this.checkCollisionsWithBullet();
-    this.checkCollisionsWithGoal();
   }
 
   allObjects() {
     let all = this.projectiles.slice();
     all = all.concat(this.powerups);
     return all;
-
   }
 
   shootBullet(options) {

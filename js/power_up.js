@@ -56,7 +56,6 @@ class PowerUp extends MovingObject {
   }
 
   draw(ctx) {
-
       if(this.count === 0) {
         ctx.drawImage(this.drawing, this.pos[0],this.pos[1], 50,50);
       } else if (this.count === 1) {
