@@ -15,7 +15,6 @@ class Game {
     this.lost = false;
     this.ctx = ctx;
     this.gameover_count = 0;
-    this.difficulty = 2000;
     this.DIM_X = window.innerWidth;
     this.DIM_Y = window.innerHeight;
     this.initProjectiles = this.initProjectiles.bind(this);
@@ -91,7 +90,7 @@ class Game {
     this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
     let position = this.randomPosition();
     this.projectiles = [new Projectile({color: Util.randomColor(), pos: position, vel: this.findCenter(position), radius: 20, game: this})];
-    this.difficulty = 2000;
+    this.difficulty = 1000;
     // this.initTest();
     this.initProjectiles(this.difficulty);
     this.score = 0;
