@@ -391,7 +391,6 @@ var Game = function () {
     this.lost = false;
     this.ctx = ctx;
     this.gameover_count = 0;
-    this.difficulty = 2000;
     this.DIM_X = window.innerWidth;
     this.DIM_Y = window.innerHeight;
     this.initProjectiles = this.initProjectiles.bind(this);
@@ -479,7 +478,7 @@ var Game = function () {
       this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
       var position = this.randomPosition();
       this.projectiles = [new _projectile2.default({ color: Util.randomColor(), pos: position, vel: this.findCenter(position), radius: 20, game: this })];
-      this.difficulty = 2000;
+      this.difficulty = 1000;
       // this.initTest();
       this.initProjectiles(this.difficulty);
       this.score = 0;
@@ -1232,14 +1231,6 @@ var calculateRad = exports.calculateRad = function calculateRad(rel_x, rel_y) {
     rad = Math.PI * 3 / 2 + (Math.PI / 2 + theta);
   }
   return rad;
-};
-
-var calculateAngVelocity = exports.calculateAngVelocity = function calculateAngVelocity(start_angle, end_angle, start_time, end_time) {
-  var dTheta = end_angle - start_angle;
-  var dTime = end_time - start_time;
-  //multiply since time is in milliseconds
-  var omega = dTheta / dTime * 1000;
-  return omega;
 };
 
 /***/ })

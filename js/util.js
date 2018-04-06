@@ -65,11 +65,3 @@ export const calculateRad = (rel_x, rel_y) => {
   }
   return rad;
 }
-
-export const calculateAngVelocity = (start_angle, end_angle, start_time, end_time) => {
-  let dTheta = end_angle - start_angle;
-  let dTime = end_time - start_time;
-  //multiply since time is in milliseconds
-  let omega = (dTheta/dTime) * 1000;
-  return omega;
-}
