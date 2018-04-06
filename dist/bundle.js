@@ -273,7 +273,23 @@ var Disc = function (_MovingObject) {
           } else {
             this.bounce(otherObject);
           }
-        } else if (Math.PI * 2 / 3 <= this.rad && this.rad < Math.PI * 4 / 3) {} else if (Math.PI * 4 / 3 <= this.rad && this.rad < Math.PI * 2) {}
+        } else if (Math.PI * 2 / 3 <= this.rad && this.rad < Math.PI * 4 / 3) {
+          if (otherObject.color === 'blue' && this.rad <= abs_theta && abs_theta <= this.rad + Math.PI * 2 / 3 || otherObject.color === 'green' && (this.rad + Math.PI * 2 / 3 <= abs_theta && abs_theta <= Math.PI * 2 || 0 <= abs_theta && abs_theta <= this.rad - Math.PI * 2 / 3) || otherObject.color === 'red' && this.rad - Math.PI * 2 / 3 <= abs_theta && abs_theta <= this.rad) {
+            otherObject.stuck = true;
+            this.game.stuckCount++;
+            otherObject.vel = [0, 0];
+          } else {
+            this.bounce(otherObject);
+          }
+        } else if (Math.PI * 4 / 3 <= this.rad && this.rad < Math.PI * 2) {
+          if (otherObject.color === 'blue' && (this.rad <= abs_theta && abs_theta <= Math.PI * 2 || 0 <= abs_theta && abs_theta <= this.rad - Math.PI * 4 / 3) || otherObject.color === 'green' && this.rad - Math.PI * 4 / 3 <= abs_theta && abs_theta <= this.rad - Math.PI * 2 / 3 || otherObject.color === 'red' && this.rad - Math.PI * 2 / 3 <= abs_theta && abs_theta <= this.rad) {
+            otherObject.stuck = true;
+            this.game.stuckCount++;
+            otherObject.vel = [0, 0];
+          } else {
+            this.bounce(otherObject);
+          }
+        }
       } else if (otherObject instanceof _power_up2.default) {
         this.enablePowerup(otherObject);
         this.game.removePowerup(otherObject);
