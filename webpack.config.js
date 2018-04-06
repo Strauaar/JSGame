@@ -4,16 +4,16 @@ module.exports = {
     filename: './js/bundle.js',
   },
   module: {
-    loaders: [
-      {
-        test: [/\.jsx?$/],
-        exclude: /(node_modules)/,
-        loader: 'babel-loader',
-        query: {
-          presets: ['es2015']
+    rules: [
+        {
+          test: [/\.jsx?$/],
+          exclude: /(node_modules)/,
+          loader: 'babel-loader',
+          options: {
+            presets: ['es2015']
+          }
         }
-      }
-    ]
+      ]
   },
   devtool: 'source-map',
   resolve: {
